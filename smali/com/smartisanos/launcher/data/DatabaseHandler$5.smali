@@ -1,0 +1,51 @@
+.class final Lcom/smartisanos/launcher/data/DatabaseHandler$5;
+.super Lcom/smartisanos/smengine/Event;
+.source "DatabaseHandler.java"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingMethod;
+    value = Lcom/smartisanos/launcher/data/DatabaseHandler;->handleEventRemoveApp(Ljava/util/List;Ljava/util/List;)V
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x8
+    name = null
+.end annotation
+
+
+# instance fields
+.field final synthetic val$pTask:Lcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;
+
+
+# direct methods
+.method constructor <init>(ILcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;)V
+    .locals 0
+    .param p1, "type"    # I
+
+    .prologue
+    .line 2010
+    iput-object p2, p0, Lcom/smartisanos/launcher/data/DatabaseHandler$5;->val$pTask:Lcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;
+
+    invoke-direct {p0, p1}, Lcom/smartisanos/smengine/Event;-><init>(I)V
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public run()V
+    .locals 1
+
+    .prologue
+    .line 2014
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/DatabaseHandler$5;->val$pTask:Lcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;->appendTask(Lcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;)V
+
+    .line 2015
+    invoke-static {}, Lcom/smartisanos/launcher/data/DatabaseHandler$PackageTask;->handleTaskList()V
+
+    .line 2016
+    return-void
+.end method
