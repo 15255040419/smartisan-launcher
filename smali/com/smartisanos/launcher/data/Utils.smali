@@ -778,49 +778,98 @@
     .line 2463
     sget v8, Landroid/os/Build$VERSION;->SDK_INT:I
 
-    const/16 v9, 0x13
+    const/16 v9, 0x15
 
-    if-lt v8, v9, :cond_2
+    if-lt v8, v9, :cond_0
 
     .line 2464
-    const/4 v0, 0x0
+    invoke-virtual {p1}, Landroid/view/Window;->getDecorView()Landroid/view/View;
+
+    move-result-object v0
 
     .line 2465
+    .local v0, "decorView":Landroid/view/View;
+    invoke-virtual {v0}, Landroid/view/View;->getSystemUiVisibility()I
+
+    move-result v1
+
+    .line 2466
+    .local v1, "visibility":I
+    or-int/lit16 v1, v1, 0x100
+
+    .line 2467
+    or-int/lit16 v1, v1, 0x400
+
+    .line 2468
+    invoke-virtual {v0, v1}, Landroid/view/View;->setSystemUiVisibility(I)V
+
+    .line 2469
+    const/high16 v8, 0x4000000
+
+    invoke-virtual {p1, v8}, Landroid/view/Window;->clearFlags(I)V
+
+    .line 2470
+    const/high16 v8, -0x80000000
+
+    invoke-virtual {p1, v8}, Landroid/view/Window;->addFlags(I)V
+
+    .line 2471
+    const/4 v8, 0x0
+
+    invoke-virtual {p1, v8}, Landroid/view/Window;->setStatusBarColor(I)V
+
+    .line 2472
+    return-void
+
+    .line 2475
+    .end local v0    # "decorView":Landroid/view/View;
+    .end local v1    # "visibility":I
+    :cond_0
+    sget v8, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v9, 0x13
+
+    if-lt v8, v9, :cond_3
+
+    .line 2476
+    const/4 v0, 0x0
+
+    .line 2477
     .local v0, "c":Ljava/lang/Class;, "Ljava/lang/Class<*>;"
     const/4 v2, 0x0
 
-    .line 2466
+    .line 2478
     .local v2, "field":Ljava/lang/reflect/Field;
     const/4 v7, 0x0
 
-    .line 2468
+    .line 2480
     .local v7, "x":I
     :try_start_0
     const-class v0, Landroid/view/WindowManager$LayoutParams;
 
-    .line 2469
+    .line 2481
     const-string v8, "FLAG_TRANSLUCENT_STATUS"
 
     invoke-virtual {v0, v8}, Ljava/lang/Class;->getField(Ljava/lang/String;)Ljava/lang/reflect/Field;
 
     move-result-object v2
 
-    .line 2470
+    .line 2482
     invoke-virtual {v2, v0}, Ljava/lang/reflect/Field;->getInt(Ljava/lang/Object;)I
     :try_end_0
     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 
     move-result v7
 
-    .line 2474
+    .line 2486
     :goto_0
-    if-eqz v7, :cond_0
+    if-eqz v7, :cond_1
 
-    .line 2475
+    .line 2487
     invoke-virtual {p1, v7}, Landroid/view/Window;->addFlags(I)V
 
-    .line 2477
-    :cond_0
+    .line 2489
+    :cond_1
     const-string v8, "Meizu"
 
     sget-object v9, Landroid/os/Build;->MANUFACTURER:Ljava/lang/String;
@@ -829,74 +878,74 @@
 
     move-result v8
 
-    if-eqz v8, :cond_1
+    if-eqz v8, :cond_2
 
-    .line 2478
+    .line 2490
     const/4 v7, 0x0
 
-    .line 2480
+    .line 2492
     :try_start_1
     const-class v0, Landroid/view/WindowManager$LayoutParams;
 
-    .line 2481
+    .line 2493
     const-string v8, "FLAG_TRANSLUCENT_NAVIGATION"
 
     invoke-virtual {v0, v8}, Ljava/lang/Class;->getField(Ljava/lang/String;)Ljava/lang/reflect/Field;
 
     move-result-object v2
 
-    .line 2482
+    .line 2494
     invoke-virtual {v2, v0}, Ljava/lang/reflect/Field;->getInt(Ljava/lang/Object;)I
     :try_end_1
     .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_1
 
     move-result v7
 
-    .line 2486
+    .line 2498
     :goto_1
-    if-eqz v7, :cond_1
+    if-eqz v7, :cond_2
 
-    .line 2487
+    .line 2499
     invoke-virtual {p1, v7}, Landroid/view/Window;->addFlags(I)V
 
-    .line 2516
+    .line 2528
     .end local v0    # "c":Ljava/lang/Class;, "Ljava/lang/Class<*>;"
     .end local v2    # "field":Ljava/lang/reflect/Field;
     .end local v7    # "x":I
-    :cond_1
+    :cond_2
     :goto_2
     return-void
 
-    .line 2471
+    .line 2483
     .restart local v0    # "c":Ljava/lang/Class;, "Ljava/lang/Class<*>;"
     .restart local v2    # "field":Ljava/lang/reflect/Field;
     .restart local v7    # "x":I
     :catch_0
     move-exception v1
 
-    .line 2472
+    .line 2484
     .local v1, "e1":Ljava/lang/Exception;
     invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
 
     goto :goto_0
 
-    .line 2483
+    .line 2495
     .end local v1    # "e1":Ljava/lang/Exception;
     :catch_1
     move-exception v1
 
-    .line 2484
+    .line 2496
     .restart local v1    # "e1":Ljava/lang/Exception;
     invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
 
     goto :goto_1
 
-    .line 2492
+    .line 2504
     .end local v0    # "c":Ljava/lang/Class;, "Ljava/lang/Class<*>;"
     .end local v1    # "e1":Ljava/lang/Exception;
     .end local v2    # "field":Ljava/lang/reflect/Field;
     .end local v7    # "x":I
-    :cond_2
+    :cond_3
     invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 
     move-result-object v8
@@ -905,25 +954,25 @@
 
     move-result-object v4
 
-    .line 2493
+    .line 2505
     .local v4, "libs":[Ljava/lang/String;
     const-string v5, "SYSTEM_UI_FLAG_TRANSPARENT_BACKGROUND"
 
-    .line 2494
+    .line 2506
     .local v5, "reflect":Ljava/lang/String;
-    if-eqz v4, :cond_1
+    if-eqz v4, :cond_2
 
-    .line 2495
+    .line 2507
     array-length v9, v4
 
     const/4 v8, 0x0
 
     :goto_3
-    if-ge v8, v9, :cond_4
+    if-ge v8, v9, :cond_5
 
     aget-object v3, v4, v8
 
-    .line 2496
+    .line 2508
     .local v3, "lib":Ljava/lang/String;
     const-string v10, "touchwiz"
 
@@ -931,7 +980,7 @@
 
     move-result v10
 
-    if-nez v10, :cond_3
+    if-nez v10, :cond_4
 
     const-string v10, "com.htc."
 
@@ -939,15 +988,15 @@
 
     move-result v10
 
-    if-eqz v10, :cond_5
+    if-eqz v10, :cond_6
 
-    .line 2497
-    :cond_3
+    .line 2509
+    :cond_4
     const-string v5, "SYSTEM_UI_FLAG_TRANSPARENT_BACKGROUND"
 
-    .line 2505
+    .line 2517
     .end local v3    # "lib":Ljava/lang/String;
-    :cond_4
+    :cond_5
     :goto_4
     :try_start_2
     const-class v8, Landroid/view/View;
@@ -956,7 +1005,7 @@
 
     move-result-object v2
 
-    .line 2506
+    .line 2518
     .restart local v2    # "field":Ljava/lang/reflect/Field;
     invoke-virtual {v2}, Ljava/lang/reflect/Field;->getType()Ljava/lang/Class;
 
@@ -964,16 +1013,16 @@
 
     sget-object v9, Ljava/lang/Integer;->TYPE:Ljava/lang/Class;
 
-    if-ne v8, v9, :cond_1
+    if-ne v8, v9, :cond_2
 
-    .line 2507
+    .line 2519
     const/4 v8, 0x0
 
     invoke-virtual {v2, v8}, Ljava/lang/reflect/Field;->getInt(Ljava/lang/Object;)I
 
     move-result v6
 
-    .line 2508
+    .line 2520
     .local v6, "result":I
     invoke-virtual {p1}, Landroid/view/Window;->getDecorView()Landroid/view/View;
 
@@ -985,7 +1034,7 @@
 
     goto :goto_2
 
-    .line 2511
+    .line 2523
     .end local v2    # "field":Ljava/lang/reflect/Field;
     .end local v6    # "result":I
     :catch_2
@@ -993,25 +1042,25 @@
 
     goto :goto_2
 
-    .line 2499
+    .line 2511
     .restart local v3    # "lib":Ljava/lang/String;
-    :cond_5
+    :cond_6
     const-string v10, "com.sonyericsson.navigationbar"
 
     invoke-virtual {v3, v10}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
 
     move-result v10
 
-    if-eqz v10, :cond_6
+    if-eqz v10, :cond_7
 
-    .line 2500
+    .line 2512
     const-string v5, "SYSTEM_UI_FLAG_TRANSPARENT"
 
-    .line 2501
+    .line 2513
     goto :goto_4
 
-    .line 2495
-    :cond_6
+    .line 2507
+    :cond_7
     add-int/lit8 v8, v8, 0x1
 
     goto :goto_3

@@ -4,6 +4,12 @@
 
 当前仓库直接保存 `com.smartisanos.home_27.apk` 的解包结果，后续以修改 `smali` 和资源文件为主，维护方式尽量与本地 `handshaker-android-maintained` 保持一致。
 
+## 兼容性记录
+
+- 兼容性修复记录见 `docs/compatibility-fixes.md`
+- 目前已记录 Android 16 顶部状态栏 / 底部手势区布局错位修复
+- 这类问题优先记录根因、涉及 smali 文件和验证结果，方便后续继续整理
+
 ## 仓库结构
 
 - `com.smartisanos.home_27.apk`：原始 APK

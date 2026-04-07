@@ -959,7 +959,7 @@
 .end method
 
 .method private getScreenSize()[F
-    .locals 14
+    .locals 15
 
     .prologue
     const/16 v9, 0x11
@@ -969,7 +969,7 @@
     const/4 v12, 0x0
 
     .line 869
-    const/4 v7, 0x3
+    const/4 v7, 0x4
 
     new-array v4, v7, [F
 
@@ -1072,23 +1072,76 @@
     .line 899
     :cond_0
     :goto_1
-    int-to-float v7, v6
-
-    aput v7, v4, v12
+    move v14, v1
 
     .line 900
-    int-to-float v7, v1
+    .local v14, "screenHeightPixels":I
+    invoke-direct {p0, v0}, Lcom/smartisanos/launcher/ApplicationProxy;->getRealDisplayHeight(Landroid/view/Display;)I
 
-    aput v7, v4, v13
+    move-result v7
 
     .line 901
-    const/4 v7, 0x2
+    .local v7, "realHeightPixels":I
+    if-lez v7, :cond_3
 
-    iget v8, v2, Landroid/util/DisplayMetrics;->density:F
+    if-le v7, v14, :cond_3
 
-    aput v8, v4, v7
+    move v14, v7
 
-    .line 902
+    .line 905
+    :cond_3
+    if-lez v7, :cond_4
+
+    iget-object v8, p0, Lcom/smartisanos/launcher/ApplicationProxy;->application:Landroid/app/Application;
+
+    invoke-static {v8}, Lcom/smartisanos/launcher/ApplicationProxy;->hasNavigationBar(Landroid/content/Context;)Z
+
+    move-result v8
+
+    if-eqz v8, :cond_4
+
+    if-ne v1, v7, :cond_4
+
+    iget-object v8, p0, Lcom/smartisanos/launcher/ApplicationProxy;->application:Landroid/app/Application;
+
+    iget v10, v2, Landroid/util/DisplayMetrics;->density:F
+
+    invoke-direct {p0, v8, v10}, Lcom/smartisanos/launcher/ApplicationProxy;->getBottomSystemInset(Landroid/content/Context;F)I
+
+    move-result v11
+
+    if-lez v11, :cond_4
+
+    if-le v1, v11, :cond_4
+
+    sub-int/2addr v1, v11
+
+    .line 913
+    :cond_4
+    int-to-float v8, v6
+
+    aput v8, v4, v12
+
+    .line 914
+    int-to-float v8, v1
+
+    aput v8, v4, v13
+
+    .line 915
+    const/4 v8, 0x2
+
+    iget v10, v2, Landroid/util/DisplayMetrics;->density:F
+
+    aput v10, v4, v8
+
+    .line 916
+    const/4 v8, 0x3
+
+    int-to-float v10, v14
+
+    aput v10, v4, v8
+
+    .line 917
     return-object v4
 
     .line 880
@@ -1165,6 +1218,182 @@
     move-exception v7
 
     goto :goto_1
+.end method
+
+.method private getBottomSystemInset(Landroid/content/Context;F)I
+    .locals 8
+    .param p1, "context"    # Landroid/content/Context;
+    .param p2, "density"    # F
+
+    .prologue
+    .line 906
+    const/high16 v4, 0x42400000    # 48.0f
+
+    mul-float/2addr v4, p2
+
+    float-to-int v1, v4
+
+    .line 907
+    .local v1, "bottomInset":I
+    const/4 v2, 0x0
+
+    .line 909
+    .local v2, "navigationMode":I
+    :try_start_0
+    invoke-virtual {p1}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v4
+
+    const-string v5, "navigation_mode"
+
+    const/4 v6, 0x0
+
+    invoke-static {v4, v5, v6}, Landroid/provider/Settings$Secure;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;I)I
+
+    move-result v2
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    .line 913
+    :goto_0
+    const-string v3, "navigation_bar_height"
+
+    .line 914
+    .local v3, "resourceName":Ljava/lang/String;
+    const/4 v4, 0x2
+
+    if-ne v2, v4, :cond_0
+
+    .line 915
+    const-string v3, "navigation_bar_gesture_height"
+
+    .line 916
+    const/high16 v4, 0x41c00000    # 24.0f
+
+    mul-float/2addr v4, p2
+
+    float-to-int v1, v4
+
+    .line 919
+    :cond_0
+    invoke-virtual {p1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v4
+
+    const-string v5, "dimen"
+
+    const-string v6, "android"
+
+    invoke-virtual {v4, v3, v5, v6}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v0
+
+    .line 920
+    .local v0, "resourceId":I
+    if-lez v0, :cond_1
+
+    .line 921
+    invoke-virtual {p1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v4
+
+    invoke-virtual {v4, v0}, Landroid/content/res/Resources;->getDimensionPixelSize(I)I
+
+    move-result v1
+
+    .line 923
+    :cond_1
+    return v1
+
+    .line 910
+    .end local v0    # "resourceId":I
+    .end local v3    # "resourceName":Ljava/lang/String;
+    :catch_0
+    move-exception v4
+
+    goto :goto_0
+.end method
+
+.method private getRealDisplayHeight(Landroid/view/Display;)I
+    .locals 7
+    .param p1, "display"    # Landroid/view/Display;
+
+    .prologue
+    .line 927
+    const/4 v0, -0x1
+
+    .line 928
+    .local v0, "realHeight":I
+    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v2, 0x11
+
+    if-lt v1, v2, :cond_1
+
+    .line 930
+    :try_start_0
+    new-instance v3, Landroid/graphics/Point;
+
+    invoke-direct {v3}, Landroid/graphics/Point;-><init>()V
+
+    .line 931
+    .local v3, "realSize":Landroid/graphics/Point;
+    const-class v1, Landroid/view/Display;
+
+    const-string v2, "getRealSize"
+
+    const/4 v4, 0x1
+
+    new-array v4, v4, [Ljava/lang/Class;
+
+    const/4 v5, 0x0
+
+    const-class v6, Landroid/graphics/Point;
+
+    aput-object v6, v4, v5
+
+    invoke-virtual {v1, v2, v4}, Ljava/lang/Class;->getMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+
+    move-result-object v1
+
+    const/4 v2, 0x1
+
+    new-array v2, v2, [Ljava/lang/Object;
+
+    const/4 v4, 0x0
+
+    aput-object v3, v2, v4
+
+    invoke-virtual {v1, p1, v2}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+
+    .line 932
+    iget v1, v3, Landroid/graphics/Point;->y:I
+
+    iget v2, v3, Landroid/graphics/Point;->x:I
+
+    if-lt v1, v2, :cond_0
+
+    move v0, v1
+
+    goto :goto_0
+
+    .line 934
+    :cond_0
+    move v0, v2
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    .line 939
+    .end local v3    # "realSize":Landroid/graphics/Point;
+    :cond_1
+    :goto_0
+    return v0
+
+    .line 936
+    :catch_0
+    move-exception v1
+
+    goto :goto_0
 .end method
 
 .method private getStatusBarHeight(Landroid/content/Context;F)I
@@ -3141,15 +3370,24 @@
     invoke-static {v1, v2, v3, v4, v5}, Lcom/smartisanos/launcher/data/Constants;->init(Landroid/content/Context;IIFI)V
 
     .line 95
-    invoke-static {}, Lcom/smartisanos/launcher/view/TextView;->initTextPaints()V
+    const/4 v1, 0x3
+
+    aget v1, v0, v1
+
+    float-to-int v1, v1
+
+    sput v1, Lcom/smartisanos/launcher/data/Constants;->screen_height:I
 
     .line 96
-    sput-boolean v7, Lcom/smartisanos/launcher/ApplicationProxy;->modelInitDone:Z
+    invoke-static {}, Lcom/smartisanos/launcher/view/TextView;->initTextPaints()V
 
     .line 97
-    invoke-direct {p0}, Lcom/smartisanos/launcher/ApplicationProxy;->registerObserver()V
+    sput-boolean v7, Lcom/smartisanos/launcher/ApplicationProxy;->modelInitDone:Z
 
     .line 98
+    invoke-direct {p0}, Lcom/smartisanos/launcher/ApplicationProxy;->registerObserver()V
+
+    .line 99
     invoke-static {}, Lcom/smartisanos/home/net/NetStatusUtil;->isNetworkConnected()Z
 
     move-result v1
