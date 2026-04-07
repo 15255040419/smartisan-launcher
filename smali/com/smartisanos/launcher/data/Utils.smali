@@ -447,6 +447,94 @@
 
     .line 2333
     .local v4, "infos":[Ljava/lang/String;
+    const/4 v9, 0x2
+
+    if-ne p1, v9, :cond_maintained_theme_done
+
+    if-eqz p0, :return_maintained_theme
+
+    invoke-virtual {p0}, Ljava/lang/String;->trim()Ljava/lang/String;
+
+    move-result-object v9
+
+    invoke-virtual {v9}, Ljava/lang/String;->length()I
+
+    move-result v9
+
+    if-lez v9, :return_maintained_theme
+
+    const/4 v9, 0x2
+
+    new-array v4, v9, [Ljava/lang/String;
+
+    const/4 v9, 0x0
+
+    aput-object p0, v4, v9
+
+    new-instance v9, Ljava/lang/StringBuilder;
+
+    invoke-direct {v9}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v10, "https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/"
+
+    invoke-virtual {v9, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v9
+
+    invoke-virtual {v9, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v9
+
+    const-string v10, ".apk"
+
+    invoke-virtual {v9, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v9
+
+    invoke-virtual {v9}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v8
+
+    const/4 v9, 0x1
+
+    aput-object v8, v4, v9
+
+    sget-object v9, Lcom/smartisanos/launcher/data/Utils;->log:Lcom/smartisanos/launcher/LOG;
+
+    const-string v10, "DEBUG"
+
+    new-instance v11, Ljava/lang/StringBuilder;
+
+    invoke-direct {v11}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v12, "theme dl url ==> ["
+
+    invoke-virtual {v11, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v11
+
+    invoke-virtual {v11, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v11
+
+    const-string v12, "]"
+
+    invoke-virtual {v11, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v11
+
+    invoke-virtual {v11}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v11
+
+    invoke-virtual {v9, v10, v11}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+
+    return-object v4
+
+    :return_maintained_theme
+    return-object v4
+
+    :cond_maintained_theme_done
     invoke-static {p0, p1}, Lcom/smartisanos/launcher/data/Utils;->getUpdateURL(Ljava/lang/String;I)Ljava/lang/String;
 
     move-result-object v0

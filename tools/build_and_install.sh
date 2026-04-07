@@ -16,6 +16,19 @@ need_cmd() {
   }
 }
 
+clean_macos_metadata() {
+  find "$repo_root" -type f -name .DS_Store \
+    ! -path "$repo_root/.git/*" \
+    -exec rm -f {} +
+}
+
+clean_apktool_workspace() {
+  if [ -d "$build_dir/apk" ]; then
+    find "$build_dir/apk" -mindepth 1 -exec rm -rf {} +
+  fi
+  rm -f "$build_dir/resources.zip"
+}
+
 find_adb() {
   if command -v adb >/dev/null 2>&1; then
     command -v adb
@@ -42,6 +55,8 @@ find_adb() {
 
 build_apk() {
   mkdir -p "$build_dir"
+  clean_macos_metadata
+  clean_apktool_workspace
   rm -f "$unsigned_apk" "$signed_apk"
   apktool b "$repo_root" -o "$unsigned_apk"
 }

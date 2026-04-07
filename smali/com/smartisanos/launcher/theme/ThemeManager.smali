@@ -1454,7 +1454,7 @@
 .end method
 
 .method public static getInstalledThemes(Landroid/content/Context;)Ljava/util/List;
-    .locals 13
+    .locals 7
     .param p0, "context"    # Landroid/content/Context;
     .annotation system Ldalvik/annotation/Signature;
         value = {
@@ -1470,30 +1470,30 @@
 
     .prologue
     .line 491
-    new-instance v9, Ljava/util/HashMap;
+    new-instance v5, Ljava/util/ArrayList;
 
-    invoke-direct {v9}, Ljava/util/HashMap;-><init>()V
+    invoke-direct {v5}, Ljava/util/ArrayList;-><init>()V
 
     .line 492
-    .local v9, "themePkgMap":Ljava/util/Map;, "Ljava/util/Map<Ljava/lang/String;Lcom/smartisanos/launcher/theme/Theme;>;"
-    sget-object v11, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_ORDER:Ljava/util/List;
+    .local v5, "themes":Ljava/util/List;, "Ljava/util/List<Lcom/smartisanos/launcher/theme/Theme;>;"
+    sget-object v6, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_ORDER:Ljava/util/List;
 
-    invoke-interface {v11}, Ljava/util/List;->size()I
+    invoke-interface {v6}, Ljava/util/List;->size()I
 
-    move-result v6
+    move-result v4
 
     .line 493
-    .local v6, "size":I
+    .local v4, "size":I
     const/4 v0, 0x0
 
     .local v0, "i":I
     :goto_0
-    if-ge v0, v6, :cond_0
+    if-ge v0, v4, :cond_1
 
     .line 494
-    sget-object v11, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_ORDER:Ljava/util/List;
+    sget-object v6, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_ORDER:Ljava/util/List;
 
-    invoke-interface {v11, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    invoke-interface {v6, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
 
     move-result-object v1
 
@@ -1501,144 +1501,44 @@
 
     .line 495
     .local v1, "id":Ljava/lang/String;
-    sget-object v11, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_MAP:Ljava/util/Map;
+    sget-object v6, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_MAP:Ljava/util/Map;
 
-    invoke-interface {v11, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    invoke-interface {v6, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
 
-    move-result-object v7
+    move-result-object v2
 
-    check-cast v7, Lcom/smartisanos/launcher/theme/Theme;
+    check-cast v2, Lcom/smartisanos/launcher/theme/Theme;
 
     .line 496
-    .local v7, "theme":Lcom/smartisanos/launcher/theme/Theme;
-    iget-object v11, v7, Lcom/smartisanos/launcher/theme/Theme;->mPackage:Ljava/lang/String;
+    .local v2, "theme":Lcom/smartisanos/launcher/theme/Theme;
+    if-eqz v2, :cond_0
 
-    invoke-interface {v9, v11, v7}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .line 497
+    iget-object v6, v2, Lcom/smartisanos/launcher/theme/Theme;->mPackage:Ljava/lang/String;
+
+    invoke-static {p0, v6}, Lcom/smartisanos/launcher/theme/ThemeManager;->getInstalledThemeByPackage(Landroid/content/Context;Ljava/lang/String;)Lcom/smartisanos/launcher/theme/Theme;
+
+    move-result-object v3
+
+    .line 498
+    .local v3, "installedTheme":Lcom/smartisanos/launcher/theme/Theme;
+    if-eqz v3, :cond_0
+
+    .line 499
+    invoke-interface {v5, v3}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 
     .line 493
+    .end local v3    # "installedTheme":Lcom/smartisanos/launcher/theme/Theme;
+    :cond_0
     add-int/lit8 v0, v0, 0x1
 
     goto :goto_0
 
-    .line 498
-    .end local v1    # "id":Ljava/lang/String;
-    .end local v7    # "theme":Lcom/smartisanos/launcher/theme/Theme;
-    :cond_0
-    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
-
-    move-result-object v5
-
-    .line 499
-    .local v5, "pm":Landroid/content/pm/PackageManager;
-    const/4 v11, 0x0
-
-    invoke-virtual {v5, v11}, Landroid/content/pm/PackageManager;->getInstalledPackages(I)Ljava/util/List;
-
-    move-result-object v3
-
-    .line 500
-    .local v3, "packages":Ljava/util/List;, "Ljava/util/List<Landroid/content/pm/PackageInfo;>;"
-    new-instance v8, Ljava/util/HashMap;
-
-    invoke-direct {v8}, Ljava/util/HashMap;-><init>()V
-
-    .line 501
-    .local v8, "themeMap":Ljava/util/Map;, "Ljava/util/Map<Ljava/lang/String;Lcom/smartisanos/launcher/theme/Theme;>;"
-    invoke-interface {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
-
-    move-result-object v11
-
-    :cond_1
-    :goto_1
-    invoke-interface {v11}, Ljava/util/Iterator;->hasNext()Z
-
-    move-result v12
-
-    if-eqz v12, :cond_2
-
-    invoke-interface {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
-
-    move-result-object v2
-
-    check-cast v2, Landroid/content/pm/PackageInfo;
-
-    .line 502
-    .local v2, "packageInfo":Landroid/content/pm/PackageInfo;
-    iget-object v4, v2, Landroid/content/pm/PackageInfo;->packageName:Ljava/lang/String;
-
     .line 503
-    .local v4, "pkg":Ljava/lang/String;
-    invoke-interface {v9, v4}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
-
-    move-result-object v7
-
-    check-cast v7, Lcom/smartisanos/launcher/theme/Theme;
-
-    .line 504
-    .restart local v7    # "theme":Lcom/smartisanos/launcher/theme/Theme;
-    if-eqz v7, :cond_1
-
-    .line 505
-    invoke-virtual {v7, v2, v5}, Lcom/smartisanos/launcher/theme/Theme;->updateFromPackage(Landroid/content/pm/PackageInfo;Landroid/content/pm/PackageManager;)V
-
-    .line 506
-    iget-object v12, v7, Lcom/smartisanos/launcher/theme/Theme;->mId:Ljava/lang/String;
-
-    invoke-interface {v8, v12, v7}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-
-    goto :goto_1
-
-    .line 509
-    .end local v2    # "packageInfo":Landroid/content/pm/PackageInfo;
-    .end local v4    # "pkg":Ljava/lang/String;
-    .end local v7    # "theme":Lcom/smartisanos/launcher/theme/Theme;
-    :cond_2
-    new-instance v10, Ljava/util/ArrayList;
-
-    invoke-direct {v10}, Ljava/util/ArrayList;-><init>()V
-
-    .line 510
-    .local v10, "themes":Ljava/util/List;, "Ljava/util/List<Lcom/smartisanos/launcher/theme/Theme;>;"
-    const/4 v0, 0x0
-
-    :goto_2
-    if-ge v0, v6, :cond_4
-
-    .line 511
-    sget-object v11, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_ORDER:Ljava/util/List;
-
-    invoke-interface {v11, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
-
-    move-result-object v1
-
-    check-cast v1, Ljava/lang/String;
-
-    .line 512
-    .restart local v1    # "id":Ljava/lang/String;
-    invoke-interface {v8, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
-
-    move-result-object v7
-
-    check-cast v7, Lcom/smartisanos/launcher/theme/Theme;
-
-    .line 513
-    .restart local v7    # "theme":Lcom/smartisanos/launcher/theme/Theme;
-    if-eqz v7, :cond_3
-
-    .line 514
-    invoke-interface {v10, v7}, Ljava/util/List;->add(Ljava/lang/Object;)Z
-
-    .line 510
-    :cond_3
-    add-int/lit8 v0, v0, 0x1
-
-    goto :goto_2
-
-    .line 517
     .end local v1    # "id":Ljava/lang/String;
-    .end local v7    # "theme":Lcom/smartisanos/launcher/theme/Theme;
-    :cond_4
-    return-object v10
+    .end local v2    # "theme":Lcom/smartisanos/launcher/theme/Theme;
+    :cond_1
+    return-object v5
 .end method
 
 .method public static getNotInstalledThemeList(Ljava/util/List;)Ljava/util/List;

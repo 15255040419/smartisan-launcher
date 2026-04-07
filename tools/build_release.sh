@@ -22,6 +22,19 @@ require_file() {
   [ -f "$1" ] || fail "missing required file: $1"
 }
 
+clean_macos_metadata() {
+  find "$repo_root" -type f -name .DS_Store \
+    ! -path "$repo_root/.git/*" \
+    -exec rm -f {} +
+}
+
+clean_apktool_workspace() {
+  if [ -d "$repo_root/build/apk" ]; then
+    find "$repo_root/build/apk" -mindepth 1 -exec rm -rf {} +
+  fi
+  rm -f "$repo_root/build/resources.zip"
+}
+
 find_sdk_tool() {
   tool_name="$1"
 
@@ -106,8 +119,9 @@ sync_versions() {
 
 build_apk() {
   mkdir -p "$build_dir"
+  clean_macos_metadata
   # Apktool reuses build intermediates and can keep stale version metadata.
-  rm -rf "$repo_root/build/apk" "$repo_root/build/resources.zip"
+  clean_apktool_workspace
   rm -f "$unsigned_apk" "$aligned_apk" "$signed_apk"
   apktool b "$repo_root" -o "$unsigned_apk"
 }

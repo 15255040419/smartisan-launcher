@@ -1549,6 +1549,7 @@
     <public type="string" name="weibo" id="0x7f080109" />
     <public type="string" name="add_weather_failed" id="0x7f08010a" />
     <public type="string" name="added_city" id="0x7f08010b" />
+    <public type="string" name="theme_manual_install_tip" id="0x7f08010c" />
     <public type="string" name="app_install_txt" id="0x7f08010d" />
     <public type="string" name="app_open_txt" id="0x7f08010e" />
     <public type="string" name="aqi" id="0x7f08010f" />

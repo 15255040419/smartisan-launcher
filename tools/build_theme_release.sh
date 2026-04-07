@@ -26,6 +26,12 @@ require_file() {
   [ -f "$1" ] || fail "missing required file: $1"
 }
 
+clean_macos_metadata() {
+  target_dir="$1"
+  [ -d "$target_dir" ] || return 0
+  find "$target_dir" -type f -name .DS_Store -exec rm -f {} +
+}
+
 find_sdk_tool() {
   tool_name="$1"
 
@@ -169,6 +175,7 @@ build_theme() {
   rm -f "$signed_apk"
 
   apktool d -f "$source_apk" -o "$theme_work_dir" >/dev/null
+  clean_macos_metadata "$theme_work_dir"
   patch_apktool_yml "$theme_work_dir/apktool.yml"
   apktool b "$theme_work_dir" -o "$unsigned_apk" >/dev/null
   sign_apk "$unsigned_apk" "$aligned_apk" "$signed_apk"

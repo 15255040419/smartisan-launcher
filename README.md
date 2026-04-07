@@ -108,6 +108,8 @@ EOF
 - 主题 `targetSdkVersion`：默认改为 `36`
 - 签名：复用 `.local/signing/release.env`
 - `build/` 只保留中间解包/构建产物，不作为最终分发目录
+- Launcher 在线主题下载固定指向 `gh-proxy` + GitHub Release：`themes-v1`
+- GitHub Release 里的主题资产文件名必须保持为 `<主题包名>.apk`
 
 常用示例：
 
@@ -116,6 +118,31 @@ THEME_LIMIT=2 ./tools/build_theme_release.sh
 THEME_FILTER=Literary ./tools/build_theme_release.sh
 KEEP_THEME_WORK=1 ./tools/build_theme_release.sh
 ```
+
+## 主题分发
+
+Launcher 里的在线主题现在默认从这个固定前缀下载：
+
+```text
+https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/
+```
+
+使用方式保持简单：
+
+- 只需要维护一个固定的主题 release/tag：`themes-v1`
+- 把 `themes/maintained/` 下的 APK 上传为 release assets
+- 资产文件名必须和主题包名一致，例如 `com.smartisanos.launcher.theme.aero.apk`
+- 后续普通 Launcher release 不需要重复附带这些主题；只有主题本身发生变化时，才需要更新这个固定 release
+
+## 主题兼容性说明
+
+部分 ROM 上，`PackageManager.getInstalledPackages(0)` 的结果和 AOSP 不完全一致。
+
+- Android 16 类原生系统上，旧逻辑还能通过全量枚举拿到已安装主题
+- HyperOS 1.0.2.0 / Android 13 上，在线主题详情页可以通过 `getPackageInfo(pkg, 0)` 判断主题已安装，但“本地主题”列表未必能通过全量枚举拿到同一个主题包
+- 如果继续依赖全量枚举，就会出现“详情页显示设定，但本地主题里看不到，点击设定后卡住”的不一致现象
+
+维护版已经把主题安装判断统一为“按已知主题包名逐个 `getPackageInfo()` 探测”，不再依赖 `getInstalledPackages(0)` 做主题识别。
 
 ## 安装说明
 
