@@ -4908,14 +4908,6 @@
 
     add-float/2addr v14, v15
 
-    iget v15, v9, Lcom/smartisanos/launcher/data/LayoutProperty;->page_title_height:F
-
-    add-float/2addr v14, v15
-
-    iget v15, v9, Lcom/smartisanos/launcher/data/LayoutProperty;->title_page_spacing:F
-
-    add-float/2addr v14, v15
-
     const/high16 v15, 0x3f000000    # 0.5f
 
     iget v0, v9, Lcom/smartisanos/launcher/data/LayoutProperty;->page_height:F
@@ -5257,14 +5249,6 @@
     int-to-float v14, v14
 
     iget v15, v9, Lcom/smartisanos/launcher/data/LayoutProperty;->page_view_margin_top:F
-
-    add-float/2addr v14, v15
-
-    iget v15, v9, Lcom/smartisanos/launcher/data/LayoutProperty;->page_title_height:F
-
-    add-float/2addr v14, v15
-
-    iget v15, v9, Lcom/smartisanos/launcher/data/LayoutProperty;->title_page_spacing:F
 
     add-float/2addr v14, v15
 

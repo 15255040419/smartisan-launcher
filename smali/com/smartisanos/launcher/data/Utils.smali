@@ -895,7 +895,6 @@
     .line 2467
     or-int/lit16 v1, v1, 0x200
 
-    .line 2468
     or-int/lit16 v1, v1, 0x400
 
     # Android 6.0+ Light Status Bar (0x2000)
@@ -920,20 +919,16 @@
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->clearFlags(I)V
 
-    .line 2471
     const/high16 v8, -0x80000000
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->addFlags(I)V
 
-    .line 2472
     const/4 v8, 0x0
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->setStatusBarColor(I)V
 
-    .line 2473
     invoke-virtual {p1, v8}, Landroid/view/Window;->setNavigationBarColor(I)V
 
-    .line 2474
     return-void
 
     .line 2475

@@ -407,6 +407,12 @@ https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/rel
 - 四指左右滑动切换主题时，偶发停留在“正在加载主题”
 - 天气图标继续走旧天气接口而直接提示不可用
 
+## 兼容性记录
+
+- 兼容性修复记录见 `docs/compatibility-fixes.md`
+- 目前已记录 Android 16 顶部状态栏 / 底部手势区布局错位修复
+- 这类问题优先记录根因、涉及 smali 文件和验证结果，方便后续继续整理
+
 ## 仓库结构
 
 - `com.smartisanos.home_27.apk`：原始 APK
