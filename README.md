@@ -1,30 +1,140 @@
-# Smartisan Launcher Maintained
+<div align="center">
+  <img src="./res/drawable-xhdpi-v4/ic_launcher.png" alt="Smartisan Launcher Maintained Logo" width="124" height="124" />
 
-基于 `apktool` 的锤子桌面非官方维护仓库。
+  <h1>Smartisan Launcher Maintained</h1>
 
-当前仓库直接保存 `com.smartisanos.home_27.apk` 的解包结果，后续以修改 `smali` 和资源文件为主，维护方式尽量与本地 `handshaker-android-maintained` 保持一致。
+  <p><strong>面向新版 Android 的锤子桌面非官方维护版</strong></p>
+  <p>基于 <code>apktool</code> 直接维护 <code>com.smartisanos.home</code> 的反编译结果，修复新版 Android 上的安装、布局与主题兼容问题，并补齐旧桌面的可用主题资产。</p>
 
-## 兼容性记录
+  <p>
+    <a href="https://github.com/rianlu/smartisan-launcher-maintained/releases/latest">
+      <img alt="Release" src="https://img.shields.io/github/v/release/rianlu/smartisan-launcher-maintained?display_name=tag&style=for-the-badge" />
+    </a>
+    <img alt="Android 16" src="https://img.shields.io/badge/Android-16%20Compatible-4CAF50?style=for-the-badge" />
+    <img alt="Themes" src="https://img.shields.io/badge/Themes-35%20Assets-1E88E5?style=for-the-badge" />
+    <img alt="apktool" src="https://img.shields.io/badge/apktool-smali%20Maintained-546E7A?style=for-the-badge" />
+  </p>
+</div>
 
-- 兼容性修复记录见 `docs/compatibility-fixes.md`
-- 目前已记录 Android 16 顶部状态栏 / 底部手势区布局错位修复
-- 这类问题优先记录根因、涉及 smali 文件和验证结果，方便后续继续整理
+> [!IMPORTANT]
+> 本仓库是锤子桌面的非官方维护项目，与原厂无官方关联。仓库内容主要用于个人学习、兼容性分析和非商业研究。详细说明见 [NOTICE.md](NOTICE.md)。
+
+## 相关项目
+
+- 同系列维护项目：[HandShaker Android Maintained](https://github.com/rianlu/handshaker-android-maintained)
+
+## 项目亮点
+
+- 修复新版 Android 上的安装与启动兼容问题
+- 修复 Android 16 顶部状态栏和底部手势区导致的桌面布局错位
+- 统一主题安装识别逻辑，兼容 Android 16 与 HyperOS / Android 13
+- 为旧桌面补齐一批新版主题，并统一预览图生成方案
+- 主题 APK 已支持批量重打包、改 `targetSdkVersion`、重签名与 GitHub Release 分发
+- 保留 `apktool` 解包结构，便于后续继续直接修改 `smali` 和资源
+
+## 当前状态
+
+- 维护版 Launcher 已可在新版 Android 上安装、打开并继续做后续兼容维护
+- 兼容性修复记录集中在 [docs/compatibility-fixes.md](docs/compatibility-fixes.md)
+- 在线主题下载固定指向 `gh-proxy` + GitHub Release 的 `themes-v1`
+- 截至 2026-04-08，`themes-v1` 已发布 35 个主题资产
+- `COPPER_RED` 和 `GINTAMA` 仍保留本地识别能力，但默认不再显示在“在线主题”列表中
+
+## 已实测环境
+
+- Redmi Note 12 Turbo / Evolution X / Android 16
+- Xiaomi Pad 5 Pro / HyperOS 1.0.2.0 / Android 13
+
+> [!NOTE]
+> 当前仓库明确实测的是以上设备与系统组合。不同品牌、ROM、Android 版本下的表现可能存在差异，请不要默认视为所有设备都完全一致。
+
+## 下载与使用
+
+### 获取 Launcher APK
+
+- 推荐直接前往 [Releases](https://github.com/rianlu/smartisan-launcher-maintained/releases) 页面下载已签名 APK
+- 当前最新版本可在 [Latest Release](https://github.com/rianlu/smartisan-launcher-maintained/releases/latest) 获取
+
+### 安装说明
+
+- 维护版保持原包名 `com.smartisanos.home`
+- 因为维护版和原版签名不同，首次安装前必须先卸载原版锤子桌面
+- 之后只要一直使用同一把维护版签名，就可以在维护版之间覆盖升级
+
+### 主题下载说明
+
+- Launcher 在线主题默认通过下面这个固定前缀下载：
+
+```text
+https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/
+```
+
+- GitHub Release 里的主题资产文件名必须保持为 `<主题包名>.apk`
+- 旧版主题在新版 Android 上常因 target 过旧被拦截安装；维护版主题已统一重打包、改 `targetSdkVersion` 为 `36` 并重新签名
+- 主题 release 只在主题资产变化时更新，不跟随每次 Launcher release 重复发布
+
+## 主题维护与兼容性
+
+### 当前处理方式
+
+- 旧桌面的主题安装判断已经统一为“按已知主题包名逐个 `getPackageInfo()` 探测”，不再依赖 `getInstalledPackages(0)` 的全量枚举
+- 这样可以避免 HyperOS 1.0.2.0 / Android 13 上出现“详情页显示设定，但本地主题里看不到，点击后卡住”的不一致问题
+- `COPPER_RED` 和 `GINTAMA` 由于当前缺少可用上游包，默认从在线主题列表隐藏，但用户手动安装后仍能被本地主题识别
+
+### 主题补充范围
+
+保守方案下，维护版已把以下新版主题补进旧主题列表与包名映射：
+
+- `BAMBOO`
+- `BLUE_GREEN`
+- `COPPER_RED`
+- `DARK_GRAY`
+- `DEEP_BLUE`
+- `GINTAMA`
+- `GRID`
+- `LAKE`
+- `LEAF`
+- `LIGHT_GOLD`
+- `RAVEN`
+- `WINE_RED`
+
+为避免把透明主题相关的额外行为一并带入旧桌面，当前没有把 `TRANS` 纳入旧项目主题列表。
+
+### 预览图策略
+
+- 从 2026-04-08 起，旧桌面的主题预览资产默认以新桌面仓库内置的 `assets/theme_preview` 为准
+- 再转换成旧桌面使用的 `preview_9_S`、`preview_16_S`、`preview_9_L`、`preview_16_L` 文件名，避免直接使用主题 APK 自带 `preview_9/16` 时出现重复预览问题
+- 当前只有 `smartisan_theme_mist` 仍沿用旧项目现有资产作为兜底，因为新桌面仓库里没有对应目录
+- `thumbnail_settings.png` 和 `thumbnail_settings_16.png` 仍保留原有提取逻辑，供设置页缩略图继续使用
+- 新增主题缺少旧桌面所需纯色 `dot.png` 时，维护版会根据主题缩略图主色生成兼容旧样式的圆点资源
+
+## 已修复问题
+
+- Android 16 上应用无法安装或启动
+- Android 16 顶部状态栏 / 底部手势区导致的桌面布局错位
+- 旧主题 APK 在新版 Android 上无法直接安装
+- HyperOS 1.0.2.0 / Android 13 上“在线主题已安装但本地主题不可见”的识别不一致
+- 旧桌面与新增主题预览图来源不一致、重复预览和圆点资源异常
+- 在线主题失效入口未隐藏导致的详情页异常
 
 ## 仓库结构
 
 - `com.smartisanos.home_27.apk`：原始 APK
 - `AndroidManifest.xml`、`apktool.yml`：apktool 解包后的核心描述文件
-- `smali/`：主要代码
+- `smali/`：反编译后的主要代码
 - `res/`、`assets/`、`lib/`、`unknown/`、`original/`：资源和原始附带文件
-- `tools/`：构建、签名、发布脚本
-- `docs/superpowers/`：本次设计和计划记录
+- `themes/`：主题资产说明、下载和维护脚本相关目录
+- `tools/`：检查、构建、签名、发布相关脚本
+- `docs/compatibility-fixes.md`：兼容性修复记录
 
-## 环境要求
+## 开发者说明
+
+### 环境要求
 
 - `apktool`
 - JDK，且命令行可用 `keytool` 和 `jarsigner`
 - `adb`
-- Android SDK `build-tools` 中的 `zipalign` / `apksigner`（release 构建优先使用）
+- Android SDK `build-tools` 中的 `zipalign` / `apksigner`
 
 `build_release.sh` 会优先从这些位置查找 `zipalign` 和 `apksigner`：
 
@@ -34,7 +144,7 @@
 4. `~/Library/Android/sdk`
 5. `~/Android/Sdk`
 
-## 常用命令
+### 常用命令
 
 先做安装兼容性检查：
 
@@ -54,26 +164,24 @@
 sh ./tools/build_release.sh
 ```
 
-## Release 版本维护
+### Release 版本维护
 
 - 日常不要手动改 `apktool.yml`
 - 版本入口统一在 `tools/release.conf`
 - 修改 `RELEASE_SUFFIX` 和 `RELEASE_VERSION_CODE` 后，再运行 `sh ./tools/build_release.sh`
 - release 构建产物会输出到 `build/release/`
 
-## Release 签名配置
+### Release 签名配置
 
-本地签名目录与 `Handshaker` 保持一致，统一使用：
+本地签名目录与 `HandShaker` 保持一致，统一使用：
 
 ```sh
 .local/signing/
 ```
 
-推荐直接复用现有 `Handshaker Android Maintained` 的 release keystore，不必为这个仓库单独再创建一把签名。
+推荐直接复用现有 `HandShaker Android Maintained` 的 release keystore，不必为这个仓库单独再创建一把签名。
 
-如果你已有那把签名，建议直接复制到当前仓库的 `.local/signing/` 下统一管理；如果没有，再自行准备一把固定的 release keystore。
-
-当前推荐文件名与 `Handshaker` 保持一致：
+当前推荐文件名与 `HandShaker` 保持一致：
 
 ```sh
 .local/signing/handshaker-maintained-release.jks
@@ -93,7 +201,7 @@ EOF
 
 如果 `RELEASE_KEYSTORE_FILE` 不是绝对路径，脚本会默认从 `.local/signing/` 下查找。
 
-## 主题 APK 维护
+### 主题 APK 维护
 
 先批量下载原始主题 APK：
 
@@ -121,10 +229,8 @@ EOF
 - 主题 `targetSdkVersion`：默认改为 `36`
 - 签名：复用 `.local/signing/release.env`
 - `themes/source-apks/*.apk` 和 `themes/maintained/*.apk` 默认不提交进 git，只保留在本地与 GitHub Release
-- `build/` 只保留中间解包/构建产物，不作为最终分发目录
-- Launcher 在线主题下载固定指向 `gh-proxy` + GitHub Release：`themes-v1`
-- GitHub Release 里的主题资产文件名必须保持为 `<主题包名>.apk`
-- 更具体的主题资产维护说明见 `themes/README.md`
+- `build/` 只保留中间解包 / 构建产物，不作为最终分发目录
+- 更具体的主题资产维护说明见 [themes/README.md](themes/README.md)
 
 常用示例：
 
@@ -135,65 +241,9 @@ KEEP_THEME_WORK=1 ./tools/build_theme_release.sh
 ./tools/extract_theme_previews.sh
 ```
 
-## 主题分发
+## 版权与免责声明
 
-Launcher 里的在线主题现在默认从这个固定前缀下载：
-
-```text
-https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/
-```
-
-使用方式保持简单：
-
-- 只需要维护一个固定的主题 release/tag：`themes-v1`
-- 把 `themes/maintained/` 下的 APK 上传为 release assets
-- 资产文件名必须和主题包名一致，例如 `com.smartisanos.launcher.theme.aero.apk`
-- 后续普通 Launcher release 不需要重复附带这些主题；只有主题本身发生变化时，才需要更新这个固定 release
-- 截至 2026-04-08，`themes-v1` 已发布 35 个主题资产；`copperred` 和 `gintama` 仍缺少可用上游包
-
-## 主题兼容性说明
-
-部分 ROM 上，`PackageManager.getInstalledPackages(0)` 的结果和 AOSP 不完全一致。
-
-- Android 16 类原生系统上，旧逻辑还能通过全量枚举拿到已安装主题
-- HyperOS 1.0.2.0 / Android 13 上，在线主题详情页可以通过 `getPackageInfo(pkg, 0)` 判断主题已安装，但“本地主题”列表未必能通过全量枚举拿到同一个主题包
-- 如果继续依赖全量枚举，就会出现“详情页显示设定，但本地主题里看不到，点击设定后卡住”的不一致现象
-
-维护版已经把主题安装判断统一为“按已知主题包名逐个 `getPackageInfo()` 探测”，不再依赖 `getInstalledPackages(0)` 做主题识别。
-
-对于当前上游接口已失效的 `COPPER_RED` 和 `GINTAMA`：
-
-- 仍保留在主题定义与包名映射中，方便用户手动安装后被本地主题识别
-- 但默认不再出现在“在线主题”列表里，避免点击后无可用下载源
-- 主题详情页底部的全量主题横条也会同步隐藏，避免继续暴露无效入口；如果当前正查看这两个主题，则仍保留当前项，避免详情页异常
-
-## 主题支持扩充
-
-保守方案下，维护版已把以下新版主题补进旧主题列表与包名映射：
-
-- `BAMBOO`
-- `BLUE_GREEN`
-- `COPPER_RED`
-- `DARK_GRAY`
-- `DEEP_BLUE`
-- `GINTAMA`
-- `GRID`
-- `LAKE`
-- `LEAF`
-- `LIGHT_GOLD`
-- `RAVEN`
-- `WINE_RED`
-
-为避免把透明主题相关的额外行为一并带入旧桌面，当前没有把 `TRANS` 纳入旧项目主题列表。
-
-由于这些新版主题 APK 没有提供旧桌面所需的纯色 `dot.png`，维护版会根据主题缩略图主色生成兼容旧样式的圆点资源，避免在详情页底部横条里显示成桌面缩略图。
-
-从 2026-04-08 起，旧桌面的主题预览资产默认以新桌面仓库内置的 `assets/theme_preview` 为准，再转换成旧桌面使用的 `preview_9_S` / `preview_16_S` / `preview_9_L` / `preview_16_L` 文件名。这样可以避免直接使用主题 APK 自带 `preview_9/16` 时出现的重复预览问题，并让旧主题与新增主题的预览风格保持一致。
-
-当前只有 `smartisan_theme_mist` 仍沿用旧项目现有资产作为兜底，因为新桌面仓库里没有对应目录。`thumbnail_settings.png` / `thumbnail_settings_16.png` 仍保留原有提取逻辑，供设置页缩略图继续使用。
-
-## 安装说明
-
-维护版保持原包名 `com.smartisanos.home`。
-
-因为维护版和原版签名不同，首次安装前必须先卸载原版锤子桌面。之后只要一直使用同一把维护版签名，就可以在维护版之间覆盖升级。
+- 原始应用及相关商标、名称、资源和版权归原权利人所有
+- 本仓库不主张对原始应用本体及其相关知识产权拥有任何权利
+- 当前仓库未对整体内容附加通用开源许可证
+- 如你计划基于本仓库进行公开分发、商用集成或其他超出个人研究范围的用途，请自行评估相关风险
