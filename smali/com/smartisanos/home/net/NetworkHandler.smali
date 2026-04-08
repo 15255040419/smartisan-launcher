@@ -390,354 +390,633 @@
 .end method
 
 .method private static fetchIcon(Lcom/smartisanos/launcher/data/ItemInfo;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Z
-    .locals 14
+    .locals 7
     .param p0, "item"    # Lcom/smartisanos/launcher/data/ItemInfo;
     .param p1, "icon"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
 
     .prologue
+    const/4 v6, 0x0
+
     .line 407
     if-nez p0, :cond_0
 
     .line 408
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
+    sget-object v0, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
 
-    const-string v11, "DEBUG"
+    const-string v1, "DEBUG"
 
-    const-string v12, "fetchIcon return by item is null"
+    const-string v2, "fetchIcon return by item is null"
 
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v0, v1, v2}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
 
     .line 409
-    const/4 v10, 0x0
-
-    .line 472
-    :goto_0
-    return v10
+    return v6
 
     .line 412
     :cond_0
-    iget-object v9, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->iconDrawableName:Ljava/lang/String;
 
     .line 413
-    .local v9, "pkg":Ljava/lang/String;
-    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+    .local v0, "drawable":Ljava/lang/String;
+    if-eqz v0, :cond_4
 
     .line 414
-    .local v0, "cmp":Ljava/lang/String;
-    iget-object v2, p0, Lcom/smartisanos/launcher/data/ItemInfo;->iconDrawableName:Ljava/lang/String;
-
-    .line 415
-    .local v2, "drawable":Ljava/lang/String;
-    const/4 v5, 0x0
-
-    .line 416
-    .local v5, "md5":Ljava/lang/String;
-    const/4 v4, 0x0
-
-    .line 417
-    .local v4, "lastUpdateTime":Ljava/lang/String;
-    if-eqz p1, :cond_1
-
-    .line 418
-    iget-object v5, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
-
-    .line 419
-    iget-object v4, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->lastUpdateTime:Ljava/lang/String;
-
-    .line 422
-    :cond_1
-    if-nez v2, :cond_2
-
-    .line 423
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
-
-    const-string v11, "DEBUG"
-
-    new-instance v12, Ljava/lang/StringBuilder;
-
-    invoke-direct {v12}, Ljava/lang/StringBuilder;-><init>()V
-
-    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    const-string v13, ";"
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    invoke-virtual {v12, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    const-string v13, " lose icon drawable name, so return !"
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    invoke-virtual {v12}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v12
-
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
-
-    .line 424
-    const/4 v10, 0x0
-
-    goto :goto_0
-
-    .line 426
-    :cond_2
     invoke-static {p0}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getInfoFromServer(Lcom/smartisanos/launcher/data/ItemInfo;)Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-
-    move-result-object v3
-
-    .line 427
-    .local v3, "iconInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-    if-nez v3, :cond_3
-
-    .line 428
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
-
-    const-string v11, "DEBUG"
-
-    const-string v12, "return false, by getInfoFromServer return null"
-
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
-
-    .line 429
-    const/4 v10, 0x0
-
-    goto :goto_0
-
-    .line 431
-    :cond_3
-    iget-object v6, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
-
-    .line 432
-    .local v6, "md5FromServer":Ljava/lang/String;
-    if-nez v6, :cond_4
-
-    .line 433
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
-
-    const-string v11, "DEBUG"
-
-    const-string v12, "return false, by can\'t get icon info from server"
-
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
-
-    .line 434
-    const/4 v10, 0x0
-
-    goto :goto_0
-
-    .line 436
-    :cond_4
-    iget-wide v10, p0, Lcom/smartisanos/launcher/data/ItemInfo;->id:J
-
-    iput-wide v10, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
-
-    .line 437
-    const/4 v10, 0x0
-
-    iput-boolean v10, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
-
-    .line 438
-    if-eqz v5, :cond_5
-
-    .line 439
-    invoke-virtual {v5, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v10
-
-    if-eqz v10, :cond_6
-
-    .line 440
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
-
-    const-string v11, "DEBUG"
-
-    new-instance v12, Ljava/lang/StringBuilder;
-
-    invoke-direct {v12}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v13, "icon already exist ["
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    invoke-virtual {p0}, Lcom/smartisanos/launcher/data/ItemInfo;->id()Ljava/lang/String;
-
-    move-result-object v13
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    const-string v13, "]"
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    invoke-virtual {v12}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v12
-
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
-
-    .line 441
-    const/4 v10, 0x0
-
-    goto/16 :goto_0
-
-    .line 444
-    :cond_5
-    const/4 v10, 0x1
-
-    iput-boolean v10, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
-
-    .line 447
-    :cond_6
-    invoke-static {p0}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->access$500(Lcom/smartisanos/launcher/data/ItemInfo;)[B
 
     move-result-object v1
 
-    .line 448
-    .local v1, "data":[B
-    if-eqz v1, :cond_7
+    .line 415
+    .local v1, "iconInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    if-eqz v1, :cond_4
 
-    array-length v10, v1
+    .line 416
+    iget-object v2, v1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
 
-    if-nez v10, :cond_8
+    .line 417
+    .local v2, "md5FromServer":Ljava/lang/String;
+    if-eqz v2, :cond_4
 
-    .line 449
-    :cond_7
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
+    .line 418
+    invoke-static {p0}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->access$500(Lcom/smartisanos/launcher/data/ItemInfo;)[B
 
-    const-string v11, "DEBUG"
+    move-result-object v3
 
-    const-string v12, "getIconDataFromServer return null"
+    .line 419
+    .local v3, "data":[B
+    if-eqz v3, :cond_4
 
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+    array-length v4, v3
 
-    .line 450
-    const/4 v10, 0x0
+    if-nez v4, :cond_1
 
-    goto/16 :goto_0
+    goto :goto_0
 
-    .line 452
-    :cond_8
-    invoke-static {v1}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getMd5([B)Ljava/lang/String;
+    .line 422
+    :cond_1
+    invoke-static {v3}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getMd5([B)Ljava/lang/String;
+
+    move-result-object v4
+
+    .line 423
+    .local v4, "newMd5":Ljava/lang/String;
+    if-eqz v4, :cond_4
+
+    .line 424
+    invoke-virtual {v4, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_2
+
+    .line 425
+    invoke-static {p0, v1, v3}, Lcom/smartisanos/home/net/NetworkHandler;->saveIconForPackageActivities(Lcom/smartisanos/launcher/data/ItemInfo;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;[B)Z
+
+    move-result v5
+
+    return v5
+
+    .line 428
+    :cond_2
+    sget-object v5, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
+
+    const-string v6, "A140"
+
+    const-string v0, "md5 is not match, fallback to package icon"
+
+    invoke-virtual {v5, v6, v0}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 433
+    .end local v1    # "iconInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .end local v2    # "md5FromServer":Ljava/lang/String;
+    .end local v3    # "data":[B
+    .end local v4    # "newMd5":Ljava/lang/String;
+    :cond_4
+    :goto_0
+    invoke-static {p0}, Lcom/smartisanos/home/net/NetworkHandler;->fetchIconByPackage(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+
+    move-result v0
+
+    return v0
+.end method
+
+.method private static fetchIconByPackage(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+    .locals 6
+    .param p0, "item"    # Lcom/smartisanos/launcher/data/ItemInfo;
+
+    .prologue
+    const/4 v5, 0x0
+
+    .line 474
+    if-eqz p0, :cond_1
+
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    .line 475
+    .local v0, "pkg":Ljava/lang/String;
+    if-eqz v0, :cond_1
+
+    .line 476
+    invoke-static {v0}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getPackageIconUrl(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    .line 477
+    .local v1, "iconUrl":Ljava/lang/String;
+    if-eqz v1, :cond_1
+
+    .line 478
+    invoke-static {v1}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getBytesFromUrl(Ljava/lang/String;)[B
+
+    move-result-object v2
+
+    .line 479
+    .local v2, "data":[B
+    if-eqz v2, :cond_1
+
+    array-length v3, v2
+
+    if-eqz v3, :cond_1
+
+    .line 480
+    invoke-static {v2}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getMd5([B)Ljava/lang/String;
+
+    move-result-object v3
+
+    .line 481
+    .local v3, "md5":Ljava/lang/String;
+    if-eqz v3, :cond_1
+
+    .line 482
+    new-instance v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-direct {v4}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;-><init>()V
+
+    .line 483
+    .local v4, "iconInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    iput-object v0, v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    .line 484
+    iput-object v3, v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
+
+    .line 485
+    invoke-static {p0, v4, v2}, Lcom/smartisanos/home/net/NetworkHandler;->saveIconForPackageActivities(Lcom/smartisanos/launcher/data/ItemInfo;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;[B)Z
+
+    move-result v5
+
+    .line 488
+    .end local v0    # "pkg":Ljava/lang/String;
+    .end local v1    # "iconUrl":Ljava/lang/String;
+    .end local v2    # "data":[B
+    .end local v3    # "md5":Ljava/lang/String;
+    .end local v4    # "iconInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    :cond_1
+    return v5
+.end method
+
+.method private static getOwnerIdMap(Ljava/lang/String;)Ljava/util/Map;
+    .locals 10
+    .param p0, "pkg"    # Ljava/lang/String;
+
+    .prologue
+    .line 490
+    new-instance v3, Ljava/util/HashMap;
+
+    invoke-direct {v3}, Ljava/util/HashMap;-><init>()V
+
+    .line 491
+    .local v3, "map":Ljava/util/HashMap;, "Ljava/util/HashMap<Ljava/lang/String;Ljava/lang/Long;>;"
+    if-eqz p0, :cond_2
+
+    .line 492
+    new-instance v4, Ljava/lang/StringBuilder;
+
+    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v5, "packageName=\'"
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v4
+
+    invoke-virtual {v4, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v4
+
+    const-string v5, "\'"
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v4
+
+    .line 493
+    .local v4, "whereCase":Ljava/lang/String;
+    invoke-static {v4}, Lcom/smartisanos/launcher/data/handler/ItemDB;->listItem(Ljava/lang/String;)Ljava/util/List;
+
+    move-result-object v1
+
+    .line 494
+    .local v1, "items":Ljava/util/List;, "Ljava/util/List<Lcom/smartisanos/launcher/data/ItemInfo;>;"
+    if-eqz v1, :cond_2
+
+    .line 495
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    .line 496
+    .local v2, "iterator":Ljava/util/Iterator;, "Ljava/util/Iterator<Lcom/smartisanos/launcher/data/ItemInfo;>;"
+    :cond_0
+    :goto_0
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v5
+
+    if-eqz v5, :cond_2
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/smartisanos/launcher/data/ItemInfo;
+
+    .line 497
+    .local v0, "item":Lcom/smartisanos/launcher/data/ItemInfo;
+    if-eqz v0, :cond_0
+
+    .line 498
+    iget-object v5, v0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    if-eqz v5, :cond_0
+
+    .line 499
+    new-instance v5, Ljava/lang/StringBuilder;
+
+    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v5, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v5
+
+    const-string v6, ";"
+
+    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v5
+
+    iget-object v6, v0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v5
+
+    invoke-virtual {v5}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v5
+
+    .line 500
+    .local v5, "key":Ljava/lang/String;
+    invoke-interface {v3, v5}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v6
+
+    if-nez v6, :cond_0
+
+    .line 501
+    iget-wide v6, v0, Lcom/smartisanos/launcher/data/ItemInfo;->id:J
+
+    invoke-static {v6, v7}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+
+    move-result-object v6
+
+    invoke-interface {v3, v5, v6}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_0
+
+    .line 505
+    .end local v0    # "item":Lcom/smartisanos/launcher/data/ItemInfo;
+    .end local v1    # "items":Ljava/util/List;, "Ljava/util/List<Lcom/smartisanos/launcher/data/ItemInfo;>;"
+    .end local v2    # "iterator":Ljava/util/Iterator;, "Ljava/util/Iterator<Lcom/smartisanos/launcher/data/ItemInfo;>;"
+    .end local v4    # "whereCase":Ljava/lang/String;
+    .end local v5    # "key":Ljava/lang/String;
+    :cond_2
+    return-object v3
+.end method
+
+.method private static saveFetchedIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+    .locals 3
+    .param p0, "iconInfo"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    .prologue
+    .line 507
+    if-eqz p0, :cond_0
+
+    .line 508
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    .line 509
+    .local v0, "params":Ljava/util/ArrayList;
+    invoke-virtual {v0, p0}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    .line 510
+    sget-object v1, Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;->EVENT_SAVE_ICON:Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;
+
+    const/4 v2, 0x0
+
+    invoke-static {v1, v2, v0}, Lcom/smartisanos/launcher/data/DatabaseUpdater;->updateDatabase(Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;Ljava/util/List;Ljava/util/ArrayList;)V
+
+    .line 512
+    .end local v0    # "params":Ljava/util/ArrayList;
+    :cond_0
+    return-void
+.end method
+
+.method private static saveIconForPackageActivities(Lcom/smartisanos/launcher/data/ItemInfo;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;[B)Z
+    .locals 12
+    .param p0, "item"    # Lcom/smartisanos/launcher/data/ItemInfo;
+    .param p1, "iconInfo"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .param p2, "data"    # [B
+
+    .prologue
+    const/4 v5, 0x0
+
+    .line 514
+    if-eqz p0, :cond_8
+
+    if-eqz p1, :cond_8
+
+    if-eqz p2, :cond_8
+
+    array-length v2, p2
+
+    if-eqz v2, :cond_8
+
+    .line 515
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    .line 516
+    .local v0, "pkg":Ljava/lang/String;
+    if-eqz v0, :cond_8
+
+    .line 517
+    iget-object v1, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
+
+    .line 518
+    .local v1, "md5":Ljava/lang/String;
+    if-nez v1, :cond_0
+
+    .line 519
+    invoke-static {p2}, Lcom/smartisanos/home/net/NetworkHandler$NetUtils;->getMd5([B)Ljava/lang/String;
+
+    move-result-object v1
+
+    .line 520
+    if-eqz v1, :cond_8
+
+    .line 523
+    :cond_0
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v2
+
+    invoke-virtual {v2}, Lcom/smartisanos/launcher/LauncherApplication;->getApplicationContext()Landroid/content/Context;
+
+    move-result-object v2
+
+    .line 524
+    .local v2, "context":Landroid/content/Context;
+    invoke-static {v2, v0}, Lcom/smartisanos/launcher/data/Utils;->findActivitiesForPackage(Landroid/content/Context;Ljava/lang/String;)Ljava/util/List;
+
+    move-result-object v3
+
+    .line 525
+    .local v3, "infos":Ljava/util/List;, "Ljava/util/List<Landroid/content/pm/ResolveInfo;>;"
+    if-eqz v3, :cond_8
+
+    invoke-interface {v3}, Ljava/util/List;->size()I
+
+    move-result v2
+
+    if-eqz v2, :cond_8
+
+    .line 526
+    invoke-static {v0}, Lcom/smartisanos/home/net/NetworkHandler;->getOwnerIdMap(Ljava/lang/String;)Ljava/util/Map;
+
+    move-result-object v4
+
+    .line 527
+    .local v4, "ownerIdMap":Ljava/util/Map;, "Ljava/util/Map<Ljava/lang/String;Ljava/lang/Long;>;"
+    invoke-interface {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v6
+
+    .line 528
+    .local v6, "iterator":Ljava/util/Iterator;, "Ljava/util/Iterator<Landroid/content/pm/ResolveInfo;>;"
+    :cond_1
+    :goto_0
+    invoke-interface {v6}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_8
+
+    invoke-interface {v6}, Ljava/util/Iterator;->next()Ljava/lang/Object;
 
     move-result-object v7
 
-    .line 453
-    .local v7, "newMd5":Ljava/lang/String;
-    if-nez v7, :cond_9
+    check-cast v7, Landroid/content/pm/ResolveInfo;
 
-    .line 454
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
+    .line 529
+    .local v7, "resolveInfo":Landroid/content/pm/ResolveInfo;
+    if-eqz v7, :cond_1
 
-    const-string v11, "A140"
+    iget-object v2, v7, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
 
-    const-string v12, "can\'t get md5"
+    if-eqz v2, :cond_1
 
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+    .line 530
+    iget-object v8, v2, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
 
-    .line 455
-    const/4 v10, 0x0
+    .line 531
+    .local v8, "componentName":Ljava/lang/String;
+    if-eqz v8, :cond_1
+
+    .line 532
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v3
+
+    const-string v11, ";"
+
+    invoke-virtual {v3, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v3
+
+    invoke-virtual {v3, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v3
+
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v3
+
+    .line 533
+    .local v3, "key":Ljava/lang/String;
+    invoke-interface {v4, v3}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/Long;
+
+    .line 534
+    .local v2, "ownerIdValue":Ljava/lang/Long;
+    const-wide/16 v10, -0x1
+
+    .line 535
+    .local v10, "ownerId":J
+    if-eqz v2, :cond_2
+
+    .line 536
+    invoke-virtual {v2}, Ljava/lang/Long;->longValue()J
+
+    move-result-wide v10
+
+    .line 538
+    :cond_2
+    invoke-static {v0, v8}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getRedirectIconInfo(Ljava/lang/String;Ljava/lang/String;)Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    move-result-object v9
+
+    .line 539
+    .local v9, "oldInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    if-eqz v9, :cond_3
+
+    const-wide/16 v2, 0x0
+
+    cmp-long v7, v10, v2
+
+    if-gez v7, :cond_3
+
+    .line 540
+    iget-wide v10, v9, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    .line 542
+    :cond_3
+    if-eqz v9, :cond_4
+
+    .line 543
+    iget-object v7, v9, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
+
+    if-eqz v7, :cond_4
+
+    invoke-virtual {v7, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_4
+
+    .line 544
+    iget-wide v2, v9, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    cmp-long v7, v2, v10
+
+    if-nez v7, :cond_4
+
+    goto :goto_0
+
+    .line 548
+    :cond_4
+    new-instance v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-direct {v7}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;-><init>()V
+
+    .line 549
+    .local v7, "saveInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    iput-wide v10, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    .line 550
+    iput-object v0, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    .line 551
+    iput-object v8, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    .line 552
+    iget-object v2, p0, Lcom/smartisanos/launcher/data/ItemInfo;->iconDrawableName:Ljava/lang/String;
+
+    iput-object v2, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    .line 553
+    iput-object v1, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->md5:Ljava/lang/String;
+
+    .line 554
+    iget-object v2, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->lastUpdateTime:Ljava/lang/String;
+
+    iput-object v2, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->lastUpdateTime:Ljava/lang/String;
+
+    .line 555
+    iput-object p2, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->iconData:[B
+
+    .line 556
+    if-eqz v9, :cond_5
+
+    .line 557
+    iget-boolean v2, v9, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    iput-boolean v2, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    goto :goto_1
+
+    .line 559
+    :cond_5
+    const-wide/16 v2, 0x0
+
+    cmp-long v2, v10, v2
+
+    if-ltz v2, :cond_6
+
+    const/4 v2, 0x1
+
+    iput-boolean v2, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    goto :goto_1
+
+    .line 561
+    :cond_6
+    const/4 v2, 0x0
+
+    iput-boolean v2, v7, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    .line 563
+    :goto_1
+    invoke-static {v7}, Lcom/smartisanos/home/net/NetworkHandler;->saveFetchedIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    .line 564
+    const/4 v5, 0x1
 
     goto/16 :goto_0
 
-    .line 457
-    :cond_9
-    invoke-virtual {v7, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v10
-
-    if-nez v10, :cond_a
-
-    .line 458
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
-
-    const-string v11, "A140"
-
-    const-string v12, "md5 is not match, need try it again"
-
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
-
-    .line 459
-    const/4 v10, 0x0
-
-    goto/16 :goto_0
-
-    .line 462
-    :cond_a
-    iput-object v1, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->iconData:[B
-
-    .line 463
-    iput-object v0, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
-
-    .line 464
-    iput-object v9, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
-
-    .line 465
-    iput-object v2, v3, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
-
-    .line 466
-    sget-object v10, Lcom/smartisanos/home/net/NetworkHandler;->log:Lcom/smartisanos/launcher/LOG;
-
-    const-string v11, "DEBUG"
-
-    new-instance v12, Ljava/lang/StringBuilder;
-
-    invoke-direct {v12}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v13, "fetchIcon "
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    invoke-virtual {v3}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->toString()Ljava/lang/String;
-
-    move-result-object v13
-
-    invoke-virtual {v12, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v12
-
-    invoke-virtual {v12}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v12
-
-    invoke-virtual {v10, v11, v12}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
-
-    .line 469
-    new-instance v8, Ljava/util/ArrayList;
-
-    invoke-direct {v8}, Ljava/util/ArrayList;-><init>()V
-
-    .line 470
-    .local v8, "params":Ljava/util/ArrayList;
-    invoke-virtual {v8, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-
-    .line 471
-    sget-object v10, Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;->EVENT_SAVE_ICON:Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;
-
-    const/4 v11, 0x0
-
-    invoke-static {v10, v11, v8}, Lcom/smartisanos/launcher/data/DatabaseUpdater;->updateDatabase(Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;Ljava/util/List;Ljava/util/ArrayList;)V
-
-    .line 472
-    const/4 v10, 0x1
-
-    goto/16 :goto_0
+    .line 568
+    .end local v0    # "pkg":Ljava/lang/String;
+    .end local v1    # "md5":Ljava/lang/String;
+    .end local v2    # "lastTemp":Ljava/lang/Object;
+    .end local v3    # "key":Ljava/lang/String;
+    .end local v4    # "ownerIdMap":Ljava/util/Map;, "Ljava/util/Map<Ljava/lang/String;Ljava/lang/Long;>;"
+    .end local v6    # "iterator":Ljava/util/Iterator;, "Ljava/util/Iterator<Landroid/content/pm/ResolveInfo;>;"
+    .end local v7    # "saveInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .end local v8    # "componentName":Ljava/lang/String;
+    .end local v9    # "oldInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .end local v10    # "ownerId":J
+    :cond_8
+    return v5
 .end method
 
 .method private static getIconUrl(Ljava/lang/String;Ljava/lang/String;)Ljava/net/URL;

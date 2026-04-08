@@ -39,6 +39,7 @@
 - 在线主题下载固定指向 `gh-proxy` + GitHub Release 的 `themes-v1`
 - 截至 2026-04-08，`themes-v1` 已发布 35 个主题资产
 - `COPPER_RED` 和 `GINTAMA` 仍保留本地识别能力，但默认不再显示在“在线主题”列表中
+- 改进版应用图标已补上“旧接口优先，新接口按包名兜底”的兼容逻辑，便于继续扩展旧桌面的图标覆盖范围
 
 ## 已实测环境
 
@@ -47,6 +48,132 @@
 
 > [!NOTE]
 > 当前仓库明确实测的是以上设备与系统组合。不同品牌、ROM、Android 版本下的表现可能存在差异，请不要默认视为所有设备都完全一致。
+
+## 应用图标逻辑说明
+
+### 旧桌面原始逻辑
+
+- 旧桌面原本主要依赖旧图标接口，也就是按 `packageName + drawableName` 去请求：
+  - 图标信息：`http://icon.smartisan.com/info/<pkg>/<drawable>.xml`
+  - 图标图片：`http://icon.smartisan.com/drawable/<pkg>/<drawable>.png`
+- 这套逻辑的问题是：必须先知道应用当前可用的 `drawableName`
+- 如果应用升级后换了图标资源名，或者旧桌面本地根本没有对应映射，就算服务器上有图，也可能完全命中不到
+- 因此旧桌面以前的“改进版图标”更像是依赖旧白名单和旧资源名的静态方案
+
+### 新桌面的补充逻辑
+
+- 新桌面额外提供了一个按包名查询的接口：
+
+```text
+http://setting.smartisan.com/app/icon
+```
+
+- 请求体是 JSON 数组，例如：
+
+```json
+[{"package":"com.tencent.mm"}]
+```
+
+- 这个接口不再要求先知道 `drawableName`，只按包名返回候选图标列表
+- 部分应用会返回多张候选图标；但“返回多张”不等于桌面支持手动选择
+- 新桌面实际也是从返回结果里取第一张可用 `logo`
+
+### 当前维护版采用的策略
+
+- 当前旧桌面维护版没有重写整套“应用图标”设置页
+- 维护版采用的是折中方案：
+  1. 先走旧接口，兼容原有逻辑
+  2. 旧接口拿不到时，再走新接口按包名查询
+  3. 查到图后，再按包名扫描该应用下所有 Launcher Activity
+  4. 把结果回填成旧桌面可识别的 `RedirectIconInfo` 记录
+- 这样做的好处是：
+  - 保留旧桌面的设置页与数据库结构
+  - 尽量增加旧桌面对现代应用的图标命中率
+  - 不需要把新桌面的整套图标系统完整搬过来
+
+### 为什么有时看起来“图标没变化”
+
+- 很多应用在新接口下本来就没有返回任何候选图标
+- 很多应用虽然返回了图标，但第一张候选图本身和旧图标风格差异很小
+- 当前版本不会把接口里的多张候选图暴露成“可选图标”，仍然只取第一张
+- 所以“迁移已生效”不一定等于“桌面视觉上明显变化”
+
+### 后续自检方法
+
+如果你想自己检查已连接设备上的第三方应用，哪些包有返回图标、哪些包返回多张候选，可以直接在仓库根目录运行：
+
+```sh
+python3 - <<'PY'
+import json, gzip, urllib.request, subprocess
+from collections import Counter
+
+pkgs = subprocess.check_output(
+    "adb shell pm list packages -3 | sed 's/^package://g' | sort",
+    shell=True,
+    text=True,
+).splitlines()
+
+pkgs = [
+    p.strip()
+    for p in pkgs
+    if p.strip()
+    and p != "com.smartisanos.home"
+    and not p.startswith("com.smartisanos.launcher.theme.")
+]
+
+body = json.dumps([{"package": p} for p in pkgs]).encode()
+req = urllib.request.Request(
+    "http://setting.smartisan.com/app/icon",
+    data=body,
+    headers={"Content-Type": "application/json", "Accept-Encoding": "gzip"},
+    method="POST",
+)
+
+with urllib.request.urlopen(req, timeout=20) as resp:
+    raw = resp.read()
+    enc = resp.headers.get("Content-Encoding", "")
+
+if "gzip" in enc.lower():
+    raw = gzip.decompress(raw)
+
+data = json.loads(raw.decode())
+app_icon = data.get("body", {}).get("app_icon", {})
+
+rows = []
+for pkg in pkgs:
+    arr = app_icon.get(pkg, [])
+    logos = []
+    if isinstance(arr, list):
+        for item in arr:
+            if isinstance(item, dict) and item.get("logo"):
+                logos.append(item["logo"])
+    rows.append((pkg, len(logos), logos))
+
+ctr = Counter(n for _, n, _ in rows)
+print("TOTAL", len(rows))
+for k in sorted(ctr):
+    print(f"COUNT_{k}={ctr[k]}")
+
+print("\nMULTI:")
+for pkg, n, logos in rows:
+    if n > 1:
+        print(pkg)
+        for i, logo in enumerate(logos, 1):
+            print(f"  {i}. {logo}")
+
+print("\nNONE:")
+for pkg, n, _ in rows:
+    if n == 0:
+        print(pkg)
+PY
+```
+
+这段命令会输出：
+
+- 第三方应用总数
+- 返回 `0 / 1 / 2 / 3 / 4...` 张候选图的包数量
+- 哪些应用属于“多候选图标”
+- 哪些应用当前完全没有图标返回
 
 ## 下载与使用
 
