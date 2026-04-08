@@ -475,7 +475,7 @@
 
     invoke-direct {v9}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v10, "https://gh-proxy.org/https://github.com/15255040419/smartisan-launcher/releases/download/themes-v1/"
+    const-string v10, "https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/"
 
     invoke-virtual {v9, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -895,23 +895,10 @@
     .line 2467
     or-int/lit16 v1, v1, 0x200
 
+    .line 2468
     or-int/lit16 v1, v1, 0x400
 
-    # Android 6.0+ Light Status Bar (0x2000)
-    const/16 v8, 0x17
-    sget v10, Landroid/os/Build$VERSION;->SDK_INT:I
-    if-lt v10, v8, :cond_light_status
-    const/16 v8, 0x2000
-    or-int/2addr v1, v8
-    :cond_light_status
-
-    # Android 8.1+ Light Navigation Bar (0x10)
-    const/16 v8, 0x1b
-    if-lt v10, v8, :cond_light_nav
-    const/16 v8, 0x10
-    or-int/2addr v1, v8
-    :cond_light_nav
-
+    .line 2469
     invoke-virtual {v0, v1}, Landroid/view/View;->setSystemUiVisibility(I)V
 
     .line 2470
@@ -919,16 +906,20 @@
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->clearFlags(I)V
 
+    .line 2471
     const/high16 v8, -0x80000000
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->addFlags(I)V
 
+    .line 2472
     const/4 v8, 0x0
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->setStatusBarColor(I)V
 
+    .line 2473
     invoke-virtual {p1, v8}, Landroid/view/Window;->setNavigationBarColor(I)V
 
+    .line 2474
     return-void
 
     .line 2475
@@ -2309,7 +2300,7 @@
     .local v0, "defSize":I
     new-instance v1, Lcom/smartisan/updater/ApkUpdater;
 
-    const-string v3, "https://api.github.com/repos/15255040419/smartisan-launcher/releases/latest"
+    const-string v3, "https://api.github.com/repos/rianlu/smartisan-launcher-maintained/releases/latest"
 
     int-to-long v6, v0
 
@@ -9302,6 +9293,16 @@
 
     .line 1459
     .local v5, "pkg":Ljava/lang/String;
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v9
+
+    invoke-static {v9, v5}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getPackedIcon(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v1
+
+    if-nez v1, :goto_2
+
     :try_start_0
     invoke-static {v5}, Lcom/smartisanos/launcher/data/Utils;->isHalfAlphaIcon(Ljava/lang/String;)Z
 
@@ -10852,13 +10853,12 @@
 
     move-object v0, v4
 
-    goto :goto_0
+    goto :cond_0
 
     :catch_0
     move-exception v1
 
-    :goto_0
-    return-object v0
+    goto :cond_0
 .end method
 
 .method public static getAvailableWeatherLaunchIntent(Landroid/content/Context;)Landroid/content/Intent;
@@ -11023,17 +11023,16 @@
 
     if-eqz v5, :cond_4
 
-    goto :goto_1
+    goto :cond_0
 
     :cond_4
     if-nez v9, :cond_2
 
     move-object v9, v8
 
-    goto :goto_0
+    goto :cond_2
 
     :cond_0
-    :goto_1
     return-object v8
 
     :cond_1
@@ -11744,6 +11743,58 @@
 
     .prologue
     .line 2009
+    sget v2, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v3, 0x1d
+
+    if-lt v2, v3, :cond_legacy
+
+    # Android 10+ (SDK 29): use RoleManager to request ROLE_HOME
+    :try_start_role
+    const-string v2, "role"
+
+    invoke-virtual {p0, v2}, Landroid/app/Activity;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Landroid/app/role/RoleManager;
+
+    if-eqz v2, :cond_role_fail
+
+    const-string v3, "android.app.role.HOME"
+
+    invoke-virtual {v2, v3}, Landroid/app/role/RoleManager;->isRoleAvailable(Ljava/lang/String;)Z
+
+    move-result v4
+
+    if-eqz v4, :cond_role_fail
+
+    invoke-virtual {v2, v3}, Landroid/app/role/RoleManager;->isRoleHeld(Ljava/lang/String;)Z
+
+    move-result v4
+
+    if-nez v4, :cond_2
+
+    invoke-virtual {v2, v3}, Landroid/app/role/RoleManager;->createRequestRoleIntent(Ljava/lang/String;)Landroid/content/Intent;
+
+    move-result-object v4
+
+    const/4 v5, 0x0
+
+    invoke-virtual {p0, v4, v5}, Landroid/app/Activity;->startActivityForResult(Landroid/content/Intent;I)V
+
+    :try_end_role
+    .catch Ljava/lang/Exception; {:try_start_role .. :try_end_role} :catch_role
+
+    return-void
+
+    :catch_role
+    move-exception v2
+
+    :cond_role_fail
+    # RoleManager failed, fall through to intent-based approach
+
+    :cond_legacy
     sget v2, Landroid/os/Build$VERSION;->SDK_INT:I
 
     const/16 v3, 0x15
