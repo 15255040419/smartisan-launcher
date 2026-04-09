@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./res/drawable-xhdpi-v4/ic_launcher.png" alt="Smartisan Launcher Maintained Logo" width="124" height="124" />
+  <img src="./launcher_icon.png" alt="Smartisan Launcher Maintained App Icon" width="124" height="124" />
 
   <h1>Smartisan Launcher Maintained</h1>
 
