@@ -135,9 +135,43 @@ select_device() {
   printf '%s\n' "$devices" | sed '/^$/d'
 }
 
+list_devices() {
+  adb_bin="$1"
+  "$adb_bin" devices | awk 'NR>1 && $2=="device" {print $1}'
+}
+
+install_to_device() {
+  adb_bin="$1"
+  device_serial="$2"
+
+  "$adb_bin" -s "$device_serial" install -r "$signed_apk"
+  echo "adb install -r succeeded on $device_serial"
+}
+
 install_apk() {
   if ! adb_bin=$(find_adb); then
     echo "adb not found, skipped install"
+    return 0
+  fi
+
+  if [ -n "${ANDROID_SERIALS:-}" ]; then
+    printf '%s\n' "$ANDROID_SERIALS" | tr ', ' '\n\n' | sed '/^$/d' | while IFS= read -r device_serial; do
+      install_to_device "$adb_bin" "$device_serial"
+    done
+    return 0
+  fi
+
+  if [ "${INSTALL_ALL_DEVICES:-0}" = "1" ]; then
+    devices=$(list_devices "$adb_bin")
+    if [ -z "$devices" ]; then
+      echo "no adb device detected, skipped install"
+      return 0
+    fi
+
+    printf '%s\n' "$devices" | while IFS= read -r device_serial; do
+      [ -n "$device_serial" ] || continue
+      install_to_device "$adb_bin" "$device_serial"
+    done
     return 0
   fi
 

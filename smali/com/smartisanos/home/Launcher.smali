@@ -2075,7 +2075,7 @@
 
     move-object/from16 v0, p0
 
-    invoke-static {v0, v2}, Lcom/smartisanos/launcher/data/Utils;->applyTransparentStatusBar(Landroid/content/Context;Landroid/view/Window;)V
+    invoke-static {v0, v2}, Lcom/smartisanos/launcher/data/Utils;->applyLauncherImmersiveWindow(Landroid/content/Context;Landroid/view/Window;)V
 
     .line 309
     sget v2, Lcom/smartisanos/launcher/ResIds$layout;->launcher_view:I
@@ -3746,9 +3746,19 @@
     iput-boolean p1, p0, Lcom/smartisanos/home/Launcher;->mHasFocus:Z
 
     .line 660
-    if-nez p1, :cond_0
+    if-eqz p1, :cond_0
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/Launcher;->getWindow()Landroid/view/Window;
+
+    move-result-object v0
+
+    invoke-static {p0, v0}, Lcom/smartisanos/launcher/data/Utils;->applyLauncherImmersiveWindow(Landroid/content/Context;Landroid/view/Window;)V
 
     .line 661
+    :cond_0
+    if-nez p1, :cond_1
+
+    .line 662
     invoke-static {}, Lcom/smartisanos/smengine/World;->getInstance()Lcom/smartisanos/smengine/World;
 
     move-result-object v0
@@ -3759,7 +3769,7 @@
 
     invoke-virtual {v0}, Lcom/smartisanos/smengine/InputManager;->forceCancelMotionEvent()Z
 
-    .line 662
+    .line 663
     new-instance v0, Lcom/smartisanos/home/Launcher$7;
 
     const/16 v1, 0x64
@@ -3772,10 +3782,10 @@
     invoke-virtual {v0, v1}, Lcom/smartisanos/home/Launcher$7;->send(F)V
 
     .line 670
-    :cond_0
+    :cond_1
     sget-boolean v0, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 
-    if-eqz v0, :cond_1
+    if-eqz v0, :cond_2
 
     sget-object v0, Lcom/smartisanos/home/Launcher;->log:Lcom/smartisanos/launcher/LOG;
 
@@ -3802,12 +3812,12 @@
     invoke-virtual {v0, v1, v2}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
 
     .line 671
-    :cond_1
-    if-nez p1, :cond_2
+    :cond_2
+    if-nez p1, :cond_3
 
     iget-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mPaused:Z
 
-    if-eqz v0, :cond_2
+    if-eqz v0, :cond_3
 
     .line 672
     iget-object v0, p0, Lcom/smartisanos/home/Launcher;->mMainView:Lcom/smartisanos/launcher/view/MainView;
@@ -3815,7 +3825,7 @@
     invoke-virtual {v0}, Lcom/smartisanos/launcher/view/MainView;->onPause()V
 
     .line 674
-    :cond_2
+    :cond_3
     return-void
 .end method
 
