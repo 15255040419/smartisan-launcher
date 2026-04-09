@@ -75,6 +75,41 @@
     return-void
 .end method
 
+.method private hasContactPermission()Z
+    .locals 4
+
+    .prologue
+    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/util/PermissionChecker;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/util/PermissionChecker;
+
+    move-result-object v0
+
+    const/4 v1, 0x1
+
+    new-array v1, v1, [Ljava/lang/String;
+
+    const/4 v2, 0x0
+
+    const-string v3, "android.permission.READ_CONTACTS"
+
+    aput-object v3, v1, v2
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/quicksearchbox/util/PermissionChecker;->lacksPermissions([Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_0
+
+    const/4 v0, 0x1
+
+    :goto_0
+    return v0
+
+    :cond_0
+    const/4 v0, 0x0
+
+    goto :goto_0
+.end method
+
 .method private init()V
     .locals 0
 
@@ -95,6 +130,71 @@
     invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->initMainContainer()V
 
     .line 148
+    return-void
+.end method
+
+.method private initContactSearchIndex()V
+    .locals 3
+
+    .prologue
+    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;
+
+    move-result-object v0
+
+    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/util/Util;->isIndexDataInit(Landroid/content/Context;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_1
+
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->initLocalContactIndexFirst()Z
+
+    move-result v1
+
+    if-nez v1, :cond_0
+
+    new-instance v1, Ljava/lang/RuntimeException;
+
+    const-string v2, "不能初始化联系人数据"
+
+    invoke-direct {v1, v2}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+
+    throw v1
+
+    :cond_0
+    const-string v1, "联系人数据初始化成功"
+
+    invoke-static {v1}, Lcom/smartisanos/quicksearchbox/util/LogUtil;->debug(Ljava/lang/String;)V
+
+    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/util/Util;->indexDataInited(Landroid/content/Context;)Z
+
+    goto :goto_0
+
+    :cond_1
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->syncContactAccurate()V
+
+    :goto_0
+    return-void
+.end method
+
+.method private requestContactPermission()V
+    .locals 3
+
+    .prologue
+    const/4 v0, 0x1
+
+    new-array v0, v0, [Ljava/lang/String;
+
+    const/4 v1, 0x0
+
+    const-string v2, "android.permission.READ_CONTACTS"
+
+    aput-object v2, v0, v1
+
+    const/16 v1, 0x64
+
+    invoke-static {p0, v0, v1}, Landroid/support/v4/app/ActivityCompat;->requestPermissions(Landroid/app/Activity;[Ljava/lang/String;I)V
+
     return-void
 .end method
 
@@ -643,13 +743,27 @@
     invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->init()V
 
     .line 89
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->hasContactPermission()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    .line 90
     invoke-static {p0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;
 
     move-result-object v0
 
     invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;->registMonitor()V
 
-    .line 90
+    goto :goto_0
+
+    .line 92
+    :cond_0
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->requestContactPermission()V
+
+    .line 94
+    :goto_0
     return-void
 .end method
 
@@ -691,71 +805,76 @@
 .end method
 
 .method protected onResume()V
-    .locals 4
+    .locals 1
 
     .prologue
     .line 114
     invoke-super {p0}, Lcom/smartisanos/quicksearchbox/BaseActivity;->onResume()V
 
     .line 115
-    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->hasContactPermission()Z
 
-    move-result-object v1
+    move-result v0
+
+    if-eqz v0, :cond_0
 
     .line 116
-    .local v1, "contactSearchIndexHelper":Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->initContactSearchIndex()V
+
+    .line 118
+    :cond_0
     invoke-static {p0}, Lcom/smartisanos/quicksearchbox/repository/app/db/helper/AppSearchIndexHelper;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/repository/app/db/helper/AppSearchIndexHelper;
 
     move-result-object v0
 
-    .line 118
-    .local v0, "appSearchIndexHelper":Lcom/smartisanos/quicksearchbox/repository/app/db/helper/AppSearchIndexHelper;
-    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/util/Util;->isIndexDataInit(Landroid/content/Context;)Z
-
-    move-result v2
-
-    if-nez v2, :cond_1
-
     .line 119
-    invoke-virtual {v1}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->initLocalContactIndexFirst()Z
-
-    move-result v2
-
-    if-nez v2, :cond_0
-
-    .line 120
-    new-instance v2, Ljava/lang/RuntimeException;
-
-    const-string v3, "\u4e0d\u80fd\u521d\u59cb\u5316\u8054\u7cfb\u4eba\u6570\u636e"
-
-    invoke-direct {v2, v3}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
-
-    throw v2
-
-    .line 122
-    :cond_0
-    const-string v2, "\u8054\u7cfb\u4eba\u6570\u636e\u521d\u59cb\u5316\u6210\u529f"
-
-    invoke-static {v2}, Lcom/smartisanos/quicksearchbox/util/LogUtil;->debug(Ljava/lang/String;)V
-
-    .line 123
-    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/util/Util;->indexDataInited(Landroid/content/Context;)Z
-
-    .line 133
-    :goto_0
-    return-void
-
-    .line 127
-    :cond_1
-    invoke-virtual {v1}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->syncContactAccurate()V
-
-    .line 129
     invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/app/db/helper/AppSearchIndexHelper;->loadAppSearchBeans()[Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;
 
-    .line 131
+    .line 120
     invoke-virtual {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->refreshResultBox()V
 
-    goto :goto_0
+    .line 121
+    return-void
+.end method
+
+.method public onRequestPermissionsResult(I[Ljava/lang/String;[I)V
+    .locals 2
+
+    .prologue
+    .line 124
+    invoke-super {p0, p1, p2, p3}, Lcom/smartisanos/quicksearchbox/BaseActivity;->onRequestPermissionsResult(I[Ljava/lang/String;[I)V
+
+    .line 125
+    const/16 v0, 0x64
+
+    if-ne p1, v0, :cond_1
+
+    array-length v0, p3
+
+    if-lez v0, :cond_1
+
+    const/4 v0, 0x0
+
+    aget v0, p3, v0
+
+    if-nez v0, :cond_1
+
+    .line 126
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->initContactSearchIndex()V
+
+    .line 127
+    invoke-static {p0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;->registMonitor()V
+
+    .line 128
+    invoke-virtual {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->refreshResultBox()V
+
+    .line 130
+    :cond_1
+    return-void
 .end method
 
 .method public refreshResultBox()V
