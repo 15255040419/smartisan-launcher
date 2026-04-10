@@ -35,11 +35,31 @@
 
     .prologue
     .line 60
+    invoke-static {}, Lcom/smartisanos/launcher/theme/ChangeThemeHandler;->getInstance()Lcom/smartisanos/launcher/theme/ChangeThemeHandler;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_0
+
+    invoke-virtual {v2}, Lcom/smartisanos/launcher/theme/ChangeThemeHandler;->shouldDoChangeThemeAnim()Z
+
+    move-result v2
+
+    if-nez v2, :cond_1
+
+    .line 63
+    :cond_0
+    return-void
+
+    .line 61
+    :cond_1
     invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
 
     move-result-object v0
 
-    .line 61
+    if-eqz v0, :cond_0
+
+    .line 62
     .local v0, "context":Lcom/smartisanos/home/Launcher;
     sget v2, Lcom/smartisanos/launcher/ResIds$string;->theme_changing:I
 
@@ -47,7 +67,7 @@
 
     move-result-object v1
 
-    .line 62
+    .line 63
     .local v1, "info":Ljava/lang/String;
     invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
 
@@ -57,6 +77,5 @@
 
     invoke-virtual {v2, v3, v1}, Lcom/smartisanos/home/Launcher;->showDialogWithoutPostThread(ZLjava/lang/String;)V
 
-    .line 63
-    return-void
+    goto :cond_0
 .end method
