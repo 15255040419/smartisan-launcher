@@ -1883,6 +1883,10 @@
     <public type="string" name="theme_default_id" id="0x7f080269" />
     <public type="string" name="theme_name" id="0x7f08026a" />
     <public type="string" name="twitter" id="0x7f08026b" />
+    <public type="string" name="launcher_wallpaper_pick_failed_text" id="0x7f08026c" />
+    <public type="string" name="launcher_wallpaper_pick_text" id="0x7f08026d" />
+    <public type="string" name="launcher_wallpaper_picker_unavailable_text" id="0x7f08026e" />
+    <public type="string" name="launcher_wallpaper_restore_default_text" id="0x7f08026f" />
     <public type="dimen" name="abc_alert_dialog_button_bar_height" id="0x7f090000" />
     <public type="dimen" name="quickbar_ex_grid_column_width" id="0x7f090001" />
     <public type="dimen" name="quickbar_ex_width" id="0x7f090002" />
@@ -3925,5 +3929,6 @@
     <public type="id" name="setting_titlebar_title" id="0x7f0f0184" />
     <public type="id" name="setting_titlebar_confirm" id="0x7f0f0185" />
     <public type="id" name="action_settings" id="0x7f0f0186" />
+    <public type="id" name="item_id_launcher_wallpaper" id="0x7f0f0187" />
     <public type="menu" name="main" id="0x7f100000" />
 </resources>

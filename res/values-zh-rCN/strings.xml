@@ -132,8 +132,12 @@
     <string name="launcher_theme_sub_text">设置桌面的背景主题</string>
     <string name="launcher_theme_text">桌面主题</string>
     <string name="launcher_unlock_anim">解锁时桌面的动画效果</string>
-    <string name="launcher_wallpaper_setting_sub_text">设置当前桌面背景壁纸</string>
+    <string name="launcher_wallpaper_setting_sub_text">仅对毛玻璃、白雾主题生效</string>
     <string name="launcher_wallpaper_setting_text">桌面壁纸</string>
+    <string name="launcher_wallpaper_pick_failed_text">当前无法设置桌面壁纸</string>
+    <string name="launcher_wallpaper_pick_text">选择图片</string>
+    <string name="launcher_wallpaper_picker_unavailable_text">当前没有可用的图片选择器</string>
+    <string name="launcher_wallpaper_restore_default_text">恢复默认壁纸</string>
     <string name="loading">正在加载</string>
     <string name="lock_notice">已锁定</string>
     <string name="lockscreen_wallpaper_setting_sub_text">设置锁屏界面的壁纸</string>

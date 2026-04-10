@@ -5551,12 +5551,109 @@
     goto :goto_1
 .end method
 
-.method public static getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;)Landroid/graphics/Bitmap;
+.method public static getCustomGaussianWallpaper(Landroid/content/Context;)Landroid/graphics/Bitmap;
+    .locals 2
+    .param p0, "context"    # Landroid/content/Context;
+
+    .prologue
+    .line 1340
+    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->getCustomGaussianWallpaperFile(Landroid/content/Context;)Ljava/io/File;
+
+    move-result-object v0
+
+    .line 1341
+    .local v0, "file":Ljava/io/File;
+    if-eqz v0, :cond_0
+
+    invoke-virtual {v0}, Ljava/io/File;->exists()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_0
+
+    .line 1342
+    invoke-virtual {v0}, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, Landroid/graphics/BitmapFactory;->decodeFile(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    return-object v1
+
+    .line 1344
+    :cond_0
+    const/4 v1, 0x0
+
+    return-object v1
+.end method
+
+.method public static getCustomGaussianWallpaperFile(Landroid/content/Context;)Ljava/io/File;
     .locals 3
+    .param p0, "context"    # Landroid/content/Context;
+
+    .prologue
+    .line 1344
+    if-nez p0, :cond_0
+
+    .line 1345
+    const/4 v0, 0x0
+
+    .line 1349
+    :goto_0
+    return-object v0
+
+    .line 1347
+    :cond_0
+    new-instance v0, Ljava/io/File;
+
+    invoke-virtual {p0}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+
+    move-result-object v1
+
+    const-string v2, "gaussian_wallpaper.png"
+
+    invoke-direct {v0, v1, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+
+    goto :goto_0
+.end method
+
+.method public static getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;)Landroid/graphics/Bitmap;
+    .locals 4
     .param p0, "theme"    # Lcom/smartisanos/launcher/theme/Theme;
 
     .prologue
     .line 1348
+    invoke-static {p0}, Lcom/smartisanos/launcher/theme/ThemeManager;->isGaussianTheme(Lcom/smartisanos/launcher/theme/Theme;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_0
+
+    .line 1349
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lcom/smartisanos/launcher/data/Utils;->getCustomGaussianWallpaper(Landroid/content/Context;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    .line 1350
+    .local v0, "customBt":Landroid/graphics/Bitmap;
+    if-eqz v0, :cond_0
+
+    .line 1351
+    invoke-static {p0, v0}, Lcom/smartisanos/launcher/data/Utils;->getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    return-object v1
+
+    .line 1354
+    .end local v0    # "customBt":Landroid/graphics/Bitmap;
+    :cond_0
     invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
 
     move-result-object v1
@@ -5920,9 +6017,37 @@
     const/4 v8, 0x0
 
     .line 1292
-    const/4 v3, 0x0
+    invoke-static {p0}, Lcom/smartisanos/launcher/theme/ThemeManager;->getCurrentTheme(Landroid/content/Context;)Lcom/smartisanos/launcher/theme/Theme;
+
+    move-result-object v0
 
     .line 1293
+    .local v0, "currentTheme":Lcom/smartisanos/launcher/theme/Theme;
+    invoke-static {v0}, Lcom/smartisanos/launcher/theme/ThemeManager;->isGaussianTheme(Lcom/smartisanos/launcher/theme/Theme;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_custom_wallpaper_end
+
+    .line 1294
+    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->getCustomGaussianWallpaper(Landroid/content/Context;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    .line 1295
+    .local v2, "customWallpaper":Landroid/graphics/Bitmap;
+    if-eqz v2, :cond_custom_wallpaper_end
+
+    .line 1296
+    return-object v2
+
+    .line 1299
+    .end local v2    # "customWallpaper":Landroid/graphics/Bitmap;
+    :cond_custom_wallpaper_end
+    .end local v0    # "currentTheme":Lcom/smartisanos/launcher/theme/Theme;
+    const/4 v3, 0x0
+
+    .line 1300
     .local v3, "oriBt":Landroid/graphics/Bitmap;
     invoke-static {p0}, Landroid/app/WallpaperManager;->getInstance(Landroid/content/Context;)Landroid/app/WallpaperManager;
 

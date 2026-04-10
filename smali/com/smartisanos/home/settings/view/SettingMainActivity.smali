@@ -24,6 +24,8 @@
 
 .field public static final REQUSET_SCROLL_ANIM:I = 0x1
 
+.field public static final REQUEST_GAUSSIAN_WALLPAPER_PICKER:I = 0x2
+
 .field private static final RESOURCE_THEMES_IDS:Ljava/lang/String; = "themes_ids"
 
 .field private static final THEME_THUMBNAIL_PREFIX_DEFAULT:Ljava/lang/String; = "t/pack1080"
@@ -59,6 +61,8 @@
 .field private mItemPageFlipAnims:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
 .field private mItemThemes:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+.field private mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
 .field private mLauncher16Grids:Lcom/smartisanos/home/settings/PreviewSettingItemView;
 
@@ -867,6 +871,387 @@
 
     .line 201
     return-void
+.end method
+
+.method private hasAvailableGaussianTheme()Z
+    .locals 4
+
+    .prologue
+    .line 202
+    sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->SUPPORTED_THEME_MAP:Ljava/util/Map;
+
+    .line 203
+    .local v0, "themeMap":Ljava/util/Map;
+    if-nez v0, :cond_0
+
+    .line 204
+    const/4 v1, 0x0
+
+    .line 221
+    :goto_0
+    return v1
+
+    .line 206
+    :cond_0
+    const-string v1, "smartisan_theme_aero"
+
+    invoke-interface {v0, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/smartisanos/launcher/theme/Theme;
+
+    .line 207
+    .local v1, "theme":Lcom/smartisanos/launcher/theme/Theme;
+    if-eqz v1, :cond_1
+
+    iget v2, v1, Lcom/smartisanos/launcher/theme/Theme;->status:I
+
+    const/16 v3, 0x66
+
+    if-ne v2, v3, :cond_1
+
+    .line 208
+    const/4 v1, 0x1
+
+    goto :goto_0
+
+    .line 211
+    :cond_1
+    const-string v1, "smartisan_theme_mist"
+
+    invoke-interface {v0, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/smartisanos/launcher/theme/Theme;
+
+    .line 212
+    if-eqz v1, :cond_2
+
+    iget v2, v1, Lcom/smartisanos/launcher/theme/Theme;->status:I
+
+    const/16 v3, 0x66
+
+    if-ne v2, v3, :cond_2
+
+    .line 213
+    const/4 v1, 0x1
+
+    goto :goto_0
+
+    .line 216
+    :cond_2
+    const/4 v1, 0x0
+
+    goto :goto_0
+.end method
+
+.method private updateGaussianWallpaperItemVisibility()V
+    .locals 2
+
+    .prologue
+    .line 222
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    if-nez v0, :cond_0
+
+    .line 223
+    return-void
+
+    .line 226
+    :cond_0
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->hasAvailableGaussianTheme()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_1
+
+    .line 227
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    .line 228
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemPreview()V
+
+    .line 233
+    :goto_0
+    return-void
+
+    .line 230
+    :cond_1
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    const/16 v1, 0x8
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    goto :goto_0
+.end method
+
+.method private refreshGaussianWallpaperIfNeeded()V
+    .locals 2
+
+    .prologue
+    .line 202
+    invoke-static {p0}, Lcom/smartisanos/launcher/theme/ThemeManager;->getCurrentTheme(Landroid/content/Context;)Lcom/smartisanos/launcher/theme/Theme;
+
+    move-result-object v0
+
+    .line 203
+    .local v0, "currentTheme":Lcom/smartisanos/launcher/theme/Theme;
+    invoke-static {v0}, Lcom/smartisanos/launcher/theme/ThemeManager;->isGaussianTheme(Lcom/smartisanos/launcher/theme/Theme;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_0
+
+    .line 204
+    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
+
+    move-result-object v1
+
+    .line 205
+    .local v1, "mainView":Lcom/smartisanos/launcher/view/MainView;
+    if-eqz v1, :cond_0
+
+    .line 206
+    invoke-virtual {v1}, Lcom/smartisanos/launcher/view/MainView;->changeWallpaper()V
+
+    .line 209
+    .end local v1    # "mainView":Lcom/smartisanos/launcher/view/MainView;
+    :cond_0
+    return-void
+.end method
+
+.method private showGaussianWallpaperDialog()V
+    .locals 4
+
+    .prologue
+    .line 210
+    new-instance v0, Landroid/view/ContextThemeWrapper;
+
+    const v1, 0x103012b
+
+    invoke-direct {v0, p0, v1}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    .line 211
+    .local v0, "themeWrapper":Landroid/view/ContextThemeWrapper;
+    new-instance v1, Landroid/app/AlertDialog$Builder;
+
+    invoke-direct {v1, v0}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
+
+    const v2, 0x7f080085
+
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v1
+
+    const v2, 0x7f08026d
+
+    .line 212
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    new-instance v3, Lcom/smartisanos/home/settings/view/SettingMainActivity$3;
+
+    invoke-direct {v3, p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity$3;-><init>(Lcom/smartisanos/home/settings/view/SettingMainActivity;)V
+
+    invoke-virtual {v1, v2, v3}, Landroid/app/AlertDialog$Builder;->setPositiveButton(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v1
+
+    const v2, 0x7f08026f
+
+    .line 213
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    new-instance v3, Lcom/smartisanos/home/settings/view/SettingMainActivity$4;
+
+    invoke-direct {v3, p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity$4;-><init>(Lcom/smartisanos/home/settings/view/SettingMainActivity;)V
+
+    invoke-virtual {v1, v2, v3}, Landroid/app/AlertDialog$Builder;->setNegativeButton(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v1
+
+    .line 214
+    invoke-virtual {v1}, Landroid/app/AlertDialog$Builder;->show()Landroid/app/AlertDialog;
+
+    .line 215
+    return-void
+.end method
+
+.method private updateGaussianWallpaperItemPreview()V
+    .locals 3
+
+    .prologue
+    .line 216
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    if-nez v0, :cond_0
+
+    .line 217
+    return-void
+
+    .line 219
+    :cond_0
+    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->getCustomGaussianWallpaper(Landroid/content/Context;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    .line 220
+    .local v0, "bitmap":Landroid/graphics/Bitmap;
+    if-nez v0, :cond_2
+
+    .line 221
+    invoke-static {p0}, Lcom/smartisanos/launcher/theme/ThemeManager;->getCurrentTheme(Landroid/content/Context;)Lcom/smartisanos/launcher/theme/Theme;
+
+    move-result-object v1
+
+    .line 222
+    .local v1, "currentTheme":Lcom/smartisanos/launcher/theme/Theme;
+    invoke-static {v1}, Lcom/smartisanos/launcher/theme/ThemeManager;->isGaussianTheme(Lcom/smartisanos/launcher/theme/Theme;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_1
+
+    .line 223
+    invoke-static {v1}, Lcom/smartisanos/launcher/data/Utils;->getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    .line 226
+    .end local v1    # "currentTheme":Lcom/smartisanos/launcher/theme/Theme;
+    :cond_1
+    if-nez v0, :cond_2
+
+    .line 227
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    const v2, 0x7f0202b2
+
+    invoke-virtual {v1, v2}, Lcom/smartisanos/home/settings/SettingItemTextVertical;->setImageResource(I)V
+
+    .line 228
+    return-void
+
+    .line 231
+    :cond_2
+    invoke-direct {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->scaledItemTheme(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    .line 232
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    invoke-virtual {v1, v0}, Lcom/smartisanos/home/settings/SettingItemTextVertical;->setBitmap(Landroid/graphics/Bitmap;)V
+
+    .line 233
+    return-void
+.end method
+
+.method public clearCustomGaussianWallpaper()V
+    .locals 2
+
+    .prologue
+    .line 234
+    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->getCustomGaussianWallpaperFile(Landroid/content/Context;)Ljava/io/File;
+
+    move-result-object v0
+
+    .line 235
+    .local v0, "customFile":Ljava/io/File;
+    if-eqz v0, :cond_1
+
+    invoke-virtual {v0}, Ljava/io/File;->exists()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_1
+
+    .line 236
+    invoke-virtual {v0}, Ljava/io/File;->delete()Z
+
+    .line 239
+    :cond_1
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemPreview()V
+
+    .line 240
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->refreshGaussianWallpaperIfNeeded()V
+
+    .line 241
+    return-void
+.end method
+
+.method public launchGaussianWallpaperPicker()V
+    .locals 4
+
+    .prologue
+    .line 242
+    new-instance v0, Landroid/content/Intent;
+
+    const-string v1, "android.intent.action.GET_CONTENT"
+
+    invoke-direct {v0, v1}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    .line 243
+    .local v0, "intent":Landroid/content/Intent;
+    const-string v1, "image/*"
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->setType(Ljava/lang/String;)Landroid/content/Intent;
+
+    .line 244
+    const-string v1, "android.intent.category.OPENABLE"
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
+
+    .line 246
+    :try_start_0
+    const/4 v1, 0x2
+
+    invoke-virtual {p0, v0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivityForResult(Landroid/content/Intent;I)V
+    :try_end_0
+    .catch Landroid/content/ActivityNotFoundException; {:try_start_0 .. :try_end_0} :catch_0
+
+    .line 252
+    :goto_0
+    return-void
+
+    .line 247
+    :catch_0
+    move-exception v1
+
+    .line 248
+    .local v1, "e":Landroid/content/ActivityNotFoundException;
+    invoke-virtual {v1}, Landroid/content/ActivityNotFoundException;->printStackTrace()V
+
+    .line 249
+    const v2, 0x7f08026e
+
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    const/4 v3, 0x0
+
+    invoke-static {p0, v2, v3}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v2
+
+    invoke-virtual {v2}, Landroid/widget/Toast;->show()V
+
+    goto :goto_0
 .end method
 
 .method private scaledItemTheme(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
@@ -2180,11 +2565,22 @@
     .restart local v1    # "intent":Landroid/content/Intent;
     .restart local v2    # "send":Z
     :cond_6
-    iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+    iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
-    if-ne p1, v4, :cond_7
+    if-ne p1, v4, :cond_item_icons
 
     .line 267
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->showGaussianWallpaperDialog()V
+
+    goto/16 :goto_0
+
+    .line 268
+    :cond_item_icons
+    iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    if-ne p1, v4, :cond_item_anim
+
+    .line 269
     sget-object v4, Lcom/smartisanos/home/settings/view/SettingMainActivity;->log:Lcom/smartisanos/launcher/LOG;
 
     const-string v5, "A140"
@@ -2203,40 +2599,40 @@
 
     goto :goto_2
 
-    .line 270
-    :cond_7
+    .line 272
+    :cond_item_anim
     iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemPageFlipAnims:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
-    if-ne p1, v4, :cond_8
+    if-ne p1, v4, :cond_about_us
 
-    .line 271
+    .line 273
     const/4 v2, 0x1
 
-    .line 272
+    .line 274
     const-class v4, Lcom/smartisanos/home/settings/LauncherAnimChooseActivity;
 
     invoke-virtual {v1, p0, v4}, Landroid/content/Intent;->setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;
 
     goto :goto_2
 
-    .line 273
-    :cond_8
+    .line 275
+    :cond_about_us
     iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mAboutUs:Landroid/view/View;
 
-    if-ne p1, v4, :cond_9
+    if-ne p1, v4, :cond_default_engine
 
-    .line 275
+    .line 277
     const/4 v2, 0x1
 
-    .line 276
+    .line 278
     const-class v4, Lcom/smartisanos/home/settings/AboutUsActivity;
 
     invoke-virtual {v1, p0, v4}, Landroid/content/Intent;->setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;
 
     goto :goto_2
 
-    .line 277
-    :cond_9
+    .line 279
+    :cond_default_engine
     iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mDefaultEngineSetter:Landroid/view/View;
 
     if-ne p1, v4, :cond_4
@@ -2389,6 +2785,22 @@
     invoke-virtual {v8, p0}, Lcom/smartisanos/home/settings/SettingItemTextVertical;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     .line 118
+    const v8, 0x7f0f0187
+
+    invoke-virtual {p0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v8
+
+    check-cast v8, Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    iput-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    .line 119
+    iget-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemLauncherWallpaper:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    invoke-virtual {v8, p0}, Lcom/smartisanos/home/settings/SettingItemTextVertical;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    .line 121
     const v8, 0x7f0f014b
 
     invoke-virtual {p0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
@@ -2757,6 +3169,240 @@
     goto :goto_0
 .end method
 
+.method protected onActivityResult(IILandroid/content/Intent;)V
+    .locals 9
+    .param p1, "requestCode"    # I
+    .param p2, "resultCode"    # I
+    .param p3, "data"    # Landroid/content/Intent;
+
+    .prologue
+    const/4 v8, 0x0
+
+    .line 180
+    invoke-super {p0, p1, p2, p3}, Lcom/smartisanos/home/settings/BaseActivity;->onActivityResult(IILandroid/content/Intent;)V
+
+    .line 181
+    const/4 v0, 0x2
+
+    if-ne p1, v0, :cond_return
+
+    const/4 v0, -0x1
+
+    if-ne p2, v0, :cond_return
+
+    if-eqz p3, :cond_return
+
+    .line 182
+    invoke-virtual {p3}, Landroid/content/Intent;->getData()Landroid/net/Uri;
+
+    move-result-object v4
+
+    .line 183
+    .local v4, "uri":Landroid/net/Uri;
+    if-eqz v4, :cond_return
+
+    .line 185
+    const/4 v5, 0x0
+
+    .line 186
+    .local v5, "input":Ljava/io/InputStream;
+    const/4 v6, 0x0
+
+    .line 188
+    .local v6, "output":Ljava/io/FileOutputStream;
+    :try_start_0
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v4}, Landroid/content/ContentResolver;->openInputStream(Landroid/net/Uri;)Ljava/io/InputStream;
+
+    move-result-object v5
+
+    .line 189
+    if-eqz v5, :cond_fail
+
+    .line 190
+    invoke-static {v5}, Landroid/graphics/BitmapFactory;->decodeStream(Ljava/io/InputStream;)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    .line 191
+    .local v1, "original":Landroid/graphics/Bitmap;
+    if-eqz v1, :cond_fail
+
+    .line 192
+    const/4 v0, 0x0
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/Utils;->getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    .line 193
+    .local v2, "processed":Landroid/graphics/Bitmap;
+    if-eqz v2, :cond_fail
+
+    .line 194
+    invoke-static {v2}, Lcom/smartisanos/launcher/data/Utils;->Bitmap2Bytes(Landroid/graphics/Bitmap;)[B
+
+    move-result-object v3
+
+    .line 195
+    .local v3, "wallpaperBytes":[B
+    if-eqz v3, :cond_fail
+
+    .line 196
+    const-string v0, "gaussian_wallpaper.png"
+
+    invoke-virtual {p0, v0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->openFileOutput(Ljava/lang/String;I)Ljava/io/FileOutputStream;
+
+    move-result-object v6
+
+    .line 197
+    invoke-virtual {v6, v3}, Ljava/io/FileOutputStream;->write([B)V
+
+    .line 198
+    invoke-virtual {v6}, Ljava/io/FileOutputStream;->flush()V
+
+    .line 199
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemPreview()V
+
+    .line 200
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->refreshGaussianWallpaperIfNeeded()V
+
+    goto :goto_cleanup
+
+    .line 202
+    .end local v1    # "original":Landroid/graphics/Bitmap;
+    .end local v2    # "processed":Landroid/graphics/Bitmap;
+    .end local v3    # "wallpaperBytes":[B
+    :cond_fail
+    const v0, 0x7f08026c
+
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {p0, v0, v8}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Landroid/widget/Toast;->show()V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+    .catchall {:try_start_0 .. :try_end_0} :catchall_0
+
+    .line 210
+    :goto_cleanup
+    if-eqz v5, :cond_close_output
+
+    :try_start_1
+    invoke-virtual {v5}, Ljava/io/InputStream;->close()V
+    :try_end_1
+    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_1
+
+    .line 216
+    :cond_close_output
+    if-eqz v6, :cond_return
+
+    :try_start_2
+    invoke-virtual {v6}, Ljava/io/FileOutputStream;->close()V
+    :try_end_2
+    .catch Ljava/lang/Exception; {:try_start_2 .. :try_end_2} :catch_2
+
+    .line 221
+    :goto_0
+    return-void
+
+    .line 203
+    :catch_0
+    move-exception v0
+
+    .line 204
+    .local v0, "e":Ljava/lang/Exception;
+    invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
+
+    .line 205
+    const v1, 0x7f08026c
+
+    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {p0, v1, v8}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Landroid/widget/Toast;->show()V
+
+    goto :goto_cleanup
+
+    .line 207
+    .end local v0    # "e":Ljava/lang/Exception;
+    :catchall_0
+    move-exception v0
+
+    .line 210
+    if-eqz v5, :cond_close_output_throw
+
+    :try_start_3
+    invoke-virtual {v5}, Ljava/io/InputStream;->close()V
+    :try_end_3
+    .catch Ljava/lang/Exception; {:try_start_3 .. :try_end_3} :catch_3
+
+    .line 216
+    :cond_close_output_throw
+    if-eqz v6, :cond_throw
+
+    :try_start_4
+    invoke-virtual {v6}, Ljava/io/FileOutputStream;->close()V
+    :try_end_4
+    .catch Ljava/lang/Exception; {:try_start_4 .. :try_end_4} :catch_4
+
+    .line 221
+    :cond_throw
+    throw v0
+
+    .line 211
+    :catch_1
+    move-exception v0
+
+    invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
+
+    goto :cond_close_output
+
+    .line 217
+    :catch_2
+    move-exception v0
+
+    invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
+
+    goto :goto_0
+
+    .line 211
+    :catch_3
+    move-exception v1
+
+    invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
+
+    goto :cond_close_output_throw
+
+    .line 217
+    :catch_4
+    move-exception v1
+
+    invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
+
+    goto :cond_throw
+
+    .line 221
+    .end local v4    # "uri":Landroid/net/Uri;
+    .end local v5    # "input":Ljava/io/InputStream;
+    .end local v6    # "output":Ljava/io/FileOutputStream;
+    :cond_return
+    return-void
+.end method
+
 .method protected onDestroy()V
     .locals 3
 
@@ -2839,14 +3485,17 @@
     invoke-virtual {v1, v2}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
 
     .line 343
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->registerCheckedButton()V
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemVisibility()V
 
     .line 344
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->registerCheckedButton()V
+
+    .line 345
     const/4 v1, 0x0
 
     iput-boolean v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->alreadyClicked:Z
 
-    .line 345
+    .line 346
     return-void
 .end method
 

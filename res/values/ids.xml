@@ -391,4 +391,5 @@
     <id name="setting_titlebar_title" />
     <id name="setting_titlebar_confirm" />
     <id name="action_settings" />
+    <id name="item_id_launcher_wallpaper" />
 </resources>

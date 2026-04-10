@@ -130,8 +130,12 @@
     <string name="launcher_theme_sub_text">Set Launcher Theme</string>
     <string name="launcher_theme_text">Launcher Theme</string>
     <string name="launcher_unlock_anim">Launcher Unlock Animation</string>
-    <string name="launcher_wallpaper_setting_sub_text">Set Wallpaper for current Launcher</string>
+    <string name="launcher_wallpaper_setting_sub_text">Only works with Aero and Mist themes</string>
     <string name="launcher_wallpaper_setting_text">Launcher Wallpaper</string>
+    <string name="launcher_wallpaper_pick_failed_text">Unable to set launcher wallpaper</string>
+    <string name="launcher_wallpaper_pick_text">Choose image</string>
+    <string name="launcher_wallpaper_picker_unavailable_text">No image picker available</string>
+    <string name="launcher_wallpaper_restore_default_text">Restore default wallpaper</string>
     <string name="loading">Loading</string>
     <string name="lock_notice">Locked</string>
     <string name="lockscreen_wallpaper_setting_sub_text">Set Lock Screen Wallpaper</string>
