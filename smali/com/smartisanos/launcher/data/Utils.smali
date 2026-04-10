@@ -10857,12 +10857,13 @@
 
     move-object v0, v4
 
-    goto :cond_0
+    goto :goto_0
 
     :catch_0
     move-exception v1
 
-    goto :cond_0
+    :goto_0
+    return-object v0
 .end method
 
 .method public static getAvailableWeatherLaunchIntent(Landroid/content/Context;)Landroid/content/Intent;
@@ -11027,16 +11028,17 @@
 
     if-eqz v5, :cond_4
 
-    goto :cond_0
+    goto :goto_1
 
     :cond_4
     if-nez v9, :cond_2
 
     move-object v9, v8
 
-    goto :cond_2
+    goto :goto_0
 
     :cond_0
+    :goto_1
     return-object v8
 
     :cond_1
