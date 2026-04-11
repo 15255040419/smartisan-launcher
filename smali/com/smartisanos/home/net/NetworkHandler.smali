@@ -931,6 +931,22 @@
 
     if-nez v7, :cond_4
 
+    iget-boolean v2, v9, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    if-eqz v2, :goto_0
+
+    iget-object v2, v9, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->iconData:[B
+
+    if-eqz v2, :goto_0
+
+    array-length v2, v2
+
+    if-eqz v2, :goto_0
+
+    invoke-static {v9}, Lcom/smartisanos/home/net/NetworkHandler;->saveFetchedIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    const/4 v5, 0x1
+
     goto :goto_0
 
     .line 548

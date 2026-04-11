@@ -456,6 +456,17 @@
 
     invoke-virtual {v1, v2, v3}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
 
+    .line 124
+    if-eqz v0, :cond_2
+
+    sget-boolean v1, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
+
+    if-eqz v1, :cond_2
+
+    const/4 v1, 0x0
+
+    invoke-static {v1}, Lcom/smartisanos/home/net/StatusReceiver;->tryToFetch(Z)V
+
     .line 125
     :cond_2
     return-void
