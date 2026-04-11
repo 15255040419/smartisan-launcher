@@ -21,7 +21,9 @@
 
 ## 相关项目
 
+- 桌面维护版仓库：当前仓库
 - 同系列维护项目：[HandShaker Android Maintained](https://github.com/rianlu/handshaker-android-maintained)
+- HandShaker 最新发布页：[Latest Release](https://github.com/rianlu/handshaker-android-maintained/releases/latest)
 
 ## 项目亮点
 
@@ -485,6 +487,11 @@ THEME_FILTER=Literary ./tools/build_theme_release.sh
 KEEP_THEME_WORK=1 ./tools/build_theme_release.sh
 ./tools/extract_theme_previews.sh
 ```
+
+## 友情链接
+
+- [LINUX DO](https://linux.do/)
+  社区文化：真诚、友善、团结、专业，共建你我引以为荣之社区。
 
 ## 版权与免责声明
 
