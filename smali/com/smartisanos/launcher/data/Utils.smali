@@ -2624,45 +2624,80 @@
 
     .line 1787
     .local v1, "packageManager":Landroid/content/pm/PackageManager;
-    new-instance v0, Landroid/content/Intent;
+    :try_start_0
+    new-instance v0, Ljava/util/ArrayList;
 
-    const-string v3, "android.intent.action.MAIN"
-
-    invoke-direct {v0, v3}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 
     .line 1788
-    .local v0, "intent":Landroid/content/Intent;
-    const-string v3, "android.intent.category.HOME"
-
-    invoke-virtual {v0, v3}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
-
-    .line 1789
-    const/4 v3, 0x0
-
-    invoke-virtual {v1, v0, v3}, Landroid/content/pm/PackageManager;->resolveActivity(Landroid/content/Intent;I)Landroid/content/pm/ResolveInfo;
+    .local v0, "homeActivities":Ljava/util/ArrayList;
+    invoke-virtual {v1, v0}, Landroid/content/pm/PackageManager;->getHomeActivities(Ljava/util/List;)Landroid/content/ComponentName;
 
     move-result-object v2
 
+    .line 1789
+    .local v2, "defaultHome":Landroid/content/ComponentName;
+    if-eqz v2, :goto_0
+
     .line 1790
+    invoke-virtual {v2}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v4
+
+    return-object v4
+    :try_end_0
+    .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_0
+
+    .line 1794
+    .end local v0    # "homeActivities":Ljava/util/ArrayList;
+    .end local v2    # "defaultHome":Landroid/content/ComponentName;
+    :goto_0
+    new-instance v0, Landroid/content/Intent;
+
+    const-string v4, "android.intent.action.MAIN"
+
+    invoke-direct {v0, v4}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    .line 1795
+    .local v0, "intent":Landroid/content/Intent;
+    const-string v4, "android.intent.category.HOME"
+
+    invoke-virtual {v0, v4}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
+
+    .line 1796
+    const/4 v4, 0x0
+
+    invoke-virtual {v1, v0, v4}, Landroid/content/pm/PackageManager;->resolveActivity(Landroid/content/Intent;I)Landroid/content/pm/ResolveInfo;
+
+    move-result-object v2
+
+    .line 1797
     .local v2, "res":Landroid/content/pm/ResolveInfo;
     if-eqz v2, :cond_0
 
-    .line 1791
-    iget-object v3, v2, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+    .line 1798
+    iget-object v4, v2, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
 
-    if-eqz v3, :cond_0
+    if-eqz v4, :cond_0
+
+    .line 1799
+    iget-object v4, v2, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    iget-object v4, v4, Landroid/content/pm/ActivityInfo;->packageName:Ljava/lang/String;
+
+    return-object v4
+
+    .line 1802
+    :cond_0
+    const/4 v4, 0x0
+
+    return-object v4
 
     .line 1792
-    iget-object v3, v2, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
-
-    iget-object v3, v3, Landroid/content/pm/ActivityInfo;->packageName:Ljava/lang/String;
-
-    .line 1795
-    :goto_0
-    return-object v3
-
-    :cond_0
-    const/4 v3, 0x0
+    .end local v0    # "intent":Landroid/content/Intent;
+    .end local v2    # "res":Landroid/content/pm/ResolveInfo;
+    :catch_0
+    move-exception v3
 
     goto :goto_0
 .end method
@@ -10754,6 +10789,68 @@
     return-object v1
 .end method
 
+.method private static getLaunchIntentForComponentIfExists(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+    .locals 5
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "pkg"    # Ljava/lang/String;
+    .param p2, "cmp"    # Ljava/lang/String;
+
+    .prologue
+    const/4 v0, 0x0
+
+    if-eqz p0, :cond_0
+
+    if-eqz p1, :cond_0
+
+    if-nez p2, :cond_1
+
+    :cond_0
+    return-object v0
+
+    :cond_1
+    :try_start_0
+    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_0
+
+    new-instance v2, Landroid/content/ComponentName;
+
+    invoke-direct {v2, p1, p2}, Landroid/content/ComponentName;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/4 v3, 0x0
+
+    invoke-virtual {v1, v2, v3}, Landroid/content/pm/PackageManager;->getActivityInfo(Landroid/content/ComponentName;I)Landroid/content/pm/ActivityInfo;
+
+    move-result-object v3
+
+    if-eqz v3, :cond_0
+
+    new-instance v4, Landroid/content/Intent;
+
+    const-string v1, "android.intent.action.MAIN"
+
+    invoke-direct {v4, v1}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    invoke-virtual {v4, v2}, Landroid/content/Intent;->setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;
+
+    const-string v1, "android.intent.category.LAUNCHER"
+
+    invoke-virtual {v4, v1}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    move-object v0, v4
+
+    goto :cond_0
+
+    :catch_0
+    move-exception v1
+
+    goto :cond_0
+.end method
+
 .method public static getAvailableWeatherLaunchIntent(Landroid/content/Context;)Landroid/content/Intent;
     .locals 10
     .param p0, "context"    # Landroid/content/Context;
@@ -10787,7 +10884,9 @@
 
     const-string v0, "com.sec.android.daemonapp"
 
-    invoke-static {p0, v0}, Lcom/smartisanos/launcher/data/Utils;->getLaunchIntentForPackageIfExists(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;
+    const-string v1, "com.samsung.android.weather.app.AppSearchableActivity"
+
+    invoke-static {p0, v0, v1}, Lcom/smartisanos/launcher/data/Utils;->getLaunchIntentForComponentIfExists(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
 
     move-result-object v8
 
@@ -10901,6 +11000,27 @@
     move-result-object v8
 
     if-eqz v8, :cond_2
+
+    iget-object v5, v4, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    iget-object v5, v5, Landroid/content/pm/ActivityInfo;->applicationInfo:Landroid/content/pm/ApplicationInfo;
+
+    if-eqz v5, :cond_4
+
+    iget v5, v5, Landroid/content/pm/ApplicationInfo;->flags:I
+
+    and-int/lit16 v5, v5, 0x81
+
+    if-eqz v5, :cond_4
+
+    goto :cond_0
+
+    :cond_4
+    if-nez v9, :cond_2
+
+    move-object v9, v8
+
+    goto :cond_2
 
     :cond_0
     return-object v8

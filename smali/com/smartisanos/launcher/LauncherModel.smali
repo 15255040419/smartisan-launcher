@@ -1026,7 +1026,19 @@
     move-result-object v0
 
     .line 614
+    const-string v4, "com.sec.android.daemonapp"
+
+    invoke-virtual {v4, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-eqz v4, :cond_weather_skip
+
+    invoke-static {p0, v0}, Lcom/smartisanos/launcher/LauncherModel;->appendSpecialWeatherResolveInfos(Landroid/content/Context;Ljava/util/List;)V
+
+    .line 614
     .local v0, "apps":Ljava/util/List;, "Ljava/util/List<Landroid/content/pm/ResolveInfo;>;"
+    :cond_weather_skip
     if-eqz v0, :cond_1
 
     .line 615
@@ -1253,7 +1265,187 @@
     .end local v6    # "name":Ljava/lang/String;
     .end local v7    # "pkg":Ljava/lang/String;
     :cond_0
+    invoke-static {p0, v3}, Lcom/smartisanos/launcher/LauncherModel;->appendSpecialWeatherResolveInfos(Landroid/content/Context;Ljava/util/List;)V
+
     return-object v3
+.end method
+
+.method private static appendSpecialWeatherResolveInfos(Landroid/content/Context;Ljava/util/List;)V
+    .locals 4
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "apps"    # Ljava/util/List;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Landroid/content/Context;",
+            "Ljava/util/List",
+            "<",
+            "Landroid/content/pm/ResolveInfo;",
+            ">;)V"
+        }
+    .end annotation
+
+    .prologue
+    if-eqz p1, :cond_0
+
+    const-string v0, "com.sec.android.daemonapp"
+
+    const-string v1, "com.samsung.android.weather.app.AppSearchableActivity"
+
+    invoke-static {p1, v0, v1}, Lcom/smartisanos/launcher/LauncherModel;->containsResolveInfo(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_0
+
+    invoke-static {p0, v0, v1}, Lcom/smartisanos/launcher/LauncherModel;->createResolveInfoForActivity(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/pm/ResolveInfo;
+
+    move-result-object v3
+
+    if-eqz v3, :cond_0
+
+    invoke-interface {p1, v3}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    :cond_0
+    return-void
+.end method
+
+.method private static containsResolveInfo(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Z
+    .locals 6
+    .param p0, "apps"    # Ljava/util/List;
+    .param p1, "pkg"    # Ljava/lang/String;
+    .param p2, "cmp"    # Ljava/lang/String;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/util/List",
+            "<",
+            "Landroid/content/pm/ResolveInfo;",
+            ">;",
+            "Ljava/lang/String;",
+            "Ljava/lang/String;",
+            ")Z"
+        }
+    .end annotation
+
+    .prologue
+    const/4 v4, 0x0
+
+    if-eqz p0, :cond_2
+
+    invoke-interface {p0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v5
+
+    :cond_0
+    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_2
+
+    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Landroid/content/pm/ResolveInfo;
+
+    if-eqz v1, :cond_0
+
+    iget-object v0, v1, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    if-eqz v0, :cond_0
+
+    iget-object v2, v0, Landroid/content/pm/ActivityInfo;->packageName:Ljava/lang/String;
+
+    invoke-virtual {p1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_0
+
+    iget-object v3, v0, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
+
+    invoke-virtual {p2, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_0
+
+    const/4 v4, 0x1
+
+    :cond_2
+    return v4
+.end method
+
+.method private static createResolveInfoForActivity(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/pm/ResolveInfo;
+    .locals 6
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "pkg"    # Ljava/lang/String;
+    .param p2, "cmp"    # Ljava/lang/String;
+
+    .prologue
+    const/4 v0, 0x0
+
+    if-eqz p0, :cond_0
+
+    if-eqz p1, :cond_0
+
+    if-nez p2, :cond_1
+
+    :cond_0
+    return-object v0
+
+    :cond_1
+    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_0
+
+    :try_start_0
+    new-instance v2, Landroid/content/ComponentName;
+
+    invoke-direct {v2, p1, p2}, Landroid/content/ComponentName;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/4 v3, 0x0
+
+    invoke-virtual {v1, v2, v3}, Landroid/content/pm/PackageManager;->getActivityInfo(Landroid/content/ComponentName;I)Landroid/content/pm/ActivityInfo;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_0
+
+    new-instance v3, Landroid/content/pm/ResolveInfo;
+
+    invoke-direct {v3}, Landroid/content/pm/ResolveInfo;-><init>()V
+
+    iput-object v2, v3, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    iget v4, v2, Landroid/content/pm/PackageItemInfo;->icon:I
+
+    iput v4, v3, Landroid/content/pm/ResolveInfo;->icon:I
+
+    iget v4, v2, Landroid/content/pm/PackageItemInfo;->labelRes:I
+
+    iput v4, v3, Landroid/content/pm/ResolveInfo;->labelRes:I
+
+    iget-object v4, v2, Landroid/content/pm/PackageItemInfo;->nonLocalizedLabel:Ljava/lang/CharSequence;
+
+    iput-object v4, v3, Landroid/content/pm/ResolveInfo;->nonLocalizedLabel:Ljava/lang/CharSequence;
+
+    iput-object p1, v3, Landroid/content/pm/ResolveInfo;->resolvePackageName:Ljava/lang/String;
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    move-object v0, v3
+
+    goto :cond_0
+
+    :catch_0
+    move-exception v5
+
+    goto :cond_0
 .end method
 
 .method public static getAppInfos(I)Ljava/util/ArrayList;
