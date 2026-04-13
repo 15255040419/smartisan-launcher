@@ -62,15 +62,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: "Smartisan Launcher Maintained ${{ github.ref_name }}"
-          body: |
-            ## 版本 ${{ github.ref_name }}
-
-            ### 安装方式
-            1. 下载 APK 文件
-            2. 通过 ADB 安装：`adb install -r smartisan-launcher-maintained-*.apk`
-
-            ---
-            由 GitHub Actions 自动构建发布。
+          body_path: CHANGELOG.md
           files: build/smartisan-launcher-maintained-${{ github.ref_name }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
