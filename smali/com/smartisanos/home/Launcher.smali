@@ -1957,6 +1957,35 @@
 
     invoke-virtual {v2, v3}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
 
+    # Injecting Runtime Permission Check for Android 6.0+
+    const-string v4, "android.permission.WRITE_EXTERNAL_STORAGE"
+
+    # Use move-object/from16 because p0 (v21) is a high register
+    move-object/from16 v0, p0
+
+    invoke-virtual {v0, v4}, Lcom/smartisanos/home/Launcher;->checkSelfPermission(Ljava/lang/String;)I
+
+    move-result v4
+
+    if-eqz v4, :cond_perm_granted
+
+    const/4 v4, 0x1
+
+    new-array v4, v4, [Ljava/lang/String;
+
+    const/4 v5, 0x0
+
+    const-string v6, "android.permission.WRITE_EXTERNAL_STORAGE"
+
+    aput-object v6, v4, v5
+
+    const/16 v5, 0x64
+
+    # Request the permission using v0
+    invoke-virtual {v0, v4, v5}, Lcom/smartisanos/home/Launcher;->requestPermissions([Ljava/lang/String;I)V
+
+    :cond_perm_granted
+
     .line 288
     invoke-direct/range {p0 .. p0}, Lcom/smartisanos/home/Launcher;->strictMode()V
 

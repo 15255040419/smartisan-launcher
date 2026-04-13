@@ -985,6 +985,17 @@
     :cond_5
     iget-object v4, p0, Lcom/smartisanos/smengine/Texture;->mBitmap:Landroid/graphics/Bitmap;
 
+    # Compat fix: convert Bitmap to ARGB_8888 if needed (fixes "invalid Bitmap format" on Android 8)
+    invoke-virtual {v4}, Landroid/graphics/Bitmap;->getConfig()Landroid/graphics/Bitmap$Config;
+    move-result-object v0
+    sget-object v1, Landroid/graphics/Bitmap$Config;->ARGB_8888:Landroid/graphics/Bitmap$Config;
+    if-eq v0, v1, :bitmap_ok
+    # Not ARGB_8888 (e.g. HARDWARE or RGBA_F16): copy to ARGB_8888
+    const/4 v0, 0x0
+    invoke-virtual {v4, v1, v0}, Landroid/graphics/Bitmap;->copy(Landroid/graphics/Bitmap$Config;Z)Landroid/graphics/Bitmap;
+    move-result-object v4
+    :bitmap_ok
+
     invoke-static {v5, v3, v4, v3}, Landroid/opengl/GLUtils;->texImage2D(IILandroid/graphics/Bitmap;I)V
 
     .line 293

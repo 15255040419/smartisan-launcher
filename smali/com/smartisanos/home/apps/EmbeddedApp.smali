@@ -399,6 +399,21 @@
 
     .line 96
     :cond_2
+    iget-object v2, p0, Lcom/smartisanos/home/apps/EmbeddedApp;->mPkg:Ljava/lang/String;
+
+    const-string v3, "com.smartisan"
+
+    invoke-virtual {v2, v3}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_white
+
+    iput-boolean v4, v1, Lcom/smartisanos/launcher/data/ApplicationInfo;->installed:Z
+
+    goto :goto_0
+
+    :cond_white
     iput-boolean v5, v1, Lcom/smartisanos/launcher/data/ApplicationInfo;->installed:Z
 
     goto :goto_0

@@ -99,7 +99,7 @@
     <string name="follow_website_title">Official Website</string>
     <string name="follow_weibo_content">锤子科技</string>
     <string name="follow_weibo_title">Weibo</string>
-    <string name="follow_weixin_title">Wechat Account</string>
+    <string name="follow_weixin_title">编译作者</string>
     <string name="forget_password">Forget</string>
     <string name="global_search">System-wide Search</string>
     <string name="has_selected_1_app_float">%1$s App Selected</string>
@@ -158,9 +158,6 @@
     <string name="obsession_header_title">OCD Settings</string>
     <string name="obsession_hide_badge">Hide Icon Badge</string>
     <string name="obsession_hide_lable">Hide Icon Labels</string>
-    <string name="ocd_setting">OCD Settings</string>
-    <string name="official_icon">Official Icon</string>
-    <string name="ok">OK</string>
     <string name="org_web">Official Website</string>
     <string name="org_web_url">www.smartisan.com</string>
     <string name="over_page_limit">Over page limit</string>
@@ -595,11 +592,11 @@
     <string name="feedback_sdk_name">用户反馈_SDK</string>
     <string name="feedback_sdk_version">v1.3.5</string>
     <string name="follow_website_content">www.smartisan.com</string>
-    <string name="follow_weixin_content">smartisan2012</string>
+    <string name="follow_weixin_content">方便面的工作室</string>
     <string name="hello_world">Hello world!</string>
     <string name="launcher_color_sort_sub_text">Sort App Icon By Color</string>
     <string name="launcher_color_sort_text">Launcher Color Sort</string>
-    <string name="more_current_version_txt">V1.0</string>
+    <string name="more_current_version_txt">v1.5.1-20260413</string>
     <string name="os_update_dlg_cancel_btn">稍后更新</string>
     <string name="os_update_dlg_msg">检测到系统版本过低，为保证您个人信息安全，正常使用手机完整功能，请 Smartisan 用户尽快升级到最新系统版本！</string>
     <string name="os_update_dlg_ok_btn">现在更新</string>

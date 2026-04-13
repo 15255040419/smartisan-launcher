@@ -34,6 +34,134 @@
     return-void
 .end method
 
+.method public static updateCustomIcon(Ljava/lang/String;Ljava/lang/String;[B)V
+    .locals 10
+    .param p0, "pkg"    # Ljava/lang/String;
+    .param p1, "cmp"    # Ljava/lang/String;
+    .param p2, "iconData"    # [B
+
+    .prologue
+    .line 300
+    if-eqz p0, :cond_0
+
+    if-nez p1, :cond_1
+
+    .line 315
+    :cond_0
+    :goto_0
+    return-void
+
+    .line 303
+    :cond_1
+    invoke-static {}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getInstance()Lcom/smartisanos/launcher/data/DatabaseProvider;
+
+    move-result-object v5
+
+    invoke-virtual {v5}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
+
+    move-result-object v1
+
+    .line 304
+    .local v1, "db":Landroid/database/sqlite/SQLiteDatabase;
+
+    # Check if the row already exists
+    const-string v2, "SELECT count(*) FROM redirect_icons WHERE packageName=? AND componentName=?"
+    const/4 v3, 0x2
+    new-array v3, v3, [Ljava/lang/String;
+    const/4 v4, 0x0
+    aput-object p0, v3, v4
+    const/4 v4, 0x1
+    aput-object p1, v3, v4
+    invoke-virtual {v1, v2, v3}, Landroid/database/sqlite/SQLiteDatabase;->rawQuery(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    move-result-object v0
+    .local v0, "cursor":Landroid/database/Cursor;
+    invoke-interface {v0}, Landroid/database/Cursor;->moveToFirst()Z
+    const/4 v4, 0x0
+    invoke-interface {v0, v4}, Landroid/database/Cursor;->getInt(I)I
+    move-result v4
+    invoke-interface {v0}, Landroid/database/Cursor;->close()V
+    if-eqz v4, :cond_insert
+
+    # UPDATE: row exists
+    new-instance v0, Landroid/content/ContentValues;
+    invoke-direct {v0}, Landroid/content/ContentValues;-><init>()V
+    .local v0, "cv":Landroid/content/ContentValues;
+    const-string v3, "icon"
+    invoke-virtual {v0, v3, p2}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    const-string v3, "use_improved_app_icon"
+    const/4 v4, 0x1
+    invoke-static {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    move-result-object v4
+    invoke-virtual {v0, v3, v4}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    const-string v2, "packageName=? AND componentName=?"
+    const/4 v3, 0x2
+    new-array v3, v3, [Ljava/lang/String;
+    const/4 v4, 0x0
+    aput-object p0, v3, v4
+    const/4 v4, 0x1
+    aput-object p1, v3, v4
+    const-string v4, "redirect_icons"
+    invoke-virtual {v1, v4, v0, v2, v3}, Landroid/database/sqlite/SQLiteDatabase;->update(Ljava/lang/String;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I
+    goto :goto_0
+
+    # INSERT: row does not exist
+    :cond_insert
+    new-instance v0, Landroid/content/ContentValues;
+    invoke-direct {v0}, Landroid/content/ContentValues;-><init>()V
+    .restart local v0    # "cv":Landroid/content/ContentValues;
+    const-string v3, "packageName"
+    invoke-virtual {v0, v3, p0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    const-string v3, "componentName"
+    invoke-virtual {v0, v3, p1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    const-string v3, "icon"
+    invoke-virtual {v0, v3, p2}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    const-string v3, "use_improved_app_icon"
+    const/4 v4, 0x1
+    invoke-static {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    move-result-object v4
+    invoke-virtual {v0, v3, v4}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    # Try to find owner_id from table_iteminfos to link this icon to the home screen item
+    const-string v3, "table_iteminfos"
+    const/4 v4, 0x1
+    new-array v4, v4, [Ljava/lang/String;
+    const/4 v5, 0x0
+    const-string v6, "_id"
+    aput-object v6, v4, v5
+    const-string v5, "packageName=? AND componentName=?"
+    const/4 v6, 0x2
+    new-array v6, v6, [Ljava/lang/String;
+    const/4 v7, 0x0
+    aput-object p0, v6, v7
+    const/4 v7, 0x1
+    aput-object p1, v6, v7
+    const/4 v7, 0x0
+    const/4 v8, 0x0
+    const/4 v9, 0x0
+    move-object v2, v1
+    invoke-virtual/range {v2 .. v9}, Landroid/database/sqlite/SQLiteDatabase;->query(Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
+    move-result-object v2
+    if-eqz v2, :cond_cursor_done
+    invoke-interface {v2}, Landroid/database/Cursor;->moveToFirst()Z
+    move-result v3
+    if-eqz v3, :cond_cursor_close
+    const/4 v3, 0x0
+    invoke-interface {v2, v3}, Landroid/database/Cursor;->getLong(I)J
+    move-result-wide v3
+    const-string v5, "owner_id"
+    invoke-static {v3, v4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    move-result-object v3
+    invoke-virtual {v0, v5, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    :cond_cursor_close
+    invoke-interface {v2}, Landroid/database/Cursor;->close()V
+    :cond_cursor_done
+
+    const/4 v4, 0x5
+    const-string v3, "redirect_icons"
+    const/4 v6, 0x0
+    invoke-virtual {v1, v3, v6, v0, v4}, Landroid/database/sqlite/SQLiteDatabase;->insertWithOnConflict(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    goto :goto_0
+.end method
+
 .method public static cleanIllegalIconByPackageName(Ljava/lang/String;)V
     .locals 3
     .param p0, "packageName"    # Ljava/lang/String;
@@ -215,29 +343,69 @@
 .end method
 
 .method public static getRedirectIcon(J)[B
-    .locals 2
+    .locals 10
     .param p0, "id"    # J
 
     .prologue
-    .line 132
+    # Try by ID first (original)
     invoke-static {p0, p1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getRedirectIconInfo(J)Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-
     move-result-object v0
+    if-eqz v0, :cond_try_pkg
+    iget-object v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->iconData:[B
+    if-eqz v0, :cond_try_pkg
+    return-object v0
 
-    .line 133
-    .local v0, "info":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-    if-eqz v0, :cond_0
-
-    .line 134
-    iget-object v1, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->iconData:[B
-
-    .line 136
+    :cond_try_pkg
+    # Fallback: Query table_iteminfos by ID to get package/component
+    const/4 v0, 0x0
+    :try_start_0
+    invoke-static {}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getInstance()Lcom/smartisanos/launcher/data/DatabaseProvider;
+    move-result-object v1
+    invoke-virtual {v1}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getReadableDatabase()Landroid/database/sqlite/SQLiteDatabase;
+    move-result-object v1
+    const-string v2, "table_iteminfos"
+    const/4 v3, 0x2
+    new-array v3, v3, [Ljava/lang/String;
+    const/4 v4, 0x0
+    const-string v5, "packageName"
+    aput-object v5, v3, v4
+    const/4 v4, 0x1
+    const-string v5, "componentName"
+    aput-object v5, v3, v4
+    new-instance v4, Ljava/lang/StringBuilder;
+    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+    const-string v5, "_id="
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v4, p0, p1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v4
+    const/4 v5, 0x0
+    const/4 v6, 0x0
+    const/4 v7, 0x0
+    const/4 v8, 0x0
+    invoke-virtual/range {v1 .. v8}, Landroid/database/sqlite/SQLiteDatabase;->query(Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
+    move-result-object v1
+    if-eqz v1, :cond_return
+    invoke-interface {v1}, Landroid/database/Cursor;->moveToFirst()Z
+    move-result v2
+    if-eqz v2, :cond_close
+    const/4 v2, 0x0
+    invoke-interface {v1, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    move-result-object v2
+    const/4 v3, 0x1
+    invoke-interface {v1, v3}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    move-result-object v3
+    # Call pkg/cmp lookup
+    invoke-static {v2, v3}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getRedirectIcon(Ljava/lang/String;Ljava/lang/String;)[B
+    move-result-object v0
+    :cond_close
+    invoke-interface {v1}, Landroid/database/Cursor;->close()V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+    :cond_return
     :goto_0
-    return-object v1
-
-    :cond_0
-    const/4 v1, 0x0
-
+    return-object v0
+    :catch_0
     goto :goto_0
 .end method
 
@@ -837,6 +1005,12 @@
     iput-object v3, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->lastUpdateTime:Ljava/lang/String;
 
     .line 213
+    const/4 v3, 0x0
+
+    move-object/from16 v0, v19
+
+    iput-boolean v3, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
     move-object/from16 v0, v17
 
     move/from16 v1, v16
@@ -857,16 +1031,27 @@
 
     move-result v3
 
+    if-nez v3, :cond_use_true
+
+    const-string v3, "1"
+
+    move-object/from16 v0, v22
+
+    invoke-virtual {v0, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v3
+
     if-eqz v3, :cond_4
 
-    .line 215
+    :cond_use_true
     const/4 v3, 0x1
 
     move-object/from16 v0, v19
 
     iput-boolean v3, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
 
-    .line 219
+    .line 217
+    :cond_4
     :goto_1
     if-eqz p1, :cond_2
 
@@ -923,28 +1108,6 @@
 
     goto/16 :goto_0
 
-    .line 217
-    .end local v18    # "e":Ljava/lang/Exception;
-    .restart local v10    # "COLUMN_CMP":I
-    .restart local v11    # "COLUMN_ICON_DATA":I
-    .restart local v12    # "COLUMN_LAST_UPDATE_TIME":I
-    .restart local v13    # "COLUMN_MD5":I
-    .restart local v14    # "COLUMN_OWNER":I
-    .restart local v15    # "COLUMN_PKG":I
-    .restart local v16    # "COLUMN_USE":I
-    .restart local v19    # "info":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-    .restart local v22    # "use":Ljava/lang/String;
-    :cond_4
-    const/4 v3, 0x0
-
-    :try_start_1
-    move-object/from16 v0, v19
-
-    iput-boolean v3, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
-    :try_end_1
-    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_0
-
-    goto :goto_1
 .end method
 
 .method public static updateIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Z
@@ -1085,4 +1248,23 @@
     invoke-virtual {v2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB$2;->execute()Lcom/smartisanos/launcher/data/DatabaseProvider$TransactionTask$Result;
 
     goto :goto_0
+.end method
+.method public static resetAllToDefault()V
+    .locals 3
+
+    .prologue
+    invoke-static {}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getInstance()Lcom/smartisanos/launcher/data/DatabaseProvider;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
+
+    move-result-object v0
+
+    .line 1200
+    const-string v1, "UPDATE redirect_icons SET icon = NULL, use_improved_app_icon = \'0\', md5 = NULL"
+
+    invoke-virtual {v0, v1}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+
+    return-void
 .end method

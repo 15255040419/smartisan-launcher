@@ -544,6 +544,32 @@
 
     .line 95
     :cond_5
+    # Redirect Smartisan Phone to System Dialer to avoid crash
+    const-string v10, "com.smartisan.contacts"
+
+    invoke-virtual {v10, v7}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v10
+
+    if-eqz v10, :cond_dialer_redirect
+
+    new-instance v10, Landroid/content/Intent;
+
+    const-string v11, "android.intent.action.DIAL"
+
+    invoke-direct {v10, v11}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const/high16 v11, 0x10000000
+
+    invoke-virtual {v10, v11}, Landroid/content/Intent;->setFlags(I)Landroid/content/Intent;
+
+    const/4 v11, 0x1
+
+    invoke-direct {p0, v10, v11}, Lcom/smartisanos/launcher/actions/StartActivity;->launchWithCellDownAnimation(Landroid/content/Intent;Z)V
+
+    goto/16 :goto_0
+
+    :cond_dialer_redirect
     sget-object v10, Lcom/smartisanos/launcher/actions/StartActivity;->log:Lcom/smartisanos/launcher/LOG;
 
     new-instance v11, Ljava/lang/StringBuilder;

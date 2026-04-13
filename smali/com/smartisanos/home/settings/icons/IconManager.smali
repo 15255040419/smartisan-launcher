@@ -126,7 +126,7 @@
 .end method
 
 .method public getIconRedirectedApplications()Ljava/util/List;
-    .locals 6
+    .locals 8
     .annotation system Ldalvik/annotation/Signature;
         value = {
             "()",
@@ -193,6 +193,69 @@
     .line 68
     .end local v2    # "key":Ljava/lang/String;
     :cond_0
+    # ADDITION: Loop over all apps in resolveInfoMap and add unadapted apps
+    iget-object v4, p0, Lcom/smartisanos/home/settings/icons/IconManager;->resolveInfoMap:Ljava/util/Map;
+
+    invoke-interface {v4}, Ljava/util/Map;->keySet()Ljava/util/Set;
+
+    move-result-object v4
+
+    invoke-interface {v4}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v4
+
+    :goto_1
+    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v5
+
+    if-eqz v5, :cond_finish
+
+    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    .restart local v2    # "key":Ljava/lang/String;
+    invoke-interface {v1, v2}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v5
+
+    if-nez v5, :cond_skip
+
+    const-string v5, ";"
+
+    invoke-virtual {v2, v5}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
+
+    move-result-object v5
+
+    new-instance v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-direct {v6}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;-><init>()V
+
+    const/4 v7, 0x0
+
+    aget-object v7, v5, v7
+
+    iput-object v7, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    const/4 v7, 0x1
+
+    aget-object v7, v5, v7
+
+    iput-object v7, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    const/4 v7, 0x0
+
+    iput-boolean v7, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    invoke-interface {v0, v6}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    :cond_skip
+    goto :goto_1
+
+    :cond_finish
     return-object v0
 .end method
 
