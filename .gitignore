@@ -1,5 +1,19 @@
+# Temporary files
+*.txt
+*.log
+*.bak
+*.tmp
+
+# APK files
+*.apk
 build/
-.local/
+dist/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Thumbnails
 .DS_Store
-themes/source-apks/*.apk
-themes/maintained/*.apk
+Thumbs.db

@@ -189,10 +189,12 @@
     invoke-virtual {p2, v3}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
 
     :populate
-    # background logic simplified (no specific corners for now or rely on default)
-    const/4 v0, 0x0
+    # background logic
+    move-object v8, p0
+    move v9, p1
+    invoke-direct {v8, v9}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->getBackgroundForPosition(I)I
+    move-result v9
     iget-object v8, v3, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter$ViewHolder;->layout:Landroid/widget/RelativeLayout;
-    const v9, 0x7f02024d # middle item rounded
     invoke-virtual {v8, v9}, Landroid/widget/RelativeLayout;->setBackgroundResource(I)V
 
     invoke-virtual {p2, v1}, Landroid/view/View;->setTag(Ljava/lang/Object;)V
@@ -282,4 +284,56 @@
     invoke-static {v8}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$900(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)Landroid/widget/LinearLayout;
     move-result-object p2
     return-object p2
+.end method
+
+.method private getBackgroundForPosition(I)I
+    .locals 5
+
+    const/4 v0, 0x0 # isTop
+    const/4 v1, 0x0 # isBottom
+    
+    # 1. Check if Top
+    if-nez p1, :cond_check_top
+    const/4 v0, 0x1
+    goto :cond_check_bottom
+    :cond_check_top
+    add-int/lit8 v2, p1, -0x1
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->getItem(I)Ljava/lang/Object;
+    move-result-object v2
+    instance-of v2, v2, Ljava/lang/String;
+    if-eqz v2, :cond_check_bottom
+    const/4 v0, 0x1
+
+    :cond_check_bottom
+    # 2. Check if Bottom
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->getCount()I
+    move-result v2
+    add-int/lit8 v2, v2, -0x1
+    if-ne p1, v2, :cond_check_next
+    const/4 v1, 0x1
+    goto :cond_final
+    :cond_check_next
+    add-int/lit8 v2, p1, 0x1
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->getItem(I)Ljava/lang/Object;
+    move-result-object v2
+    instance-of v2, v2, Ljava/lang/String;
+    if-eqz v2, :cond_final
+    const/4 v1, 0x1
+
+    :cond_final
+    # 3. Choose background
+    if-eqz v0, :cond_middle
+    if-eqz v1, :cond_top_only
+    const v3, 0x7f0201cd # selector_setting_sub_item_bg_single
+    return v3
+    :cond_top_only
+    const v3, 0x7f0201ce # selector_setting_sub_item_bg_top
+    return v3
+    :cond_middle
+    if-eqz v1, :cond_mid_only
+    const v3, 0x7f0201cb # selector_setting_sub_item_bg_bottom
+    return v3
+    :cond_mid_only
+    const v3, 0x7f0201cc # selector_setting_sub_item_bg_middle
+    return v3
 .end method

@@ -584,11 +584,9 @@
     iget-object v15, v0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
 
     new-instance v0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSortComparator;
-
     move-object/from16 v1, p0
     iget-object v2, v1, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconManager:Lcom/smartisanos/home/settings/icons/IconManager;
     invoke-direct {v0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSortComparator;-><init>(Lcom/smartisanos/home/settings/icons/IconManager;)V
-
     invoke-static {v15, v0}, Ljava/util/Collections;->sort(Ljava/util/List;Ljava/util/Comparator;)V
 
     # NOW: Build mDisplayList with headers
