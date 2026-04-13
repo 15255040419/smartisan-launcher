@@ -2694,19 +2694,6 @@
 
     .line 386
     :goto_2
-    invoke-static {}, Lcom/smartisanos/home/net/NetStatusUtil;->isEnableDownload()Z
-
-    move-result v2
-
-    if-eqz v2, :cond_0
-
-    .line 387
-    const/4 v2, 0x0
-
-    move-object/from16 v0, p0
-
-    invoke-static {v0, v2}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
-
     goto/16 :goto_0
 
     .line 383
@@ -3455,18 +3442,29 @@
     invoke-virtual {v3}, Lcom/smartisanos/launcher/view/MainView;->onResume()V
 
     .line 559
-    sget-boolean v3, Lcom/smartisanos/launcher/data/Constants;->ENABLE_LAUNCH_FLIP_ANIMATION:Z
+    invoke-static {}, Lcom/smartisanos/home/net/NetStatusUtil;->isEnableDownload()Z
 
-    if-eqz v3, :cond_14
+    move-result v3
+
+    if-eqz v3, :cond_update_skip
 
     .line 560
+    invoke-static {p0, v7}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
+
+    .line 559
+    :cond_update_skip
+    sget-boolean v3, Lcom/smartisanos/launcher/data/Constants;->ENABLE_LAUNCH_FLIP_ANIMATION:Z
+
+    if-eqz v3, :cond_resume_active_icons
+
+    .line 561
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->delayResumeActiveIcons()V
 
-    .line 566
-    :goto_2
-    if-eqz v2, :cond_15
-
     .line 567
+    :goto_2
+    if-eqz v2, :cond_color_theme_resume
+
+    .line 568
     iget-object v3, p0, Lcom/smartisanos/home/Launcher;->mMainView:Lcom/smartisanos/launcher/view/MainView;
 
     if-eqz v3, :cond_8
@@ -3481,14 +3479,14 @@
 
     if-nez v3, :cond_8
 
-    .line 568
+    .line 569
     invoke-static {}, Lcom/smartisanos/launcher/theme/ChangeThemeHandler;->getInstance()Lcom/smartisanos/launcher/theme/ChangeThemeHandler;
 
     move-result-object v3
 
     invoke-virtual {v3}, Lcom/smartisanos/launcher/theme/ChangeThemeHandler;->setChangeThemeAnimStart()V
 
-    .line 569
+    .line 570
     iget-object v3, p0, Lcom/smartisanos/home/Launcher;->mContext:Landroid/app/Activity;
 
     invoke-static {v3}, Lcom/smartisanos/launcher/theme/ThemeManager;->getCurrentTheme(Landroid/content/Context;)Lcom/smartisanos/launcher/theme/Theme;
@@ -3700,13 +3698,13 @@
     goto/16 :goto_1
 
     .line 562
-    :cond_14
+    :cond_resume_active_icons
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->resumeActiveIcons()V
 
     goto/16 :goto_2
 
     .line 572
-    :cond_15
+    :cond_color_theme_resume
     sget-object v3, Lcom/smartisanos/launcher/actions/ColorThemeChanged;->changeThemeMessage:Landroid/os/Message;
 
     if-eqz v3, :cond_8
