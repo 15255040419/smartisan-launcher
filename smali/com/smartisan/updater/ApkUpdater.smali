@@ -884,6 +884,50 @@
     return-void
 .end method
 
+.method private appendReleaseNotes(Ljava/lang/String;Lcom/smartisan/updater/Version;)Ljava/lang/String;
+    .locals 3
+    .param p1, "message"    # Ljava/lang/String;
+    .param p2, "version"    # Lcom/smartisan/updater/Version;
+
+    .prologue
+    invoke-virtual {p2}, Lcom/smartisan/updater/Version;->getReleaseNotes()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_0
+
+    return-object p1
+
+    :cond_0
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    const-string v2, "\n\n"
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    return-object v1
+.end method
+
 .method private showDownloadDialog(Landroid/content/Context;Lcom/smartisan/updater/Version;)V
     .locals 10
     .param p1, "context"    # Landroid/content/Context;
@@ -992,6 +1036,10 @@
 
     .line 455
     .local v2, "message":Ljava/lang/String;
+    invoke-direct {p0, v2, p2}, Lcom/smartisan/updater/ApkUpdater;->appendReleaseNotes(Ljava/lang/String;Lcom/smartisan/updater/Version;)Ljava/lang/String;
+
+    move-result-object v2
+
     invoke-virtual {v1, v2}, Landroid/app/AlertDialog$Builder;->setMessage(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
 
     .line 456
@@ -1189,6 +1237,10 @@
 
     move-result-object v2
 
+    invoke-direct {p0, v2, p1}, Lcom/smartisan/updater/ApkUpdater;->appendReleaseNotes(Ljava/lang/String;Lcom/smartisan/updater/Version;)Ljava/lang/String;
+
+    move-result-object v2
+
     .line 356
     :goto_1
     sget v3, Lcom/smartisan/updater/R$string;->update_download:I
@@ -1364,6 +1416,10 @@
 
     .line 353
     invoke-virtual {v6, v7, v8}, Landroid/content/Context;->getString(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-direct {p0, v2, p1}, Lcom/smartisan/updater/ApkUpdater;->appendReleaseNotes(Ljava/lang/String;Lcom/smartisan/updater/Version;)Ljava/lang/String;
 
     move-result-object v2
 

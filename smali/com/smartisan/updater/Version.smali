@@ -28,6 +28,8 @@
 
 .field private needUpdate:Z
 
+.field private releaseNotes:Ljava/lang/String;
+
 .field private size:J
 
 .field private updateUrl:Ljava/lang/String;
@@ -507,6 +509,31 @@
     invoke-virtual {v0, v2}, Lcom/smartisan/updater/Version;->setCode(I)V
 
     .line 89
+    const-string v2, "body"
+
+    invoke-virtual {p1, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v3, "\r\n"
+
+    const-string v4, "\n"
+
+    invoke-virtual {v2, v3, v4}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v3, "\r"
+
+    const-string v4, "\n"
+
+    invoke-virtual {v2, v3, v4}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2}, Lcom/smartisan/updater/Version;->setReleaseNotes(Ljava/lang/String;)V
+
+    .line 89
     const-string v2, "assets"
 
     invoke-virtual {p1, v2}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
@@ -827,6 +854,15 @@
     return-object v0
 .end method
 
+.method public getReleaseNotes()Ljava/lang/String;
+    .locals 1
+
+    .prologue
+    iget-object v0, p0, Lcom/smartisan/updater/Version;->releaseNotes:Ljava/lang/String;
+
+    return-object v0
+.end method
+
 .method public getSize()J
     .locals 2
 
@@ -922,6 +958,16 @@
     iput-boolean p1, p0, Lcom/smartisan/updater/Version;->needUpdate:Z
 
     .line 85
+    return-void
+.end method
+
+.method public setReleaseNotes(Ljava/lang/String;)V
+    .locals 0
+    .param p1, "releaseNotes"    # Ljava/lang/String;
+
+    .prologue
+    iput-object p1, p0, Lcom/smartisan/updater/Version;->releaseNotes:Ljava/lang/String;
+
     return-void
 .end method
 
