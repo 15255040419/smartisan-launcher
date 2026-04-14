@@ -3448,6 +3448,12 @@
 
     if-eqz v3, :cond_update_skip
 
+    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->shouldCheckUpdate()Z
+
+    move-result v3
+
+    if-nez v3, :cond_update_skip
+
     .line 560
     invoke-static {p0, v7}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
 
@@ -3736,6 +3742,47 @@
     invoke-virtual {v3, v8}, Lcom/smartisanos/smengine/Event;->send(F)V
 
     goto :goto_4
+.end method
+
+.method private shouldCheckUpdate()Z
+    .locals 8
+
+    const-string v0, "launcher_settings"
+    const/4 v1, 0x0
+    invoke-virtual {p0, v0, v1}, Lcom/smartisanos/home/Launcher;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+    move-result-object v0
+
+    const-string v1, "last_update_check_time"
+    const-wide/16 v2, 0x0
+    invoke-interface {v0, v1, v2, v3}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    move-result-wide v2
+
+    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+    move-result-wide v4
+
+    sub-long v6, v4, v2
+    const-wide/32 v2, 0x5265c00 # 86400000ms = 24h
+
+    cmp-long v1, v6, v2
+    if-gez v1, :cond_0
+
+    const-wide/16 v2, 0x0
+    cmp-long v1, v6, v2
+    if-ltz v1, :cond_0
+
+    const/4 v0, 0x0
+    return v0
+
+    :cond_0
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "last_update_check_time"
+    invoke-interface {v0, v1, v4, v5}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+
+    const/4 v0, 0x1
+    return v0
 .end method
 
 .method protected onStop()V

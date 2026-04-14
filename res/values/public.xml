@@ -1027,6 +1027,7 @@
     <public type="drawable" name="wx_invail" id="0x7f0202b8" />
     <public type="drawable" name="notification_template_icon_bg" id="0x7f0202b9" />
     <public type="drawable" name="transparent_drawable" id="0x7f0202ba" />
+    <public type="drawable" name="ic_add_icon_plus" id="0x7f0202bb" />
     <public type="mipmap" name="pull_refresh_anim_01" id="0x7f030000" />
     <public type="mipmap" name="pull_refresh_anim_02" id="0x7f030001" />
     <public type="mipmap" name="pull_refresh_anim_03" id="0x7f030002" />

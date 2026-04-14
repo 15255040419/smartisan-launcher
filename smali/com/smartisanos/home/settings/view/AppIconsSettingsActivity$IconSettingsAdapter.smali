@@ -246,8 +246,20 @@
     invoke-virtual {v8, v10}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
     move-result-object v8
     check-cast v8, Landroid/graphics/drawable/Drawable;
-    invoke-virtual {v9, v8}, Landroid/widget/ImageView;->setImageDrawable(Landroid/graphics/drawable/Drawable;)V
+    
+    # ALWAYS clear the image first to prevent flickering/reuse issues
+    const/4 v10, 0x0
+    invoke-virtual {v9, v10}, Landroid/widget/ImageView;->setImageDrawable(Landroid/graphics/drawable/Drawable;)V
 
+    if-eqz v8, :cond_set_plus
+    invoke-virtual {v9, v8}, Landroid/widget/ImageView;->setImageDrawable(Landroid/graphics/drawable/Drawable;)V
+    goto :cond_icon_load_done
+
+    :cond_set_plus
+    const v8, 0x7f0202bb # ic_add_icon_plus
+    invoke-virtual {v9, v8}, Landroid/widget/ImageView;->setImageResource(I)V
+
+    :cond_icon_load_done
     # Row index: compute absolute index in mIconInfoList and add 1
     iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
     iget-object v8, v8, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
