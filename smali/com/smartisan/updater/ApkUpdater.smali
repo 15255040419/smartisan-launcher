@@ -903,6 +903,16 @@
     return-object p1
 
     :cond_0
+    const-string v1, "#"
+    const-string v2, ""
+    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    move-result-object v0
+
+    const-string v1, "\\*"
+    const-string v2, ""
+    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replaceAll(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v0
+
     new-instance v1, Ljava/lang/StringBuilder;
 
     invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
@@ -1013,7 +1023,7 @@
     .line 448
     new-instance v1, Landroid/app/AlertDialog$Builder;
 
-    const/4 v5, 0x5
+    const v5, 0x5
 
     invoke-direct {v1, p1, v5}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;I)V
 

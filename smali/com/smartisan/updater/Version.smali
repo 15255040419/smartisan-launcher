@@ -174,11 +174,11 @@
 
     .line 42
     :cond_0
-    const-string v1, "-"
+    const-string v6, "-"
 
-    const-string v3, "."
+    const-string v7, "."
 
-    invoke-virtual {v0, v1, v3}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    invoke-virtual {v0, v6, v7}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
 
     move-result-object v0
 

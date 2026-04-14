@@ -762,26 +762,18 @@
 .end method
 
 .method private isEnableCellular()Z
-    .locals 3
+    .locals 2
 
     .prologue
     const-string v0, "enable_cellular"
 
-    .line 511
-    invoke-direct {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getBoolean(Ljava/lang/String;)Z
-
-    move-result v1
-
-    invoke-static {v0}, Lcom/smartisanos/launcher/data/setting/SettingDB;->contains(Ljava/lang/String;)Z
-
-    move-result v2
-
-    if-nez v2, :cond_0
-
     const/4 v1, 0x1
 
-    :cond_0
-    return v1
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/setting/SettingDB;->readBool(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    return v0
 .end method
 
 .method private isMultiBlockLaunchAppOn()Z
@@ -2693,23 +2685,18 @@
     :cond_c
     const v4, 0x7f0f0152
 
+    if-eq v0, v4, :cond_badge_click
+
+    const v4, 0x7f0f0153
+
     if-ne v0, v4, :cond_d
 
+    :cond_badge_click
+
     .line 296
-    const-string v4, "launcher_settings"
-    const/4 v5, 0x0
-    invoke-virtual {p0, v4, v5}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
-    move-result-object v4
-    invoke-interface {v4}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
-    move-result-object v4
-    const-string v5, "has_new_version"
-    const/4 v6, 0x0
-    invoke-interface {v4, v5, v6}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
-    move-result-object v4
-    invoke-interface {v4}, Landroid/content/SharedPreferences$Editor;->apply()V
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateUpdateBadge()V
 
-    const/4 v4, 0x0
+    const/4 v4, 0x1
     invoke-static {p0, v4}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
 
     goto/16 :goto_0
@@ -3524,7 +3511,7 @@
 .end method
 
 .method private updateUpdateBadge()V
-    .locals 6
+    .locals 7
 
     const-string v0, "launcher_settings"
     const/4 v1, 0x0
@@ -3545,24 +3532,25 @@
 
     if-eqz v1, :cond_clear_badge
 
-    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
-    move-result-object v1
-    const v2, 0x7f020068
-    invoke-virtual {v1, v2}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
-    move-result-object v1
-    const/4 v2, 0x0
+    new-instance v2, Landroid/graphics/drawable/ShapeDrawable;
+    new-instance v5, Landroid/graphics/drawable/shapes/OvalShape;
+    invoke-direct {v5}, Landroid/graphics/drawable/shapes/OvalShape;-><init>()V
+    invoke-direct {v2, v5}, Landroid/graphics/drawable/ShapeDrawable;-><init>(Landroid/graphics/drawable/shapes/Shape;)V
+
+    invoke-virtual {v2}, Landroid/graphics/drawable/ShapeDrawable;->getPaint()Landroid/graphics/Paint;
+    move-result-object v5
+    const/high16 v6, -0x10000 # 0xFFFF0000
+    invoke-virtual {v5, v6}, Landroid/graphics/Paint;->setColor(I)V
+
+    const/4 v5, 0x0
+    const/16 v6, 0x1e # 30px
+    invoke-virtual {v2, v5, v5, v6, v6}, Landroid/graphics/drawable/ShapeDrawable;->setBounds(IIII)V
+
+    const/16 v5, 0x8 # 8px padding
+    invoke-virtual {v0, v5}, Landroid/widget/TextView;->setCompoundDrawablePadding(I)V
+
     const/4 v3, 0x0
-    invoke-virtual {v1}, Landroid/graphics/drawable/Drawable;->getIntrinsicWidth()I
-    move-result v4
-    invoke-virtual {v1}, Landroid/graphics/drawable/Drawable;->getIntrinsicHeight()I
-    move-result v5
-    invoke-virtual {v1, v2, v3, v4, v5}, Landroid/graphics/drawable/Drawable;->setBounds(IIII)V
-    const/4 v2, 0x0
-    const/4 v3, 0x0
-    const/4 v4, 0x0
-    invoke-virtual {v0, v2, v3, v1, v4}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
-    const/16 v1, 0x10
-    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setCompoundDrawablePadding(I)V
+    invoke-virtual {v0, v3, v3, v2, v3}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
     goto :cond_badge_done
 
     :cond_clear_badge
