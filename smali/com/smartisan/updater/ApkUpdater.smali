@@ -2104,13 +2104,35 @@
     move-result-object v9
 
     .line 172
-    if-eqz v9, :cond_8
-
     invoke-virtual {v9}, Lcom/smartisan/updater/Version;->isNeedUpdate()Z
 
     move-result v11
 
     if-eqz v11, :cond_8
+
+    iget-object v11, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
+
+    const-string v12, "launcher_settings"
+
+    const/4 v13, 0x0
+
+    invoke-virtual {v11, v12, v13}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+
+    move-result-object v11
+
+    invoke-interface {v11}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+
+    move-result-object v11
+
+    const-string v12, "has_new_version"
+
+    const/4 v13, 0x1
+
+    invoke-interface {v11, v12, v13}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+
+    move-result-object v11
+
+    invoke-interface {v11}, Landroid/content/SharedPreferences$Editor;->apply()V
 
     invoke-direct {p0, v9}, Lcom/smartisan/updater/ApkUpdater;->isValidVersion(Lcom/smartisan/updater/Version;)Z
 

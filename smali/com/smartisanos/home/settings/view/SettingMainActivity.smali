@@ -515,7 +515,7 @@
 
     .prologue
     .line 545
-    sget-object v1, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+    sget-object v1, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
 
     invoke-virtual {v1}, Ljava/lang/Boolean;->toString()Ljava/lang/String;
 
@@ -762,17 +762,26 @@
 .end method
 
 .method private isEnableCellular()Z
-    .locals 1
+    .locals 3
 
     .prologue
-    .line 511
     const-string v0, "enable_cellular"
 
+    .line 511
     invoke-direct {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getBoolean(Ljava/lang/String;)Z
 
-    move-result v0
+    move-result v1
 
-    return v0
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/setting/SettingDB;->contains(Ljava/lang/String;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_0
+
+    const/4 v1, 0x1
+
+    :cond_0
+    return v1
 .end method
 
 .method private isMultiBlockLaunchAppOn()Z
@@ -2687,7 +2696,21 @@
     if-ne v0, v4, :cond_d
 
     .line 296
-    invoke-static {p0, v8}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
+    const-string v4, "launcher_settings"
+    const/4 v5, 0x0
+    invoke-virtual {p0, v4, v5}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+    move-result-object v4
+    invoke-interface {v4}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v4
+    const-string v5, "has_new_version"
+    const/4 v6, 0x0
+    invoke-interface {v4, v5, v6}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v4
+    invoke-interface {v4}, Landroid/content/SharedPreferences$Editor;->apply()V
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateUpdateBadge()V
+
+    const/4 v4, 0x0
+    invoke-static {p0, v4}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
 
     goto/16 :goto_0
 
@@ -3137,7 +3160,7 @@
 
     invoke-direct {v8}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v9, "v"
+    const-string v9, ""
 
     invoke-virtual {v8, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -3495,7 +3518,61 @@
 
     iput-boolean v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->alreadyClicked:Z
 
-    .line 346
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateUpdateBadge()V
+
+    return-void
+.end method
+
+.method private updateUpdateBadge()V
+    .locals 6
+
+    const-string v0, "launcher_settings"
+    const/4 v1, 0x0
+    invoke-virtual {p0, v0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+    move-result-object v0
+
+    const-string v1, "has_new_version"
+    const/4 v2, 0x0
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    move-result v1
+
+    const v0, 0x7f0f0153
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+    move-result-object v0
+    check-cast v0, Landroid/widget/TextView;
+
+    if-eqz v0, :cond_badge_done
+
+    if-eqz v1, :cond_clear_badge
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+    move-result-object v1
+    const v2, 0x7f020068
+    invoke-virtual {v1, v2}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+    move-result-object v1
+    const/4 v2, 0x0
+    const/4 v3, 0x0
+    invoke-virtual {v1}, Landroid/graphics/drawable/Drawable;->getIntrinsicWidth()I
+    move-result v4
+    invoke-virtual {v1}, Landroid/graphics/drawable/Drawable;->getIntrinsicHeight()I
+    move-result v5
+    invoke-virtual {v1, v2, v3, v4, v5}, Landroid/graphics/drawable/Drawable;->setBounds(IIII)V
+    const/4 v2, 0x0
+    const/4 v3, 0x0
+    const/4 v4, 0x0
+    invoke-virtual {v0, v2, v3, v1, v4}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
+    const/16 v1, 0x10
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setCompoundDrawablePadding(I)V
+    goto :cond_badge_done
+
+    :cond_clear_badge
+    const/4 v1, 0x0
+    const/4 v2, 0x0
+    const/4 v3, 0x0
+    const/4 v4, 0x0
+    invoke-virtual {v0, v1, v2, v3, v4}, Landroid/widget/TextView;->setCompoundDrawables(Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;Landroid/graphics/drawable/Drawable;)V
+
+    :cond_badge_done
     return-void
 .end method
 

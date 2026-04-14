@@ -174,6 +174,14 @@
 
     .line 42
     :cond_0
+    const-string v1, "-"
+
+    const-string v3, "."
+
+    invoke-virtual {v0, v1, v3}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+
+    move-result-object v0
+
     const-string v1, "\\."
 
     invoke-virtual {v0, v1}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
