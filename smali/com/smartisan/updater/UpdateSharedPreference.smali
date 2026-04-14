@@ -1,4 +1,4 @@
-.class Lcom/smartisan/updater/UpdateSharedPreference;
+.class public Lcom/smartisan/updater/UpdateSharedPreference;
 .super Ljava/lang/Object;
 .source "UpdateSharedPreference.java"
 

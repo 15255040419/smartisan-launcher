@@ -183,4 +183,5 @@
     <color name="user_experience_tips_color">#7e818b</color>
     <color name="white">#fff</color>
     <color name="window_transparent">#80000000</color>
+    <color name="smartisan_badge_red">#ffd04242</color>
 </resources>

@@ -65,6 +65,7 @@
 .field private mUpdateUrl:Ljava/lang/String;
 
 .field private mVersionMessage:Ljava/lang/String;
+.field private mIsDownloading:Z
 
 
 # direct methods
@@ -1023,7 +1024,7 @@
     .line 448
     new-instance v1, Landroid/app/AlertDialog$Builder;
 
-    const v5, 0x5
+    const v5, 0x7f0a0180
 
     invoke-direct {v1, p1, v5}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;I)V
 
@@ -1154,7 +1155,9 @@
     :cond_4
     new-instance v1, Landroid/app/AlertDialog$Builder;
 
-    invoke-direct {v1, p1}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
+    const v5, 0x7f0a0180
+
+    invoke-direct {v1, p1, v5}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;I)V
 
     .restart local v1    # "builder":Landroid/app/AlertDialog$Builder;
     goto :goto_1
@@ -1941,6 +1944,8 @@
 
     move-result v11
 
+    iput-boolean v11, p0, Lcom/smartisan/updater/ApkUpdater;->mIsDownloading:Z
+
     if-eqz v11, :cond_1
 
     move-object v9, v10
@@ -2347,6 +2352,16 @@
     .param p2, "updateUrl"    # Ljava/lang/String;
 
     .prologue
+    new-instance v3, Landroid/os/StrictMode$VmPolicy$Builder;
+
+    invoke-direct {v3}, Landroid/os/StrictMode$VmPolicy$Builder;-><init>()V
+
+    invoke-virtual {v3}, Landroid/os/StrictMode$VmPolicy$Builder;->build()Landroid/os/StrictMode$VmPolicy;
+
+    move-result-object v3
+
+    invoke-static {v3}, Landroid/os/StrictMode;->setVmPolicy(Landroid/os/StrictMode$VmPolicy;)V
+
     .line 719
     new-instance v3, Ljava/lang/StringBuilder;
 
@@ -2590,40 +2605,29 @@
     .line 232
     iget-boolean v3, p0, Lcom/smartisan/updater/ApkUpdater;->mIsManualUpdate:Z
 
-    if-eqz v3, :cond_1
-
-    .line 233
-    iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
-
-    invoke-static {v3}, Lcom/smartisan/updater/UpdateSharedPreference;->getInstance(Landroid/content/Context;)Lcom/smartisan/updater/UpdateSharedPreference;
-
-    move-result-object v2
-
-    .line 234
-    .local v2, "sharePreFerence":Lcom/smartisan/updater/UpdateSharedPreference;
-    iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
-
-    invoke-virtual {v2}, Lcom/smartisan/updater/UpdateSharedPreference;->getDownloadId()J
-
-    move-result-wide v4
-
-    invoke-static {v3, v4, v5}, Lcom/smartisan/updater/UpdateUtils;->isDownloadProcessing(Landroid/content/Context;J)Z
-
-    move-result v3
-
     if-nez v3, :cond_1
 
     .line 239
-    iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
+    iget-boolean v3, p0, Lcom/smartisan/updater/ApkUpdater;->mIsDownloading:Z
 
-    sget v4, Lcom/smartisan/updater/R$string;->check_update_fail:I
+    if-eqz v3, :cond_show_fail
+
+    const v4, 0x7f080270
+
+    goto :cond_do_toast
+
+    :cond_show_fail
+    const v4, 0x7f08011c
+
+    :cond_do_toast
+    iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
 
     invoke-virtual {v3, v4}, Landroid/content/Context;->getString(I)Ljava/lang/String;
 
     move-result-object v0
 
     .line 240
-    .local v0, "error":Ljava/lang/String;
+    .local v0, "msg":Ljava/lang/String;
     iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
 
     invoke-static {v3, v0, v6}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;

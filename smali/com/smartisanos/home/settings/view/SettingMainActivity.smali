@@ -202,6 +202,15 @@
     return-object v0
 .end method
 
+.method static synthetic access$500(Lcom/smartisanos/home/settings/view/SettingMainActivity;)V
+    .locals 0
+
+    .prologue
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateUpdateBadge()V
+
+    return-void
+.end method
+
 .method private buildEvent(Landroid/content/Context;)V
     .locals 3
     .param p1, "context"    # Landroid/content/Context;
@@ -2694,10 +2703,9 @@
     :cond_badge_click
 
     .line 296
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateUpdateBadge()V
-
-    const/4 v4, 0x1
-    invoke-static {p0, v4}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
+    new-instance v4, Lcom/smartisanos/home/settings/view/SettingMainActivity$5;
+    invoke-direct {v4, p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity$5;-><init>(Lcom/smartisanos/home/settings/view/SettingMainActivity;)V
+    invoke-virtual {p1, v4}, Landroid/view/View;->post(Ljava/lang/Runnable;)Z
 
     goto/16 :goto_0
 
@@ -3539,7 +3547,7 @@
 
     invoke-virtual {v2}, Landroid/graphics/drawable/ShapeDrawable;->getPaint()Landroid/graphics/Paint;
     move-result-object v5
-    const/high16 v6, -0x10000 # 0xFFFF0000
+    const v6, -0x2fbdbe # 0xFFD04242
     invoke-virtual {v5, v6}, Landroid/graphics/Paint;->setColor(I)V
 
     const/4 v5, 0x0
