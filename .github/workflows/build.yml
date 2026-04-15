@@ -31,27 +31,14 @@ jobs:
           mkdir -p build
           java -jar tools/apktool.jar b . -o build/unsigned.apk
 
-      - name: Generate debug keystore
-        run: |
-          mkdir -p build/signing
-          keytool -genkeypair \
-            -keystore build/signing/debug.keystore \
-            -storepass android \
-            -keypass android \
-            -alias androiddebugkey \
-            -dname "CN=Android Debug,O=Android,C=US" \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000
-
       - name: Sign APK
         run: |
           cp build/unsigned.apk build/signed.apk
           jarsigner \
-            -keystore build/signing/debug.keystore \
+            -keystore tools/signing/release.keystore \
             -storepass android \
             -keypass android \
-            build/signed.apk androiddebugkey
+            build/signed.apk smartisan
 
       - name: Rename APK
         run: |
