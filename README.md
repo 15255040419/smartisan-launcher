@@ -3,7 +3,7 @@
 
   <h1>Smartisan Launcher Maintained</h1>
 
-  <p><strong>面向新版 Android 的锤子桌面非官方维护版</strong></p>
+  <p><strong>锤子桌面复活</strong></p>
   <p>基于 <code>apktool</code> 直接维护 <code>com.smartisanos.home</code> 的反编译结果，修复新版 Android 上的安装、布局与主题兼容问题，并补齐旧桌面的可用主题资产。</p>
 
   <p>
@@ -22,8 +22,6 @@
 ## 相关项目
 
 - 桌面维护版仓库：当前仓库
-- 同系列维护项目：[HandShaker Android Maintained](https://github.com/rianlu/handshaker-android-maintained)
-- HandShaker 最新发布页：[Latest Release](https://github.com/rianlu/handshaker-android-maintained/releases/latest)
 
 ## 项目亮点
 
