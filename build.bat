@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 setlocal enabledelayedexpansion
 
 :: 1. 环境配置
@@ -7,18 +8,17 @@ set "PATH=%JAVA_HOME%\bin;%PATH%"
 set "ADB=C:\Users\ck\AppData\Local\Android\Sdk\platform-tools\adb.exe"
 
 echo [0/4] Syncing version from tools\release.conf...
-:: 从 release.conf 读取版本号
-for /f "tokens=2 delims==" %%a in ('findstr "RELEASE_VERSION_CODE" tools\release.conf') do set VERSION_CODE=%%a
-for /f "tokens=2 delims==" %%a in ('findstr "RELEASE_BASE_VERSION" tools\release.conf') do set VERSION_NAME=%%a
-
-if "%VERSION_CODE%"=="" (
-    echo FAIL: Could not find RELEASE_VERSION_CODE in tools\release.conf
-    exit /b 1
+:: 使用 Python 脚本同步所有文件的版本号
+python tools\sync_version.py
+if %errorlevel% neq 0 (
+    echo FAIL: Version sync failed.
+    exit /b %errorlevel%
 )
 
-:: 使用 PowerShell 更新 apktool.yml 中的版本号
-powershell -Command "(Get-Content apktool.yml) -replace 'versionCode: \d+', 'versionCode: %VERSION_CODE%' -replace 'versionName: [^\n]+', 'versionName: %VERSION_NAME%' | Set-Content apktool.yml"
-echo Version synced: %VERSION_NAME% (%VERSION_CODE%)
+:: 刷新变量以用于输出
+for /f "tokens=2 delims==" %%a in ('findstr "RELEASE_VERSION_CODE" tools\release.conf') do set VERSION_CODE=%%a
+for /f "tokens=2 delims==" %%a in ('findstr "RELEASE_BASE_VERSION" tools\release.conf') do set VERSION_NAME=%%a
+echo Version ready: %VERSION_NAME% (%VERSION_CODE%)
 
 :: 2. 编译 APK
 if not exist build mkdir build
