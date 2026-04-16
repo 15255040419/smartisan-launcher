@@ -161,7 +161,7 @@
     <string name="obsession_hide_badge">隐藏图标上的角标</string>
     <string name="obsession_hide_lable">隐藏桌面图标名称</string>
     <string name="ocd_setting">强迫症选项</string>
-    <string name="official_icon">官方图标</string>
+    <string name="official_icon">可替换图标</string>
     <string name="ok">确认</string>
     <string name="org_web">官方网站</string>
     <string name="org_web_url">www.smartisan.com</string>
@@ -495,4 +495,5 @@
     <string name="weather_toast">当前 %1$s ℃，%2$s</string>
     <string name="weather_toast_no_data">当前无法获取天气数据</string>
     <string name="downloading_update_toast">版本更新下载中，请在通知栏安装</string>
+    <string name="icon_setting_footer_text">你可以选择一个普适性图标来替换未被重绘的应用程序的图标，在该应用的图标被重绘后，图标将被替换</string>
 </resources>

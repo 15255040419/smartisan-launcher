@@ -1316,6 +1316,22 @@
 
     invoke-virtual {v6, v7}, Landroid/widget/ListView;->addFooterView(Landroid/view/View;)V
 
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
+
+    move-result-object v6
+
+    const v7, 0x7f04007c
+
+    const/4 v8, 0x0
+
+    invoke-virtual {v6, v7, v8}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
+
+    move-result-object v7
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->listView:Landroid/widget/ListView;
+
+    invoke-virtual {v6, v7}, Landroid/widget/ListView;->addFooterView(Landroid/view/View;)V
+
     .line 127
     new-instance v6, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 

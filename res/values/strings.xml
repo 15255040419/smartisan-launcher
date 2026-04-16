@@ -269,6 +269,7 @@
     <string name="uninstall_multi_system_app_toast_text">To preserve complete system functionality, built-in system apps cannot be uninstalled</string>
     <string name="uninstall_system_app_text">Unable to uninstall built-in apps.</string>
     <string name="uninstalling">Uninstalling…</string>
+    <string name="official_icon">Replaceable Icon</string>
     <string name="unofficial_icon">Redesigned Icon</string>
     <string name="use_improved_app_icon">Download Improved App Icons</string>
     <string name="user_experience_title_txt">UX Improvement</string>
@@ -633,4 +634,5 @@
     <string name="theme_name">theme_name</string>
     <string name="twitter">Twitter</string>
     <string name="downloading_update_toast">Downloading update, check notification bar to install.</string>
+    <string name="icon_setting_footer_text">You can choose a universal icon to replace icons of apps that haven\'t been redrawn. Once the app\'s icon is redrawn, the icon will be replaced.</string>
 </resources>

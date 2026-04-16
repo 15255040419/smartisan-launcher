@@ -3937,4 +3937,9 @@
     <public type="id" name="item_id_launcher_wallpaper" id="0x7f0f0187" />
     <public type="id" name="theme_manual_install_tip_view" id="0x7f0f0188" />
     <public type="menu" name="main" id="0x7f100000" />
+    <public type="id" name="btn_cancel" id="0x7f0f0189" />
+    <public type="id" name="btn_update" id="0x7f0f018a" />
+    <public type="id" name="footer_container" id="0x7f0f018b" />
+    <public type="layout" name="smartisan_update_dialog" id="0x7f04007b" />
+    <public type="layout" name="app_icon_settings_footer" id="0x7f04007c" />
 </resources>
