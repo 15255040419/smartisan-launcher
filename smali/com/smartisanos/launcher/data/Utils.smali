@@ -899,6 +899,21 @@
     or-int/lit16 v1, v1, 0x400
 
     .line 2469
+    # Android 6.0+ Light Status Bar (0x2000)
+    const/16 v8, 0x17
+    sget v10, Landroid/os/Build$VERSION;->SDK_INT:I
+    if-lt v10, v8, :cond_light_status
+    const/16 v8, 0x2000
+    or-int/2addr v1, v8
+    :cond_light_status
+
+    # Android 8.1+ Light Navigation Bar (0x10)
+    const/16 v8, 0x1b
+    if-lt v10, v8, :cond_light_nav
+    const/16 v8, 0x10
+    or-int/2addr v1, v8
+    :cond_light_nav
+
     invoke-virtual {v0, v1}, Landroid/view/View;->setSystemUiVisibility(I)V
 
     .line 2470

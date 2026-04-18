@@ -3334,7 +3334,9 @@
 
     float-to-int v2, v2
 
-    aget v3, v0, v7
+    const/4 v3, 0x3
+
+    aget v3, v0, v3
 
     float-to-int v3, v3
 
