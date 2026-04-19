@@ -2578,26 +2578,65 @@
     iget-boolean v3, p0, Lcom/smartisan/updater/ApkUpdater;->mIsManualUpdate:Z
 
     if-eqz v3, :cond_1
-
-    .line 226
+    
+    # --- Custom Smartisan UI Change Start (No Update Dialog) ---
     iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
-
+    new-instance v0, Landroid/app/AlertDialog$Builder;
+    const v5, 0x7f0a0180
+    invoke-direct {v0, v3, v5}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;I)V
+    
+    # Inflate custom layout (using same layout 0x7f04007b)
+    invoke-static {v3}, Landroid/view/LayoutInflater;->from(Landroid/content/Context;)Landroid/view/LayoutInflater;
+    move-result-object v5
+    const v6, 0x7f04007b # layout id
+    const/4 v9, 0x0
+    invoke-virtual {v5, v6, v9}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
+    move-result-object v6
+    
+    # Set Title
+    const v5, 0x7f0f0088 # title id
+    invoke-virtual {v6, v5}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+    move-result-object v5
+    check-cast v5, Landroid/widget/TextView;
+    sget v9, Lcom/smartisan/updater/R$string;->check_update:I
+    invoke-virtual {v5, v9}, Landroid/widget/TextView;->setText(I)V
+    
+    # Set Message (No update version)
     sget v4, Lcom/smartisan/updater/R$string;->no_updated_version:I
-
     invoke-virtual {v3, v4}, Landroid/content/Context;->getString(I)Ljava/lang/String;
-
-    move-result-object v1
-
-    .line 227
-    .local v1, "noVersion":Ljava/lang/String;
-    iget-object v3, p0, Lcom/smartisan/updater/ApkUpdater;->mContext:Landroid/content/Context;
-
-    invoke-static {v3, v1, v6}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
-
-    move-result-object v3
-
-    invoke-virtual {v3}, Landroid/widget/Toast;->show()V
-
+    move-result-object v5
+    const v9, 0x7f0f008a # message id
+    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+    move-result-object v9
+    check-cast v9, Landroid/widget/TextView;
+    invoke-virtual {v9, v5}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    
+    # Set view to builder
+    invoke-virtual {v0, v6}, Landroid/app/AlertDialog$Builder;->setView(Landroid/view/View;)Landroid/app/AlertDialog$Builder;
+    invoke-virtual {v0}, Landroid/app/AlertDialog$Builder;->create()Landroid/app/AlertDialog;
+    move-result-object v5
+    
+    # Hide Update Button, use Cancel as OK
+    const v9, 0x7f0f018a # update btn id
+    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+    move-result-object v9
+    const/16 v8, 0x8 # GONE
+    invoke-virtual {v9, v8}, Landroid/view/View;->setVisibility(I)V
+    
+    const v9, 0x7f0f0189 # cancel btn id
+    invoke-virtual {v6, v9}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+    move-result-object v9
+    check-cast v9, Landroid/widget/Button;
+    sget v3, Lcom/smartisan/updater/R$string;->dlg_ok:I
+    invoke-virtual {v9, v3}, Landroid/widget/Button;->setText(I)V
+    
+    new-instance v3, Lcom/smartisan/updater/ApkUpdater$7; # Wrapper listener if exists
+    const/4 v4, 0x0
+    invoke-direct {v3, v5, v4}, Lcom/smartisan/updater/ApkUpdater$7;-><init>(Landroid/content/DialogInterface;Landroid/content/DialogInterface$OnClickListener;)V
+    invoke-virtual {v9, v3}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+    
+    invoke-virtual {v5}, Landroid/app/AlertDialog;->show()V
+    # --- Custom Smartisan UI Change End ---
     goto :goto_0
 
     .line 231
