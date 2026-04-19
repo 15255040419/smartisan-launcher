@@ -475,7 +475,7 @@
 
     invoke-direct {v9}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v10, "https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/"
+    const-string v10, "https://gh-proxy.org/https://github.com/15255040419/smartisan-launcher/releases/download/themes-v1/"
 
     invoke-virtual {v9, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -2315,7 +2315,7 @@
     .local v0, "defSize":I
     new-instance v1, Lcom/smartisan/updater/ApkUpdater;
 
-    const-string v3, "https://api.github.com/repos/rianlu/smartisan-launcher-maintained/releases/latest"
+    const-string v3, "https://api.github.com/repos/15255040419/smartisan-launcher/releases/latest"
 
     int-to-long v6, v0
 

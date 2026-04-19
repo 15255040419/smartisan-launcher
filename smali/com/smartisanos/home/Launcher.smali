@@ -3437,7 +3437,18 @@
     :cond_3
     iget-boolean v3, p0, Lcom/smartisanos/home/Launcher;->mHasStartSetupWizard:Z
 
+    if-eqz v3, :cond_custom_unlock_check
+
+    goto :cond_custom_wizard_logic
+
+    :cond_custom_unlock_check
+    iget-boolean v3, p0, Lcom/smartisanos/home/Launcher;->isHomeKeyScrollToLeft:Z
+
     if-eqz v3, :cond_12
+
+    goto :goto_0
+
+    :cond_custom_wizard_logic
 
     .line 484
     iput-boolean v7, p0, Lcom/smartisanos/home/Launcher;->mHasStartSetupWizard:Z

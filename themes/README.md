@@ -14,7 +14,7 @@
 ## 分发方式
 
 - Launcher 在线主题下载固定指向：
-  `https://gh-proxy.org/https://github.com/rianlu/smartisan-launcher-maintained/releases/download/themes-v1/<package>.apk`
+  `https://gh-proxy.org/https://github.com/15255040419/smartisan-launcher/releases/download/themes-v1/<package>.apk`
 - GitHub Release `themes-v1` 是主题资产的唯一线上分发源。
 - 仓库只提交脚本、文档和必要清单，不提交大体积 APK 产物。
 
