@@ -407,13 +407,7 @@
 
     .line 570
     :cond_0
-    invoke-static {}, Landroid/os/Process;->myPid()I
-
-    move-result v2
-
-    invoke-static {v2}, Landroid/os/Process;->killProcess(I)V
-
-    goto :goto_0
+    return-void
 .end method
 
 .method private getDownloadProcess()I

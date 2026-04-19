@@ -35,16 +35,9 @@
 
 # virtual methods
 .method public run()V
-    .locals 1
+    .locals 0
 
     .prologue
     .line 566
-    invoke-static {}, Landroid/os/Process;->myPid()I
-
-    move-result v0
-
-    invoke-static {v0}, Landroid/os/Process;->killProcess(I)V
-
-    .line 567
     return-void
 .end method

@@ -44,19 +44,12 @@
 .end method
 
 .method public static forceStopPackage(Landroid/app/ActivityManager;Ljava/lang/String;)V
-    .locals 1
+    .locals 0
     .param p0, "am"    # Landroid/app/ActivityManager;
     .param p1, "pkg"    # Ljava/lang/String;
 
     .prologue
     .line 95
-    invoke-static {}, Landroid/os/Process;->myPid()I
-
-    move-result v0
-
-    invoke-static {v0}, Landroid/os/Process;->killProcess(I)V
-
-    .line 96
     return-void
 .end method
 
