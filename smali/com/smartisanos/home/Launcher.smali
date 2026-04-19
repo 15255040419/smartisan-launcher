@@ -253,6 +253,149 @@
     return-void
 .end method
 
+.method private refreshPendingIconAppearance()V
+    .locals 11
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->isLauncherRefreshPending(Landroid/content/Context;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_start
+
+    return-void
+
+    :cond_start
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->clearLauncherRefreshPending(Landroid/content/Context;)V
+
+    # collect unique package names from all desktop items
+
+    new-instance v3, Ljava/util/ArrayList;
+
+    invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherModel;->getItemMap()Ljava/util/HashMap;
+
+    move-result-object v4
+
+    new-instance v2, Ljava/util/ArrayList;
+
+    invoke-interface {v4}, Ljava/util/Map;->keySet()Ljava/util/Set;
+
+    move-result-object v0
+
+    invoke-direct {v2, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v5
+
+    :cond_loop
+    :goto_loop
+    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_loop_end
+
+    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/Long;
+
+    invoke-virtual {v1}, Ljava/lang/Long;->longValue()J
+
+    move-result-wide v7
+
+    invoke-static {v7, v8}, Lcom/smartisanos/launcher/LauncherModel;->getItemInfo(J)Lcom/smartisanos/launcher/data/ItemInfo;
+
+    move-result-object v6
+
+    if-eqz v6, :cond_loop
+
+    iget-object v9, v6, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    invoke-static {v9}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_loop
+
+    invoke-virtual {v3, v9}, Ljava/util/ArrayList;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_loop
+
+    invoke-virtual {v3, v9}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    goto :goto_loop
+
+    :cond_loop_end
+    invoke-virtual {v3}, Ljava/util/ArrayList;->size()I
+
+    move-result v10
+
+    if-lez v10, :cond_end
+
+    # show initializing dialog
+
+    sget v0, Lcom/smartisanos/launcher/ResIds$string;->initializing:I
+
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/Launcher;->getString(I)Ljava/lang/String;
+
+    move-result-object v9
+
+    const/4 v0, 0x1
+
+    invoke-virtual {p0, v0, v9}, Lcom/smartisanos/home/Launcher;->showDialog(ZLjava/lang/String;)V
+
+    # build RedirectIconInfo[] with correct useImprovedAppIcon flag
+
+    new-array v0, v10, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    sget-boolean v1, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
+
+    const/4 v2, 0x0
+
+    :goto_fill
+    if-ge v2, v10, :cond_fill_done
+
+    new-instance v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-direct {v6}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;-><init>()V
+
+    invoke-virtual {v3, v2}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v7
+
+    check-cast v7, Ljava/lang/String;
+
+    iput-object v7, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    iput-boolean v1, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    aput-object v6, v0, v2
+
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_fill
+
+    :cond_fill_done
+    invoke-static {v0}, Lcom/smartisanos/launcher/LauncherModel;->updateAppIcon([Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    # dismiss dialog after 1500ms
+
+    const/4 v0, 0x0
+
+    const-wide/16 v1, 0x5dc
+
+    invoke-virtual {p0, v0, v9, v1, v2}, Lcom/smartisanos/home/Launcher;->showDialogDelayed(ZLjava/lang/String;J)V
+
+    :cond_end
+    return-void
+.end method
+
 .method static synthetic access$000()Lcom/smartisanos/launcher/LOG;
     .locals 1
 
@@ -872,31 +1015,6 @@
 
     .prologue
     .line 856
-    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
-
-    move-result-object v0
-
-    if-eqz v0, :cond_0
-
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
-
-    move-result-object v0
-
-    if-eqz v0, :cond_0
-
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->getAnimationController()Lcom/smartisanos/launcher/view/AnimationController;
-
-    move-result-object v0
-
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
-
-    move-result v0
-
-    if-eqz v0, :cond_0
-
-    return-void
-
-    :cond_0
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->createEmergencyUnlockEvent()Lcom/smartisanos/smengine/Event;
 
     move-result-object v0
@@ -1982,35 +2100,6 @@
 
     invoke-virtual {v2, v3}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
 
-    # Injecting Runtime Permission Check for Android 6.0+
-    const-string v4, "android.permission.WRITE_EXTERNAL_STORAGE"
-
-    # Use move-object/from16 because p0 (v21) is a high register
-    move-object/from16 v0, p0
-
-    invoke-virtual {v0, v4}, Lcom/smartisanos/home/Launcher;->checkSelfPermission(Ljava/lang/String;)I
-
-    move-result v4
-
-    if-eqz v4, :cond_perm_granted
-
-    const/4 v4, 0x1
-
-    new-array v4, v4, [Ljava/lang/String;
-
-    const/4 v5, 0x0
-
-    const-string v6, "android.permission.WRITE_EXTERNAL_STORAGE"
-
-    aput-object v6, v4, v5
-
-    const/16 v5, 0x64
-
-    # Request the permission using v0
-    invoke-virtual {v0, v4, v5}, Lcom/smartisanos/home/Launcher;->requestPermissions([Ljava/lang/String;I)V
-
-    :cond_perm_granted
-
     .line 288
     invoke-direct/range {p0 .. p0}, Lcom/smartisanos/home/Launcher;->strictMode()V
 
@@ -2788,20 +2877,6 @@
     return-void
 .end method
 
-.method public onBackPressed()V
-    .locals 1
-
-    .prologue
-    iget-object v0, p0, Lcom/smartisanos/home/Launcher;->mMainView:Lcom/smartisanos/launcher/view/MainView;
-
-    if-eqz v0, :cond_0
-
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/MainView;->handleBackKeyFromActivity()V
-
-    :cond_0
-    return-void
-.end method
-
 .method protected onNewIntent(Landroid/content/Intent;)V
     .locals 14
     .param p1, "intent"    # Landroid/content/Intent;
@@ -3299,6 +3374,8 @@
     .line 463
     invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->requestSyncWeatherData(Landroid/content/Context;)V
 
+    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->refreshPendingIconAppearance()V
+
     .line 465
     iget-object v3, p0, Lcom/smartisanos/home/Launcher;->mEditPageTitleDialog:Lcom/smartisanos/launcher/view/EditTitleDialog;
 
@@ -3486,12 +3563,6 @@
     move-result v3
 
     if-eqz v3, :cond_update_skip
-
-    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->shouldCheckUpdate()Z
-
-    move-result v3
-
-    if-nez v3, :cond_update_skip
 
     .line 560
     invoke-static {p0, v7}, Lcom/smartisanos/launcher/data/Utils;->checkUpdate(Landroid/app/Activity;Z)V
@@ -3715,15 +3786,7 @@
     .line 498
     .end local v2    # "shouldDoChangeThemeAnim":Z
     :cond_12
-    iget-boolean v3, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
-
-    if-eqz v3, :cond_12_skip_emergency
-
-    iput-boolean v7, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
-
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->postEmergencyUnlockEvent()V
-
-    :cond_12_skip_emergency
 
     goto/16 :goto_0
 
@@ -3789,47 +3852,6 @@
     invoke-virtual {v3, v8}, Lcom/smartisanos/smengine/Event;->send(F)V
 
     goto :goto_4
-.end method
-
-.method private shouldCheckUpdate()Z
-    .locals 8
-
-    const-string v0, "launcher_settings"
-    const/4 v1, 0x0
-    invoke-virtual {p0, v0, v1}, Lcom/smartisanos/home/Launcher;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
-    move-result-object v0
-
-    const-string v1, "last_update_check_time"
-    const-wide/16 v2, 0x0
-    invoke-interface {v0, v1, v2, v3}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
-    move-result-wide v2
-
-    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
-    move-result-wide v4
-
-    sub-long v6, v4, v2
-    const-wide/32 v2, 0x5265c00 # 86400000ms = 24h
-
-    cmp-long v1, v6, v2
-    if-gez v1, :cond_0
-
-    const-wide/16 v2, 0x0
-    cmp-long v1, v6, v2
-    if-ltz v1, :cond_0
-
-    const/4 v0, 0x0
-    return v0
-
-    :cond_0
-    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
-    move-result-object v0
-    const-string v1, "last_update_check_time"
-    invoke-interface {v0, v1, v4, v5}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
-    move-result-object v0
-    invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
-
-    const/4 v0, 0x1
-    return v0
 .end method
 
 .method protected onStop()V

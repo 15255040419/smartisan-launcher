@@ -6764,30 +6764,13 @@
 
     if-eqz v26, :cond_b
 
-    # Load icon: Try package/component lookup first (for custom icons), then fallback to ID-based lookup (original)
-    move-object/from16 v0, v22
-
-    move-object/from16 v1, v15
-
-    iget-object v1, v1, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
-
-    iget-object v1, v1, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
-
-    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getRedirectIcon(Ljava/lang/String;Ljava/lang/String;)[B
-
-    move-result-object v10
-
-    if-nez v10, :cond_got_icon
-
+    .line 2108
     invoke-static {v12, v13}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getRedirectIcon(J)[B
 
     move-result-object v10
 
-    :cond_got_icon
-    # End of custom icon loading logic
-
     .line 2109
-    if-eqz v10, :cond_5
+    if-eqz v10, :cond_b
 
     .line 2112
     invoke-static {v10}, Lcom/smartisanos/launcher/data/Utils;->iconDataToDrawable([B)Landroid/graphics/drawable/Drawable;
