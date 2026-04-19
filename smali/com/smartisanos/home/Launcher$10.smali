@@ -73,25 +73,7 @@
     if-eqz v0, :cond_0
 
     .line 841
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->getAnimationController()Lcom/smartisanos/launcher/view/AnimationController;
-
-    move-result-object v0
-
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
-
-    move-result v0
-
-    sget-boolean v1, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
-
-    if-nez v1, :cond_enable_ready
-
-    const/4 v1, 0x1
-
-    sput-boolean v1, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
-
-    :cond_enable_ready
-    if-nez v0, :cond_init_done
-
+    .line 841
     invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
 
     move-result-object v0
@@ -100,9 +82,16 @@
 
     move-result-object v0
 
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->initUnlockScreenAnimation()V
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->getAnimationController()Lcom/smartisanos/launcher/view/AnimationController;
 
-    :cond_init_done
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
     .line 842
     sget-boolean v0, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 

@@ -2101,6 +2101,39 @@
     invoke-virtual {v2, v3}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
 
     .line 288
+    sget v2, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v3, 0x17
+
+    if-lt v2, v3, :cond_perm_granted
+
+    const-string v2, "android.permission.WRITE_EXTERNAL_STORAGE"
+
+    move-object/from16 v5, p0
+
+    invoke-static {v5, v2}, Landroid/support/v4/content/ContextCompat;->checkSelfPermission(Landroid/content/Context;Ljava/lang/String;)I
+
+    move-result v2
+
+    if-eqz v2, :cond_perm_granted
+
+    const/4 v2, 0x1
+
+    new-array v2, v2, [Ljava/lang/String;
+
+    const/4 v3, 0x0
+
+    const-string v4, "android.permission.WRITE_EXTERNAL_STORAGE"
+
+    aput-object v4, v2, v3
+
+    const/16 v3, 0x64
+
+    invoke-static {v5, v2, v3}, Landroid/support/v4/app/ActivityCompat;->requestPermissions(Landroid/app/Activity;[Ljava/lang/String;I)V
+
+    :cond_perm_granted
+
+    .line 288
     invoke-direct/range {p0 .. p0}, Lcom/smartisanos/home/Launcher;->strictMode()V
 
     .line 289
@@ -2868,6 +2901,9 @@
     const/4 v0, 0x0
 
     sput-object v0, Lcom/smartisanos/home/Launcher;->mySelf:Lcom/smartisanos/home/Launcher;
+
+    .line 975
+    sput v0, Lcom/smartisanos/launcher/ApplicationProxy;->PROC_ID:I
 
     .line 976
     :cond_1

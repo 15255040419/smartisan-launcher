@@ -341,3 +341,139 @@
 ### 结果
 
 - 主题预览页恢复完美垂直居中表现。
+
+---
+
+## 2026-04-19 选择翻页动画闪退问题修复
+
+### 现象
+
+- 在设置页选择任意翻页动画（旋转图标、百叶窗、卡片等）时，界面瞬间黑屏闪退，直接回到上级设置列表。
+- 重复操作必定复现，且选中的动画并未实际生效。
+
+### 根因
+
+**`LauncherSettings.updateAndNotice()` 调用了一个从未在 `AndroidManifest.xml` 中声明的 ContentProvider authority。**
+
+```
+java.lang.SecurityException: Failed to find provider com.smartisanos.home.settings for user 0;
+expected to find a valid ContentProvider for this authority
+    at com.smartisanos.launcher.data.LauncherSettings.updateAndNotice(...)
+    at com.smartisanos.home.settings.view.PageFlipAnimChooser$2.onItemClick(...)
+```
+
+- `ApplicationProxy.smali` 的静态初始化块中，`setting_base_uri` 被写死为 `content://com.smartisanos.home.settings/`。
+- 这一 URI 在原始锤子 OS（Android 4.x–7.x）上对应一个系统内置提供者，系统并不严格校验。
+- Android 11 引入了严格的 ContentProvider 包可见性校验，若 URI authority 未在 `AndroidManifest.xml` 注册，`ContentResolver.notifyChange()` 会直接抛出 `SecurityException`，导致进程崩溃。
+
+### 修复
+
+- 文件：`smali/com/smartisanos/launcher/ApplicationProxy.smali`
+- 将 `setting_base_uri` 切换为桌面自身已在 `AndroidManifest.xml` 中合法注册的提供者 authority：
+
+```diff
+- const-string v0, "content://com.smartisanos.home.settings/"
++ const-string v0, "content://com.smartisanos.launcher.exportprovider/"
+```
+
+`com.smartisanos.launcher.exportprovider` 对应 `LauncherCallProvider`，拥有有效的读权限声明，可以被 `notifyChange()` 合法访问。
+
+### 结果
+
+- 选择任何翻页动画后不再崩溃，动画效果立即生效。
+- 无副作用：`exportprovider` authority 仅作为广播通道以触发 `ContentObserver`，并不真正提供数据查询。
+
+### 验证
+
+- ADB 抓取 logcat 确认 `SecurityException` 消失。
+- Android 16 真机验证：选择六种翻页动画，均正常切换无闪退。
+
+---
+
+## 2026-04-19 Launcher$10 紧急解锁事件注入修复
+
+### 现象
+
+- 按 Home 键返回桌面时，会再次播放完整的解锁缩放动画（与按电源键解锁的效果一样）。
+- 从设置界面返回桌面同样触发解锁动画，视觉上有明显"闪一下"。
+
+### 根因
+
+**`Launcher$10.smali`（`createEmergencyUnlockEvent()` 的匿名内部事件类）的 `run()` 方法被注入了强制初始化逻辑。**
+
+维护版在原先仅做条件检查的代码段中额外插入了：
+
+```smali
+# 注入内容（错误）
+sget-boolean v1, .../Constants;->ENABLE_UNLOCK_ANIMATION:Z
+if-nez v1, :cond_enable_ready
+const/4 v1, 0x1
+sput-boolean v1, .../Constants;->ENABLE_UNLOCK_ANIMATION:Z   # 强制设为 true
+:cond_enable_ready
+if-nez v0, :cond_init_done
+invoke-virtual {v0}, .../PageView;->initUnlockScreenAnimation()V  # 强制重新初始化
+:cond_init_done
+```
+
+这导致无论何时 `postEmergencyUnlockEvent()` 被触发（包括每次普通 onResume），都会：
+1. 把 `ENABLE_UNLOCK_ANIMATION` 强制设为 `true`。
+2. 绕过 `isUnlockAnimationInit()` 的自然防重复机制。
+3. 重新初始化动画并强制播放。
+
+### 修复
+
+- 文件：`smali/com/smartisanos/home/Launcher$10.smali`
+- 完整恢复为 `v1.5.1-r3` 基线逻辑（参考 git tag `122df65`）：
+
+```smali
+# 正确逻辑（v1.5.1-r3 原版）
+invoke-virtual {v0}, .../AnimationController;->isUnlockAnimationInit()Z
+move-result v0
+if-eqz v0, :cond_0          # 未初始化 → 直接返回，不播放
+sget-boolean v0, .../Constants;->ENABLE_UNLOCK_ANIMATION:Z
+if-eqz v0, :cond_1          # 动画被禁用 → 强制结束现有动画
+invoke-virtual {v0}, .../AnimationController;->playUnlockAnimation()V
+```
+
+原版通过 `isUnlockAnimationInit()` 作为天然防重播的栅栏：普通 Home 键回退时该值为 `false`，直接走 `:cond_0` 返回，完全不进入动画逻辑。
+
+### 结果
+
+- 按 Home 键 / 从设置返回桌面：无解锁动画，直接显示桌面。
+- 锁屏后真正解锁：正常播放解锁动画。
+- 行为与原版 v1.5.1-r3 完全一致。
+
+### 验证
+
+- Android 16 真机验证：连续高频按 Home 键，无多余动画。
+- 在设置修改翻页动画后返回，不再出现解锁动画闪现。
+
+## 2026-04-19 主题下载运行时存储权限恢复 (v1.5.4.1)
+
+### 现象
+
+- 在 Android 11+ 设备上下载在线主题时，点击下载按钮后进度条瞬间消失，下载失败。
+- 系统 Logcat 显示 `DownloadManager` 无法写入公共外部存储目录。
+
+### 根因
+
+- 上游维护版在 `3085bab` 提交中试图通过 `DownloadManager` API 避开文件系统直接操作，从而误认为不再需要存储权限。
+- 在 Android 6.0+ 系统上，写入 `DIRECTORY_DOWNLOADS` 等公共目录仍需 `WRITE_EXTERNAL_STORAGE` 的运行时授权。
+- 主入口 `Launcher.smali` 缺失了针对该权限的动态申请弹窗。
+
+### 修复
+
+- **主入口注入**：在 `Launcher.smali` 的 `onCreate` 方法中注入运行时权限检查逻辑。
+- **动态申请**：如果设备为 Android 6.0+ 且未获得存储权限，应用启动的第一时间将弹出系统授权对话框。
+- **逻辑路径**：使用 `ActivityCompat.requestPermissions` 实现标准方案，确保下载器能获得文件写入通途。
+
+### 结果
+
+- 安装并首次打开桌面时，会主动提示申请存储权限。
+- 授权后，在线主题下载恢复正常，不再出现静默失败。
+
+### 验证
+
+- 清除已安装的 Launcher 数据并重新安装。
+- 启动后观察到系统权限申请弹窗。
+- 点击“允许”后进入主题详情页，点击下载，apk 成功下载并弹出安装界面。

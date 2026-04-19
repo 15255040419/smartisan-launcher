@@ -31,7 +31,7 @@
 
 ## 当前状态
 
-- **[2026-04-19] v1.5.3.3.3 逻辑补完版**：通过 `isHomeKeyScrollToLeft` 标志位判定逻辑，成功实现解锁动画与普通导航的分离；彻底抹平 Android 16 底部留缝；补全并稳定了自定义图标修改逻辑。
+- **[2026-04-19] v1.5.4.1.3 逻辑补完版**：通过 `isHomeKeyScrollToLeft` 标志位判定逻辑，成功实现解锁动画与普通导航的分离；彻底抹平 Android 16 底部留缝；补全并稳定了自定义图标修改逻辑。
 - **主要兼容性修复记录**：集中在 [docs/compatibility-fixes.md](docs/compatibility-fixes.md)。
 - **在线主题下载**：固定指向 `gh-proxy` + GitHub Release 的 `themes-v1`。
 - **分身应用**：搜索页已可在主应用结果之外补充显示分身 / 双开应用结果，并支持直接打开，初步兼容多开环境。
