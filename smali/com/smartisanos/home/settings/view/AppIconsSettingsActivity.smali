@@ -599,7 +599,9 @@
     invoke-virtual {v1, v2}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
     
     # 1. Official Group Header
-    const-string v2, "已重绘"
+    const v2, 0x7f080280
+    invoke-virtual {v0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getString(I)Ljava/lang/String;
+    move-result-object v2
     invoke-virtual {v1, v2}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
     
     # 2. Add apps until Group B starts
@@ -623,7 +625,9 @@
     
     :cond_start_b
     if-nez v3, :cond_add_to_b
-    const-string v2, "未重绘"
+    const v2, 0x7f080281
+    invoke-virtual {v0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getString(I)Ljava/lang/String;
+    move-result-object v2
     invoke-virtual {v1, v2}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
     const/4 v3, 0x1
     :cond_add_to_b

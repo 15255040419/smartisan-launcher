@@ -1890,6 +1890,11 @@
     <public type="string" name="launcher_wallpaper_picker_unavailable_text" id="0x7f08026e" />
     <public type="string" name="launcher_wallpaper_restore_default_text" id="0x7f08026f" />
     <public type="string" name="downloading_update_toast" id="0x7f080270" />
+    <public type="string" name="icon_redrawn" id="0x7f080280" />
+    <public type="string" name="icon_original" id="0x7f080281" />
+    <public type="string" name="follow_studio_title" id="0x7f080282" />
+    <public type="string" name="check_update_title" id="0x7f080283" />
+    <public type="string" name="update_available_title" id="0x7f080284" />
     <public type="dimen" name="abc_alert_dialog_button_bar_height" id="0x7f090000" />
     <public type="dimen" name="quickbar_ex_grid_column_width" id="0x7f090001" />
     <public type="dimen" name="quickbar_ex_width" id="0x7f090002" />
