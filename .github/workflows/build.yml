@@ -50,6 +50,8 @@ jobs:
         with:
           name: "Smartisan Launcher Maintained ${{ github.ref_name }}"
           body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
           files: build/smartisan-launcher-maintained-${{ github.ref_name }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
