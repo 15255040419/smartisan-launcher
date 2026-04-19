@@ -3084,6 +3084,7 @@
 
     move-result-object v0
 
+    const/16 p1, 0x7d0
     invoke-virtual {v0, p1}, Ljava/net/HttpURLConnection;->setConnectTimeout(I)V
 
     .line 2055

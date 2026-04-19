@@ -271,11 +271,9 @@
     invoke-static {v0}, Lcom/smartisanos/launcher/LauncherModel;->setItemInfo(Lcom/smartisanos/launcher/data/ItemInfo;)V
 
     .line 52
-    iget-object v0, p0, Lcom/smartisanos/launcher/actions/StartActivity;->mItemInfo:Lcom/smartisanos/launcher/data/ItemInfo;
-
-    iget-wide v0, v0, Lcom/smartisanos/launcher/data/ItemInfo;->id:J
-
-    invoke-static {v0, v1, v4}, Lcom/smartisanos/launcher/LauncherModel;->updateNewlyInstall(JZ)V
+    # Removed sync DB write to fix app launch lag
+    # iget-wide v0, v0, Lcom/smartisanos/launcher/data/ItemInfo;->id:J
+    # invoke-static {v0, v1, v4}, Lcom/smartisanos/launcher/LauncherModel;->updateNewlyInstall(JZ)V
 
     .line 55
     :cond_1

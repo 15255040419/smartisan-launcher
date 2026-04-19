@@ -372,7 +372,7 @@
 
     .line 683
     .local v4, "conn":Ljava/net/HttpURLConnection;
-    const/16 v5, 0x1388
+    const/16 v5, 0x7d0
 
     .line 684
     .local v5, "timeout":I

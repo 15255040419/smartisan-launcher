@@ -2480,7 +2480,7 @@
     if-ge v0, v13, :cond_1
 
     .line 502
-    mul-int v36, v16, v30
+    mul-int v36, v16, v13
 
     add-int v17, v36, v18
 
@@ -2758,7 +2758,7 @@
     if-ge v0, v13, :cond_6
 
     .line 535
-    mul-int v36, v16, v30
+    mul-int v36, v16, v13
 
     add-int v17, v36, v18
 
