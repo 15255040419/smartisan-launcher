@@ -247,13 +247,9 @@
 
     sget-boolean v4, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 
-    if-nez v4, :cond_7b
+    if-nez v4, :cond_lock_fix
 
-    const/4 v4, 0x1
-
-    sput-boolean v4, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
-
-    :cond_7b
+    :cond_lock_fix
     iget-object v4, p0, Lcom/smartisanos/launcher/ApplicationProxy$9;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
 
     invoke-virtual {v4}, Lcom/smartisanos/launcher/ApplicationProxy;->createInitUnlockAnimationEvent()Lcom/smartisanos/smengine/Event;
@@ -421,13 +417,9 @@
     :cond_e
     sget-boolean v4, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 
-    if-nez v4, :cond_e_enable_ready
+    if-nez v4, :cond_unlock_fix
 
-    const/4 v4, 0x1
-
-    sput-boolean v4, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
-
-    :cond_e_enable_ready
+    :cond_unlock_fix
     invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
 
     move-result-object v4

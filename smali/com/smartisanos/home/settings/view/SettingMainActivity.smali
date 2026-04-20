@@ -56,6 +56,8 @@
 
 .field private mItemHideLable:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+.field private mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
 .field private mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
 .field private mItemPageFlipAnims:Lcom/smartisanos/home/settings/SettingItemTextVertical;
@@ -874,6 +876,15 @@
 
     invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
+    # [PATCH] register unlock animation switch listener
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_register_skip_unlock
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_register_skip_unlock
+
     .line 200
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mEnableCellular:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
@@ -1678,6 +1689,15 @@
 
     invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
+    # [PATCH] unregister unlock animation switch listener
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_unregister_skip_unlock
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_unregister_skip_unlock
+
     .line 207
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mEnableCellular:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
@@ -2269,7 +2289,7 @@
 
     move-result-object v0
 
-    if-ne p1, v0, :cond_2
+    if-ne p1, v0, :cond_unlock_anim
 
     .line 323
     sget-object v0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->log:Lcom/smartisanos/launcher/LOG;
@@ -2284,6 +2304,27 @@
     const-string v0, "launcher_hide_lable"
 
     invoke-direct {p0, v0, p2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->putBoolean(Ljava/lang/String;Z)V
+
+    goto :goto_0
+
+    # [PATCH] check unlock animation switch
+    :cond_unlock_anim
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_2
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
+
+    move-result-object v0
+
+    if-ne p1, v0, :cond_2
+
+    const-string v0, "launcher_unlock_animation_enabled"
+
+    invoke-direct {p0, v0, p2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->putBoolean(Ljava/lang/String;Z)V
+
+    # update runtime flag
+    sput-boolean p2, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 
     goto :goto_0
 
@@ -3046,6 +3087,17 @@
 
     iput-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemHideLable:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+    # [PATCH] init unlock animation switch
+    const v8, 0x7f0f018c
+
+    invoke-virtual {p0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v8
+
+    check-cast v8, Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    iput-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
     .line 145
     const v8, 0x7f0f0057
 
@@ -3565,6 +3617,21 @@
     iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemHideLable:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     invoke-virtual {v1, v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    # [PATCH] sync unlock animation switch state
+    const-string v1, "launcher_unlock_animation_enabled"
+
+    invoke-direct {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getBoolean(Ljava/lang/String;)Z
+
+    move-result v0
+
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v1, :cond_skip_unlock_anim_sync
+
+    invoke-virtual {v1, v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    :cond_skip_unlock_anim_sync
 
     .line 341
     iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mMultiBlockFastLaunchAppSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;

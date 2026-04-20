@@ -361,7 +361,7 @@
     .line 99
     const-string v3, "launcher_unlock_animation_enabled"
 
-    const-string v4, "0"
+    const-string v4, "false"
 
     invoke-virtual {v0, v3, v4}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 
@@ -683,24 +683,33 @@
     invoke-static {}, Lcom/smartisanos/home/net/StatusReceiver;->updateStatus()V
 
     .line 162
+    # [PATCH] Read as string then parse boolean to support both "true"/"false" (putBoolean) and legacy "1"/"0" (int) values
     const-string v8, "launcher_unlock_animation_enabled"
 
-    const/4 v9, 0x1
+    const-string v9, "false"
 
-    invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+    invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/setting/SettingDB;->readString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v8
+
+    # Check for "true"
+    const-string v9, "true"
+
+    invoke-virtual {v9, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v7
 
-    .line 163
-    .local v7, "unlockAnimValue":I
-    const/4 v8, 0x1
+    if-nez v7, :cond_unlock_is_true
 
-    if-ne v7, v8, :cond_2
+    # Also check for legacy "1"
+    const-string v9, "1"
 
-    const/4 v8, 0x1
+    invoke-virtual {v9, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
-    :goto_0
-    sput-boolean v8, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
+    move-result v7
+
+    :cond_unlock_is_true
+    sput-boolean v7, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 
     .line 165
     const/4 v4, -0x1
@@ -805,12 +814,6 @@
     :cond_1
     return-void
 
-    .line 163
-    .restart local v7    # "unlockAnimValue":I
-    :cond_2
-    const/4 v8, 0x0
-
-    goto :goto_0
 
     .line 170
     .restart local v0    # "baseMode":I

@@ -2,7 +2,32 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
-## 2026-04-07 Android 12 ~ 16 首页上下留缝修复
+## 2026-04-20 解锁动画稳定性及手动开关实现
+
+### 现象
+
+- 部分 Android 12+ 机型解锁进入桌面时，缩放动画可能卡在中间状态（卡死）
+- 解锁动画稳定性受系统 `SurfaceFlinger` 与 Launcher 状态机同步影响，难以在 Smali 层彻底修复底层死锁
+
+### 修复方案
+
+- **增加手动开关**：在“桌面设置”中增加“解锁动画”开关。
+- **稳定性增强**：允许用户彻底关闭该动画，绕过系统同步导致的卡死问题。
+- **UI 改动**：
+    - `res/layout/setting_main.xml`：新增 `SettingItemSwitch`。
+    - `res/values/strings.xml`：新增中英文文案。
+- **逻辑改动**：
+    - `smali/com/smartisanos/home/settings/view/SettingMainActivity.smali`：实现开关逻辑并实时更新 `Constants.ENABLE_UNLOCK_ANIMATION` 运行时标记。
+    - `smali/com/smartisanos/launcher/data/LauncherSettings.smali`：在启动时同步持久化开关状态。
+    - `smali/com/smartisanos/launcher/ApplicationProxy.smali`：修复配置监听器（ContentObserver），使其支持字符串格式的开关读取。
+    - `smali/com/smartisanos/launcher/ApplicationProxy$9.smali`：**关键修复**，移除了在锁屏和解锁广播中强行将动画设为 `true` 的硬编码逻辑，确保用户设置不被系统事件覆盖。
+
+### 结果
+
+- **版本更新**：v1.5.4.3
+- **默认状态**：解锁动画默认设为 **关闭**，极大提升了在第三方 Android 12+ 系统上的启动稳定性。
+- **自主可控**：用户可以根据机型兼容性自主决定是否开启解锁动画，彻底避开无法预期的系统死锁问题。
+
 
 ### 现象
 

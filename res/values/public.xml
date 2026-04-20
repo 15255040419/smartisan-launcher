@@ -3945,6 +3945,8 @@
     <public type="id" name="btn_cancel" id="0x7f0f0189" />
     <public type="id" name="btn_update" id="0x7f0f018a" />
     <public type="id" name="footer_container" id="0x7f0f018b" />
+    <public type="id" name="item_id_unlock_anim" id="0x7f0f018c" />
+    <public type="id" name="id_unlock_anim_tips" id="0x7f0f018d" />
     <public type="layout" name="smartisan_update_dialog" id="0x7f04007b" />
     <public type="layout" name="app_icon_settings_footer" id="0x7f04007c" />
 </resources>

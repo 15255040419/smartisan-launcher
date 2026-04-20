@@ -394,4 +394,6 @@
     <id name="action_settings" />
     <id name="item_id_launcher_wallpaper" />
     <id name="setting_switch_launcher" />
+    <id name="item_id_unlock_anim" />
+    <id name="id_unlock_anim_tips" />
 </resources>

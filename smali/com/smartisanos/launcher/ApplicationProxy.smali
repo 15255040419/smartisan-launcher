@@ -3081,17 +3081,28 @@
     .line 811
     const-string v8, "launcher_unlock_animation_enabled"
 
-    const/4 v9, 0x1
+    const-string v9, "false"
 
-    invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+    invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/setting/SettingDB;->readString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v8
+
+    const-string v9, "true"
+
+    invoke-virtual {v9, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v6
 
-    .line 813
-    .local v6, "unlockAnimValue":I
-    const/4 v8, 0x1
+    if-nez v6, :cond_unlock_is_true_proxy
 
-    if-ne v6, v8, :cond_16
+    const-string v9, "1"
+
+    invoke-virtual {v9, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v6
+
+    :cond_unlock_is_true_proxy
+    if-eqz v6, :cond_16
 
     const/4 v8, 0x1
 

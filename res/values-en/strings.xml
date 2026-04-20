@@ -16,4 +16,6 @@
     <string name="follow_website_title">Official Website</string>
     <string name="follow_website_content">www.smartisan.com</string>
     <string name="setting_follow_title">FOLLOW US</string>
+    <string name="unlock_animation_title">Unlock Animation</string>
+    <string name="unlock_animation_tips">Play scale animation after unlock</string>
 </resources>
