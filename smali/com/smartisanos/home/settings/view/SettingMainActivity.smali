@@ -3679,6 +3679,23 @@
     const/4 v2, 0x0
     invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
     move-result v1
+    if-eqz v1, :cond_check_version_done
+    const-string v2, "new_version_code"
+    const/4 v3, 0x0
+    invoke-interface {v0, v2, v3}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    move-result v2
+    invoke-static {p0}, Lcom/smartisan/updater/UpdateUtils;->getVersionCode(Landroid/content/Context;)I
+    move-result v3
+    if-lt v3, v2, :cond_check_version_done
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "has_new_version"
+    const/4 v2, 0x0
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    const/4 v1, 0x0
+    :cond_check_version_done
 
     const v0, 0x7f0f0153
     invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;

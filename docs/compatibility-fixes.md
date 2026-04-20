@@ -1,6 +1,31 @@
 # Smartisan Launcher Maintained Compatibility Fixes
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
+ 
+## 2026-04-20 检查更新系统稳定性与灵敏度修复 (v1.5.4.4)
+
+### 现象
+
+- **红点不消失**：安装最新版后，设置界面的“检查更新”红点依然存在，必须手动点击一次才会消失。
+- **功能闪退**：点击“检查更新”按钮时，Launcher 偶发闪退回到桌面。
+- **无提示文案**：在已经是最新版的情况下，点击检查更新没有任何 Toast 提示。
+
+### 根因
+
+1.  **权限越界**：`ApkUpdater` 试图直接访问 `Version` 类中的私有字段 `code`，在 Android 运行时触发了 `IllegalAccessError` 导致崩溃。
+2.  **逻辑污染**：在注入红点清理代码时，误用了存放 VersionCode 的寄存器 `v11` 进行逻辑跳转判定，导致程序错误地进入了“非法版本”判定分支。
+3.  **缺乏比对**：旧逻辑仅依赖网络请求结果，没有在本地实时比对当前版本与已发现版本的差异。
+
+### 修复方案
+
+- **权限开放**：将 `smali/com/smartisan/updater/Version.smali` 中的 `code` 和 `needUpdate` 字段权限从 `private` 修改为 `public`。
+- **智能校验**：修改 `smali/com/smartisanos/home/settings/view/SettingMainActivity.smali`，在显示红点前增加 VersionCode 实时比对：若 `当前版本 >= 已发现版本`，则自动清理标记位。
+- **逻辑重构**：修正 `smali/com/smartisan/updater/ApkUpdater.smali` 中的寄存器冲突，在跳转前重新加载 `isNeedUpdate` 状态，确保“暂无更新”的 Toast 能被正确触发。
+
+### 结果
+
+- **版本更新**：v1.5.4.4
+- **体验提升**：红点显示逻辑变得极其灵敏，安装更新后自动消失；修复了所有已知的检查更新闪退问题。
 
 ## 2026-04-20 解锁动画稳定性及手动开关实现
 

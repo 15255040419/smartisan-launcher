@@ -2145,10 +2145,22 @@
 
     move-result-object v12
 
+    const-string v13, "new_version_code"
+
+    iget v11, v9, Lcom/smartisan/updater/Version;->code:I
+
+    invoke-interface {v12, v13, v11}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+
+    move-result-object v12
+
     invoke-interface {v12}, Landroid/content/SharedPreferences$Editor;->apply()V
 
     const/4 v10, 0x0
     # --- Custom Red-Dot Clear Logic End ---
+
+    invoke-virtual {v9}, Lcom/smartisan/updater/Version;->isNeedUpdate()Z
+
+    move-result v11
 
     if-eqz v11, :cond_8
 

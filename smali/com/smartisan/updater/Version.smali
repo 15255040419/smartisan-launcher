@@ -16,7 +16,7 @@
 
 
 # instance fields
-.field private code:I
+.field public code:I
 
 .field private mForceUpdate:Z
 
@@ -26,7 +26,7 @@
 
 .field private name:Ljava/lang/String;
 
-.field private needUpdate:Z
+.field public needUpdate:Z
 
 .field private releaseNotes:Ljava/lang/String;
 
