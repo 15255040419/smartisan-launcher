@@ -2145,11 +2145,11 @@
 
     move-result-object v12
 
-    const-string v13, "new_version_code"
+    const-string v13, "new_version_name"
 
-    iget v11, v9, Lcom/smartisan/updater/Version;->code:I
+    iget-object v11, v9, Lcom/smartisan/updater/Version;->name:Ljava/lang/String;
 
-    invoke-interface {v12, v13, v11}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    invoke-interface {v12, v13, v11}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
 
     move-result-object v12
 
