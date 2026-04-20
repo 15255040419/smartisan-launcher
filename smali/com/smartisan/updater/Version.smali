@@ -24,15 +24,15 @@
 
 .field private md5Str:Ljava/lang/String;
 
-.field private name:Ljava/lang/String;
+.field public name:Ljava/lang/String;
 
 .field public needUpdate:Z
 
-.field private releaseNotes:Ljava/lang/String;
+.field public releaseNotes:Ljava/lang/String;
 
-.field private size:J
+.field public size:J
 
-.field private updateUrl:Ljava/lang/String;
+.field public updateUrl:Ljava/lang/String;
 
 
 # direct methods

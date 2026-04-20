@@ -54,6 +54,16 @@
 
     .prologue
     .line 673
+    new-instance v4, Landroid/os/StrictMode$VmPolicy$Builder;
+
+    invoke-direct {v4}, Landroid/os/StrictMode$VmPolicy$Builder;-><init>()V
+
+    invoke-virtual {v4}, Landroid/os/StrictMode$VmPolicy$Builder;->build()Landroid/os/StrictMode$VmPolicy;
+
+    move-result-object v4
+
+    invoke-static {v4}, Landroid/os/StrictMode;->setVmPolicy(Landroid/os/StrictMode$VmPolicy;)V
+
     iget-object v4, p0, Lcom/smartisan/updater/ApkUpdater$DownloadReceiver$1;->val$downloadManager:Landroid/app/DownloadManager;
 
     iget-object v5, p0, Lcom/smartisan/updater/ApkUpdater$DownloadReceiver$1;->val$query:Landroid/app/DownloadManager$Query;
@@ -75,51 +85,53 @@
     if-eqz v4, :cond_0
 
     .line 682
-    const-string v4, "local_filename"
+    const-string v4, "_id"
 
     invoke-interface {v0, v4}, Landroid/database/Cursor;->getColumnIndex(Ljava/lang/String;)I
 
     move-result v2
 
     .line 683
-    .local v2, "fileIndex":I
-    invoke-interface {v0, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    invoke-interface {v0, v2}, Landroid/database/Cursor;->getLong(I)J
 
-    move-result-object v1
+    move-result-wide v2
 
     .line 685
-    .local v1, "file":Ljava/lang/String;
-    new-instance v3, Landroid/content/Intent;
+    .local v2, "id":J
+    new-instance v1, Landroid/content/Intent;
 
     const-string v4, "android.intent.action.VIEW"
 
-    invoke-direct {v3, v4}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+    invoke-direct {v1, v4}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
 
     .line 686
-    .local v3, "intent":Landroid/content/Intent;
+    .local v1, "intent":Landroid/content/Intent;
     const/high16 v4, 0x10000000
 
-    invoke-virtual {v3, v4}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+    invoke-virtual {v1, v4}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
 
     .line 687
-    new-instance v4, Ljava/io/File;
+    const/4 v4, 0x1
 
-    invoke-direct {v4, v1}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    invoke-virtual {v1, v4}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
 
-    invoke-static {v4}, Landroid/net/Uri;->fromFile(Ljava/io/File;)Landroid/net/Uri;
+    .line 688
+    iget-object v4, p0, Lcom/smartisan/updater/ApkUpdater$DownloadReceiver$1;->val$downloadManager:Landroid/app/DownloadManager;
+
+    invoke-virtual {v4, v2, v3}, Landroid/app/DownloadManager;->getUriForDownloadedFile(J)Landroid/net/Uri;
 
     move-result-object v4
 
     const-string v5, "application/vnd.android.package-archive"
 
-    invoke-virtual {v3, v4, v5}, Landroid/content/Intent;->setDataAndType(Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;
+    invoke-virtual {v1, v4, v5}, Landroid/content/Intent;->setDataAndType(Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;
 
-    .line 688
+    .line 690
     iget-object v4, p0, Lcom/smartisan/updater/ApkUpdater$DownloadReceiver$1;->val$newContext:Landroid/content/Context;
 
-    invoke-virtual {v4, v3}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
+    invoke-virtual {v4, v1}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
 
-    .line 689
+    .line 691
     iget-object v4, p0, Lcom/smartisan/updater/ApkUpdater$DownloadReceiver$1;->this$1:Lcom/smartisan/updater/ApkUpdater$DownloadReceiver;
 
     invoke-static {v4}, Lcom/smartisan/updater/ApkUpdater$DownloadReceiver;->access$700(Lcom/smartisan/updater/ApkUpdater$DownloadReceiver;)Z
