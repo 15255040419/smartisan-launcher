@@ -16,11 +16,11 @@
 - **UI 改动**：
     - `res/layout/setting_main.xml`：新增 `SettingItemSwitch`。
     - `res/values/strings.xml`：新增中英文文案。
-- **逻辑改动**：
-    - `smali/com/smartisanos/home/settings/view/SettingMainActivity.smali`：实现开关逻辑并实时更新 `Constants.ENABLE_UNLOCK_ANIMATION` 运行时标记。
-    - `smali/com/smartisanos/launcher/data/LauncherSettings.smali`：在启动时同步持久化开关状态。
-    - `smali/com/smartisanos/launcher/ApplicationProxy.smali`：修复配置监听器（ContentObserver），使其支持字符串格式的开关读取。
-    - `smali/com/smartisanos/launcher/ApplicationProxy$9.smali`：**关键修复**，移除了在锁屏和解锁广播中强行将动画设为 `true` 的硬编码逻辑，确保用户设置不被系统事件覆盖。
+- **逻辑改动 (内部修改细节)**：
+    - **UI 绑定**：在 `SettingMainActivity.smali` 的 `onCreate` 中注册 `SettingItemSwitch` 回调，并通过 `SettingDB` 持久化布尔值字符串（"true"/"false"）。
+    - **初始化同步**：修改 `LauncherSettings.smali` 的 `initSettingDB`，若配置不存在则默认注入 `"false"` 字符串。
+    - **底层解耦（重点）**：在 `ApplicationProxy$9.smali` 中使用了“手术刀”式的修改，定位到处理 `ACTION_KEYGUARD_ON` 和 `ACTION_KEYGUARD_TO_DISMISS` 的广播接收器，**删除了其中强制将 `Constants.ENABLE_UNLOCK_ANIMATION` 设为 `1` 的 `sput-boolean` 指令**，确保全局变量不再被系统广播恶意重置。
+    - **类型安全**：更新 `ApplicationProxy.smali` 的 `ContentObserver` 回调，将原本失效的 `readInt` 替换为 `readString` 并配合字符串比较，实现了对新存储格式的实时政治响应。
 
 ### 结果
 
