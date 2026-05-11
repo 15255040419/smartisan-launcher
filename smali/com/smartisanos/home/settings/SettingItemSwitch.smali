@@ -683,11 +683,17 @@
 .end method
 
 .method public setSwitchSubtitle(Ljava/lang/CharSequence;)V
-    .locals 1
+    .locals 2
     .param p1, "s"    # Ljava/lang/CharSequence;
 
     .prologue
     .line 226
+    iget-object v0, p0, Lcom/smartisanos/home/settings/SettingItemSwitch;->mSubTitle:Landroid/widget/TextView;
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setVisibility(I)V
+
     iget-object v0, p0, Lcom/smartisanos/home/settings/SettingItemSwitch;->mSubTitle:Landroid/widget/TextView;
 
     invoke-virtual {v0, p1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V

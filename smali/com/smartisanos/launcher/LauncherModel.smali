@@ -2815,32 +2815,24 @@
 .end method
 
 .method public static handleOnNewMessage(Landroid/content/Intent;)V
-    .locals 5
+    .locals 8
     .param p0, "intent"    # Landroid/content/Intent;
 
-    .prologue
-    .line 672
     const/4 v1, 0x0
 
-    .line 673
-    .local v1, "messageCount":I
     const-string v3, "extra_packagename"
 
     invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v2
 
-    .line 674
-    .local v2, "pkgName":Ljava/lang/String;
     const-string v3, "extra_componentname"
 
     invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v0
 
-    .line 676
-    .local v0, "cpName":Ljava/lang/String;
-    if-eqz v2, :cond_0
+    if-eqz v2, :cond_try_component
 
     invoke-virtual {v2}, Ljava/lang/String;->trim()Ljava/lang/String;
 
@@ -2850,28 +2842,162 @@
 
     move-result v3
 
-    if-lez v3, :cond_0
+    if-lez v3, :cond_try_component
 
-    .line 677
+    goto :cond_count
+
+    :cond_try_component
+    const-string v3, "android.intent.extra.update_application_component_name"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v3
+
+    if-nez v3, :cond_parse_component
+
+    const-string v4, "com.htc.launcher.extra.COMPONENT"
+
+    invoke-virtual {p0, v4}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v3
+
+    :cond_parse_component
+    if-eqz v3, :cond_try_badge_pkg
+
+    invoke-static {v3}, Landroid/content/ComponentName;->unflattenFromString(Ljava/lang/String;)Landroid/content/ComponentName;
+
+    move-result-object v4
+
+    if-eqz v4, :cond_try_badge_pkg
+
+    invoke-virtual {v4}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v4}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v0
+
+    goto :cond_count
+
+    :cond_try_badge_pkg
+    const-string v3, "badge_count_package_name"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    if-nez v0, :cond_try_sony
+
+    const-string v3, "badge_count_class_name"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    :cond_try_sony
+    if-eqz v2, :cond_try_sony_pkg
+
+    invoke-virtual {v2}, Ljava/lang/String;->trim()Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-virtual {v3}, Ljava/lang/String;->length()I
+
+    move-result v3
+
+    if-lez v3, :cond_try_sony_pkg
+
+    goto :cond_count
+
+    :cond_try_sony_pkg
+    const-string v3, "com.sonyericsson.home.intent.extra.badge.PACKAGE_NAME"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    if-nez v0, :cond_count
+
+    const-string v3, "com.sonyericsson.home.intent.extra.badge.ACTIVITY_NAME"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    :cond_count
     const-string v3, "extra_message_count"
 
     const/4 v4, 0x0
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->hasExtra(Ljava/lang/String;)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_badge_count
 
     invoke-virtual {p0, v3, v4}, Landroid/content/Intent;->getIntExtra(Ljava/lang/String;I)I
 
     move-result v1
 
-    .line 679
-    if-gez v1, :cond_0
+    goto :cond_fix_negative
 
-    .line 680
+    :cond_badge_count
+    const-string v3, "badge_count"
+
+    invoke-virtual {p0, v3, v4}, Landroid/content/Intent;->getIntExtra(Ljava/lang/String;I)I
+
+    move-result v1
+
+    const-string v3, "com.htc.launcher.extra.COUNT"
+
+    invoke-virtual {p0, v3, v1}, Landroid/content/Intent;->getIntExtra(Ljava/lang/String;I)I
+
+    move-result v1
+
+    if-gtz v1, :cond_fix_negative
+
+    const-string v3, "android.intent.extra.update_application_message_text"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v6
+
+    if-nez v6, :cond_parse_text
+
+    const-string v3, "com.sonyericsson.home.intent.extra.badge.MESSAGE"
+
+    invoke-virtual {p0, v3}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v6
+
+    :cond_parse_text
+    if-eqz v6, :cond_fix_negative
+
+    :try_start_0
+    invoke-virtual {v6}, Ljava/lang/String;->trim()Ljava/lang/String;
+
+    move-result-object v6
+
+    invoke-static {v6}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+
+    move-result v1
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    goto :cond_fix_negative
+
+    :catch_0
+    const/4 v1, 0x1
+
+    :cond_fix_negative
+    if-gez v1, :cond_update
+
     const/4 v1, 0x0
 
-    .line 683
-    :cond_0
+    :cond_update
     invoke-static {v2, v0, v1}, Lcom/smartisanos/launcher/LauncherModel;->updateMessageCount(Ljava/lang/String;Ljava/lang/String;I)V
 
-    .line 684
     return-void
 .end method
 

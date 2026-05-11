@@ -158,6 +158,7 @@
     <string name="obsession_header_title">OCD Settings</string>
     <string name="obsession_hide_badge">Hide Icon Badge</string>
     <string name="obsession_hide_lable">Hide Icon Labels</string>
+    <string name="hide_navigation_bar_label">Hide Navigation Bar On Home Screen</string>
     <string name="org_web">Official Website</string>
     <string name="org_web_url">www.smartisan.com</string>
     <string name="over_page_limit">Over page limit</string>
@@ -196,6 +197,7 @@
     <string name="setting_follow_title">Follow Us</string>
     <string name="setting_grade_txt">Rate on Google Play</string>
     <string name="setting_main_title">Smartisan Launcher</string>
+    <string name="setting_battery_optimization">Battery Optimization</string>
     <string name="setting_user_experience_des_txt">Once enabled, anonymous information will be collected to improve the user experience of Smartisan OS. None of your personal information will be included.</string>
     <string name="setting_user_experience_switch_txt">Join Now</string>
     <string name="setting_user_experience_title_txt">Smartisan Service Terms</string>

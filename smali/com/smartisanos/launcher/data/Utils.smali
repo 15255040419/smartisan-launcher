@@ -75,6 +75,8 @@
 
 .field private static lastSyncWeatherDataTime:J
 
+.field private static lastWallpaperSyncAt:J
+
 .field private static final log:Lcom/smartisanos/launcher/LOG;
 
 .field private static mWeatherInfoToast:Landroid/widget/Toast;
@@ -138,6 +140,8 @@
 
     .line 2148
     sput-wide v2, Lcom/smartisanos/launcher/data/Utils;->lastSyncWeatherDataTime:J
+
+    sput-wide v2, Lcom/smartisanos/launcher/data/Utils;->lastWallpaperSyncAt:J
 
     .line 2213
     sput-object v1, Lcom/smartisanos/launcher/data/Utils;->mWeatherInfoToast:Landroid/widget/Toast;
@@ -475,7 +479,7 @@
 
     invoke-direct {v9}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v10, "https://gh-proxy.org/https://github.com/15255040419/smartisan-launcher/releases/download/themes-v1/"
+    const-string v10, "https://gh.llkk.cc/https://github.com/15255040419/smartisan-launcher/releases/download/themes-v1/"
 
     invoke-virtual {v9, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -864,6 +868,18 @@
     goto :goto_1
 .end method
 
+.method public static updateWindowColorAndSystemUi(Landroid/view/Window;)V
+    .locals 1
+    .param p0, "win"    # Landroid/view/Window;
+
+    .prologue
+    const/4 v0, 0x0
+
+    invoke-static {v0, p0}, Lcom/smartisanos/launcher/data/Utils;->applyTransparentStatusBar(Landroid/content/Context;Landroid/view/Window;)V
+
+    return-void
+.end method
+
 .method public static applyTransparentStatusBar(Landroid/content/Context;Landroid/view/Window;)V
     .locals 11
     .param p0, "context"    # Landroid/content/Context;
@@ -897,6 +913,33 @@
 
     .line 2468
     or-int/lit16 v1, v1, 0x400
+
+    instance-of v8, p0, Lcom/smartisanos/home/Launcher;
+
+    if-eqz v8, :cond_hide_navigation_off
+
+    const-string v8, "launcher_hide_navigation_bar"
+
+    const/4 v9, 0x0
+
+    invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v8
+
+    if-eqz v8, :cond_hide_navigation_off
+
+    or-int/lit8 v1, v1, 0x2
+
+    or-int/lit16 v1, v1, 0x1000
+
+    goto :cond_hide_navigation_done
+
+    :cond_hide_navigation_off
+    and-int/lit8 v1, v1, -0x3
+
+    and-int/lit16 v1, v1, -0x1001
+
+    :cond_hide_navigation_done
 
     .line 2469
     # Android 6.0+ Light Status Bar (0x2000)
@@ -6132,6 +6175,148 @@
     invoke-virtual {v2}, Ljava/lang/Exception;->printStackTrace()V
 
     goto :goto_0
+.end method
+
+.method public static syncSystemWallpaper(Landroid/content/Context;Landroid/graphics/Bitmap;)Z
+    .locals 3
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "bitmap"    # Landroid/graphics/Bitmap;
+
+    .prologue
+    const/4 v2, 0x0
+
+    if-eqz p0, :cond_fail
+
+    if-eqz p1, :cond_fail
+
+    :try_start_0
+    invoke-static {p0}, Landroid/app/WallpaperManager;->getInstance(Landroid/content/Context;)Landroid/app/WallpaperManager;
+
+    move-result-object v0
+
+    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v2, 0x18
+
+    if-lt v1, v2, :cond_legacy
+
+    const/4 v1, 0x0
+
+    const/4 v2, 0x1
+
+    invoke-virtual {v0, p1, v1, v2, v2}, Landroid/app/WallpaperManager;->setBitmap(Landroid/graphics/Bitmap;Landroid/graphics/Rect;ZI)I
+
+    invoke-static {}, Lcom/smartisanos/launcher/data/Utils;->markLauncherRebootSkipForWallpaperSync()V
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_legacy
+    invoke-virtual {v0, p1}, Landroid/app/WallpaperManager;->setBitmap(Landroid/graphics/Bitmap;)V
+
+    invoke-static {}, Lcom/smartisanos/launcher/data/Utils;->markLauncherRebootSkipForWallpaperSync()V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :catch_0
+    move-exception v0
+
+    const/4 v2, 0x0
+
+    :cond_fail
+    return v2
+.end method
+
+.method private static markLauncherRebootSkipForWallpaperSync()V
+    .locals 2
+
+    .prologue
+    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+
+    move-result-wide v0
+
+    sput-wide v0, Lcom/smartisanos/launcher/data/Utils;->lastWallpaperSyncAt:J
+
+    return-void
+.end method
+
+.method public static shouldSkipLauncherRebootAfterWallpaperSync()Z
+    .locals 8
+
+    .prologue
+    const-wide/16 v6, 0x0
+
+    sget-wide v0, Lcom/smartisanos/launcher/data/Utils;->lastWallpaperSyncAt:J
+
+    cmp-long v2, v0, v6
+
+    if-nez v2, :cond_check
+
+    const/4 v0, 0x0
+
+    return v0
+
+    :cond_check
+    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+
+    move-result-wide v2
+
+    sub-long/2addr v2, v0
+
+    const-wide/16 v4, 0x1388
+
+    cmp-long v0, v2, v4
+
+    if-lez v0, :cond_skip
+
+    sput-wide v6, Lcom/smartisanos/launcher/data/Utils;->lastWallpaperSyncAt:J
+
+    const/4 v0, 0x0
+
+    return v0
+
+    :cond_skip
+    sput-wide v6, Lcom/smartisanos/launcher/data/Utils;->lastWallpaperSyncAt:J
+
+    const/4 v0, 0x1
+
+    return v0
+.end method
+
+.method public static syncSystemWallpaperIfNeeded(Landroid/content/Context;)V
+    .locals 2
+    .param p0, "context"    # Landroid/content/Context;
+
+    .prologue
+    if-nez p0, :cond_0
+
+    return-void
+
+    :cond_0
+    invoke-static {p0}, Lcom/smartisanos/launcher/theme/ThemeManager;->getCurrentTheme(Landroid/content/Context;)Lcom/smartisanos/launcher/theme/Theme;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/Utils;->getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    invoke-static {p0, v1}, Lcom/smartisanos/launcher/data/Utils;->syncSystemWallpaper(Landroid/content/Context;Landroid/graphics/Bitmap;)Z
+
+    return-void
+.end method
+
+.method public static updateWallpaperSyncState(Landroid/content/Context;)V
+    .locals 0
+    .param p0, "context"    # Landroid/content/Context;
+
+    .prologue
+    return-void
 .end method
 
 .method public static getMessageBitmap(Landroid/content/Context;I)Landroid/graphics/Bitmap;

@@ -56,6 +56,8 @@
 
 .field private mItemHideLable:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+.field private mHideNavigationBarSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
 .field private mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
 .field private mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
@@ -862,6 +864,19 @@
     return-void
 .end method
 
+.method private isHideNavigationBar()Z
+    .locals 1
+
+    .prologue
+    const-string v0, "launcher_hide_navigation_bar"
+
+    invoke-direct {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getBoolean(Ljava/lang/String;)Z
+
+    move-result v0
+
+    return v0
+.end method
+
 .method private registerCheckedButton()V
     .locals 1
 
@@ -884,6 +899,14 @@
     invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
     :cond_register_skip_unlock
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mHideNavigationBarSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_register_skip_hide_navigation
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_register_skip_hide_navigation
 
     .line 200
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mEnableCellular:Lcom/smartisanos/home/settings/SettingItemSwitch;
@@ -1055,7 +1078,7 @@
     .line 210
     new-instance v0, Landroid/view/ContextThemeWrapper;
 
-    const v1, 0x103012b
+    const v1, 0x7f0a0180
 
     invoke-direct {v0, p0, v1}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
 
@@ -1698,12 +1721,133 @@
 
     :cond_unregister_skip_unlock
 
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mHideNavigationBarSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_unregister_skip_hide_navigation
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_unregister_skip_hide_navigation
+
     .line 207
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mEnableCellular:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
     .line 208
+    return-void
+.end method
+
+.method private openBatteryOptimizationSettings()V
+    .locals 8
+
+    .prologue
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v3, "power"
+
+    invoke-virtual {p0, v3}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v3
+
+    check-cast v3, Landroid/os/PowerManager;
+
+    if-eqz v3, :cond_request_ignore
+
+    invoke-virtual {v3, v2}, Landroid/os/PowerManager;->isIgnoringBatteryOptimizations(Ljava/lang/String;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_request_ignore
+
+    goto :cond_open_ignore_settings
+
+    :cond_request_ignore
+    :try_start_0
+    new-instance v3, Landroid/content/Intent;
+
+    const-string v4, "android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
+
+    invoke-direct {v3, v4}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    new-instance v4, Ljava/lang/StringBuilder;
+
+    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v5, "package:"
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v4
+
+    invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-static {v4}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v4
+
+    invoke-virtual {v3, v4}, Landroid/content/Intent;->setData(Landroid/net/Uri;)Landroid/content/Intent;
+
+    invoke-virtual {p0, v3}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivity(Landroid/content/Intent;)V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    return-void
+
+    :catch_0
+    move-exception v0
+
+    :cond_open_ignore_settings
+    :try_start_1
+    new-instance v3, Landroid/content/Intent;
+
+    const-string v4, "android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS"
+
+    invoke-direct {v3, v4}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    invoke-virtual {p0, v3}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivity(Landroid/content/Intent;)V
+    :try_end_1
+    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_1
+
+    return-void
+
+    :catch_1
+    move-exception v1
+
+    :try_start_2
+    new-instance v3, Landroid/content/Intent;
+
+    const-string v4, "android.settings.APPLICATION_DETAILS_SETTINGS"
+
+    invoke-direct {v3, v4}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const-string v4, "package"
+
+    const/4 v5, 0x0
+
+    invoke-static {v4, v2, v5}, Landroid/net/Uri;->fromParts(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v4
+
+    invoke-virtual {v3, v4}, Landroid/content/Intent;->setData(Landroid/net/Uri;)Landroid/content/Intent;
+
+    invoke-virtual {p0, v3}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivity(Landroid/content/Intent;)V
+    :try_end_2
+    .catch Ljava/lang/Exception; {:try_start_2 .. :try_end_2} :catch_2
+
+    return-void
+
+    :catch_2
+    move-exception v6
+
     return-void
 .end method
 
@@ -2330,6 +2474,37 @@
 
     .line 325
     :cond_2
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mHideNavigationBarSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_2_hide_navigation_done
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
+
+    move-result-object v0
+
+    if-ne p1, v0, :cond_2_hide_navigation_done
+
+    sget-object v0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->log:Lcom/smartisanos/launcher/LOG;
+
+    const-string v1, "A140"
+
+    const-string v2, "onCheckedChanged mHideNavigationBarSwitch"
+
+    invoke-virtual {v0, v1, v2}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v0, "launcher_hide_navigation_bar"
+
+    invoke-direct {p0, v0, p2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->putBoolean(Ljava/lang/String;Z)V
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getWindow()Landroid/view/Window;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/Utils;->updateWindowColorAndSystemUi(Landroid/view/Window;)V
+
+    goto/16 :goto_0
+
+    :cond_2_hide_navigation_done
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mEnableCellular:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     invoke-virtual {v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
@@ -2407,7 +2582,7 @@
     .line 225
     new-instance v3, Landroid/view/ContextThemeWrapper;
 
-    const v4, 0x103012b
+    const v4, 0x7f0a0180
 
     invoke-direct {v3, p0, v4}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
 
@@ -2774,6 +2949,29 @@
 
     .line 301
     :cond_f
+    const-string v4, "setting_battery_optimization"
+
+    const-string v5, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v6
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v7
+
+    invoke-virtual {v7, v4, v5, v6}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v4
+
+    if-ne v0, v4, :cond_f_battery_done
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->openBatteryOptimizationSettings()V
+
+    goto/16 :goto_0
+
+    :cond_f_battery_done
     const-string v4, "setting_switch_launcher"
 
     const-string v5, "id"
@@ -3098,6 +3296,38 @@
 
     iput-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemUnlockAnim:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+    const-string v8, "item_id_hide_navigation_bar"
+
+    const-string v9, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v8, v9, v10}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v1
+
+    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_skip_hide_navigation_switch
+
+    instance-of v1, v0, Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v1, :cond_skip_hide_navigation_switch
+
+    check-cast v0, Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mHideNavigationBarSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    :cond_skip_hide_navigation_switch
+
     .line 145
     const v8, 0x7f0f0057
 
@@ -3207,6 +3437,33 @@
     invoke-virtual {v8, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     :cond_skip_switch_launcher
+    const-string v8, "setting_battery_optimization"
+
+    const-string v9, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v8, v9, v10}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v8
+
+    if-eqz v8, :cond_skip_battery_optimization
+
+    invoke-virtual {p0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v8
+
+    if-eqz v8, :cond_skip_battery_optimization
+
+    invoke-virtual {v8, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    :cond_skip_battery_optimization
     iget-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mAboutUs:Landroid/view/View;
 
     invoke-virtual {v8, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
@@ -3633,6 +3890,18 @@
 
     :cond_skip_unlock_anim_sync
 
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mHideNavigationBarSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v1, :cond_skip_hide_navigation_sync
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->isHideNavigationBar()Z
+
+    move-result v2
+
+    invoke-virtual {v1, v2}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    :cond_skip_hide_navigation_sync
+
     .line 341
     iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mMultiBlockFastLaunchAppSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
@@ -3668,7 +3937,7 @@
 .end method
 
 .method private updateUpdateBadge()V
-    .locals 7
+    .locals 8
 
     const-string v0, "launcher_settings"
     const/4 v1, 0x0
@@ -3682,6 +3951,21 @@
 
     if-eqz v1, :cond_check_version_done
 
+    const-string v2, "new_version_code"
+    const/4 v3, 0x0
+    invoke-interface {v0, v2, v3}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    move-result v3
+
+    if-lez v3, :cond_check_version_name
+
+    invoke-static {p0}, Lcom/smartisan/updater/UpdateUtils;->getVersionCode(Landroid/content/Context;)I
+    move-result v4
+
+    if-lt v4, v3, :cond_check_version_done
+
+    goto :cond_clear_update_pref
+
+    :cond_check_version_name
     const-string v2, "new_version_name"
     const/4 v3, 0x0
     invoke-interface {v0, v2, v3}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
@@ -3699,12 +3983,17 @@
 
     if-eqz v2, :cond_check_version_done
 
+    :cond_clear_update_pref
     invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
     move-result-object v0
 
     const-string v1, "has_new_version"
     const/4 v2, 0x0
     invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+
+    const-string v1, "new_version_code"
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
     move-result-object v0
 
     invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V

@@ -1015,6 +1015,31 @@
 
     .prologue
     .line 856
+    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_0
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_0
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->getAnimationController()Lcom/smartisanos/launcher/view/AnimationController;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    return-void
+
+    :cond_0
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->createEmergencyUnlockEvent()Lcom/smartisanos/smengine/Event;
 
     move-result-object v0
@@ -1083,7 +1108,7 @@
     return-void
 .end method
 
-.method private resetStatusBarColor()V
+.method public resetStatusBarColor()V
     .locals 2
 
     .prologue
@@ -1096,19 +1121,13 @@
 
     move-result v0
 
-    if-eqz v0, :cond_0
-
-    .line 1617
+    :cond_0
     invoke-virtual {p0}, Lcom/smartisanos/home/Launcher;->getWindow()Landroid/view/Window;
 
     move-result-object v0
 
-    const/4 v1, 0x0
+    invoke-static {p0, v0}, Lcom/smartisanos/launcher/data/Utils;->applyTransparentStatusBar(Landroid/content/Context;Landroid/view/Window;)V
 
-    invoke-static {v0, v1}, Lcom/meizu/flyme/reflect/StatusBarProxy;->setStatusBarDarkIcon(Landroid/view/Window;Z)Z
-
-    .line 1619
-    :cond_0
     return-void
 .end method
 
@@ -1154,6 +1173,15 @@
     iput-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
 
     .line 1595
+    return-void
+.end method
+
+.method public clearLauncherPreparePowerOffFlag()V
+    .locals 0
+
+    .prologue
+    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->setLauncherFinishPowerOff()V
+
     return-void
 .end method
 
@@ -2260,6 +2288,10 @@
 
     invoke-virtual {v0, v2}, Lcom/smartisanos/home/Launcher;->setContentView(I)V
 
+    move-object/from16 v0, p0
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/Utils;->syncSystemWallpaperIfNeeded(Landroid/content/Context;)V
+
     .line 313
     sget-object v2, Lcom/smartisanos/home/Launcher;->log:Lcom/smartisanos/launcher/LOG;
 
@@ -2907,6 +2939,23 @@
 
     .line 976
     :cond_1
+    invoke-static {}, Lcom/smartisanos/launcher/data/Utils;->shouldSkipLauncherRebootAfterWallpaperSync()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_1_reboot
+
+    sget-object v0, Lcom/smartisanos/home/Launcher;->log:Lcom/smartisanos/launcher/LOG;
+
+    const-string v1, "DEBUG"
+
+    const-string v2, "skip rebootLauncher because wallpaper sync just finished"
+
+    invoke-virtual {v0, v1, v2}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
+
+    return-void
+
+    :cond_1_reboot
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->rebootLauncher()V
 
     .line 977
@@ -3412,6 +3461,18 @@
 
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->refreshPendingIconAppearance()V
 
+    invoke-static {}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->needFetchIconForInit()Z
+
+    move-result v3
+
+    if-eqz v3, :cond_icon_bootstrap_done
+
+    sget-object v3, Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;->EVENT_REQUEST_FETCH_ICON:Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;
+
+    invoke-static {v3}, Lcom/smartisanos/launcher/data/DatabaseUpdater;->updateDatabase(Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;)V
+
+    :cond_icon_bootstrap_done
+
     .line 465
     iget-object v3, p0, Lcom/smartisanos/home/Launcher;->mEditPageTitleDialog:Lcom/smartisanos/launcher/view/EditTitleDialog;
 
@@ -3825,7 +3886,7 @@
 
     .line 620
     :cond_11
-    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->resetStatusBarColor()V
+    invoke-virtual {p0}, Lcom/smartisanos/home/Launcher;->resetStatusBarColor()V
 
     .line 621
     return-void
@@ -3833,7 +3894,15 @@
     .line 498
     .end local v2    # "shouldDoChangeThemeAnim":Z
     :cond_12
+    iget-boolean v3, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
+
+    if-eqz v3, :cond_12_skip_emergency
+
+    iput-boolean v7, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
+
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->postEmergencyUnlockEvent()V
+
+    :cond_12_skip_emergency
 
     goto/16 :goto_0
 

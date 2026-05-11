@@ -95,6 +95,8 @@
 
 .field private mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+.field private mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
 .field private refreshIconListReceiver:Landroid/content/BroadcastReceiver;
 
 .field private mCurrentSelectPkg:Ljava/lang/String;
@@ -935,7 +937,7 @@
 .end method
 
 .method public onCheckedChanged(Landroid/widget/CompoundButton;Z)V
-    .locals 3
+    .locals 4
     .param p1, "buttonView"    # Landroid/widget/CompoundButton;
     .param p2, "isChecked"    # Z
 
@@ -947,7 +949,7 @@
 
     move-result-object v0
 
-    if-ne p1, v0, :cond_0
+    if-ne p1, v0, :cond_check_icon_pack
 
     .line 377
     const-string v0, "DEBUG"
@@ -976,6 +978,58 @@
     sget-object v0, Lcom/smartisanos/launcher/data/InterfaceDefine;->ENABLE_SYNC_APP_ICON:Ljava/lang/String;
 
     invoke-direct {p0, v0, p2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->setBoolean(Ljava/lang/String;Z)V
+
+    if-eqz p2, :cond_0
+
+    sget-object v0, Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;->EVENT_REQUEST_FETCH_ICON:Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/DatabaseUpdater;->updateDatabase(Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;)V
+
+    goto :cond_0
+
+    :cond_check_icon_pack
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_0
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
+
+    move-result-object v0
+
+    if-ne p1, v0, :cond_0
+
+    const-string v0, "DEBUG"
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v2, "onCheckedChanged mItemUseIconPack changed to "
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    invoke-virtual {v1, p2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/LOG;->e(Ljava/lang/String;Ljava/lang/String;)V
+
+    if-eqz p2, :cond_disable_icon_pack
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconPackPicker()V
+
+    goto :cond_0
+
+    :cond_disable_icon_pack
+    const-string v3, "__disabled__"
+
+    invoke-virtual {p0, v3}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applySelectedIconPackPackage(Ljava/lang/String;)V
 
     .line 381
     :cond_0
@@ -1213,7 +1267,7 @@
 
     .line 105
     .local v0, "bottom":I
-    invoke-virtual {v2, v1, v5, v3, v0}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    invoke-virtual {v2, v1, v5, v3, v9}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
 
     .line 106
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
@@ -1223,9 +1277,9 @@
     .line 107
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
-    const v7, 0x7f080101
+    const-string v7, "\u6539\u8fdb\u56fe\u6807"
 
-    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setTitle(I)V
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setTitle(Ljava/lang/CharSequence;)V
 
     .line 108
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
@@ -1233,6 +1287,107 @@
     sget-boolean v7, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
 
     invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const v7, 0x7f0201ce
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setBackgroundResource(I)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
+
+    iget-object v7, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-virtual {v6, v7}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    new-instance v6, Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-direct {v6, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;-><init>(Landroid/content/Context;)V
+
+    iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    new-instance v6, Landroid/widget/LinearLayout$LayoutParams;
+
+    invoke-direct {v6, v11, v10}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+
+    iget-object v7, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-virtual {v7, v6}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const v7, 0x7f0201cb
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setBackgroundResource(I)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const-string v7, "\u56fe\u6807\u5305"
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setTitle(Ljava/lang/CharSequence;)V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->isIconPackAutoEnabled()Z
+
+    move-result v6
+
+    iget-object v7, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-virtual {v7, v6}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    if-eqz v6, :cond_icon_pack_subtitle_off
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getSelectedIconPackPackage(Landroid/content/Context;)Ljava/lang/String;
+
+    move-result-object v7
+
+    invoke-static {p0, v7}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackLabel(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v7
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setSwitchSubtitle(Ljava/lang/CharSequence;)V
+
+    goto :cond_icon_pack_subtitle_done
+
+    :cond_icon_pack_subtitle_off
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const-string v7, "\u672a\u4f7f\u7528"
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setSwitchSubtitle(Ljava/lang/CharSequence;)V
+
+    :cond_icon_pack_subtitle_done
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-virtual {v6}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
+
+    move-result-object v6
+
+    const/16 v7, 0x8
+
+    invoke-virtual {v6, v7}, Lsmartisanos/widget/SwitchEx;->setVisibility(I)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const/4 v7, 0x1
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setClickable(Z)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    new-instance v7, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$5;
+
+    invoke-direct {v7, p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$5;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    invoke-virtual {v6, v7}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
+
+    iget-object v7, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    invoke-virtual {v6, v7}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
     .line 110
     invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
@@ -1558,6 +1713,327 @@
     return-void
 .end method
 
+.method private isIconPackAutoEnabled()Z
+    .locals 4
+
+    .prologue
+    const/4 v3, 0x0
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getSelectedIconPackPackage(Landroid/content/Context;)Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "__disabled__"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_0
+
+    return v3
+
+    :cond_0
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackPackages(Landroid/content/Context;)Ljava/util/ArrayList;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_1
+
+    invoke-virtual {v1}, Ljava/util/ArrayList;->size()I
+
+    move-result v2
+
+    if-lez v2, :cond_1
+
+    const/4 v2, 0x1
+
+    return v2
+
+    :cond_1
+    return v3
+.end method
+
+.method private applyIconPackAutoEnabled(Z)V
+    .locals 5
+    .param p1, "enabled"    # Z
+
+    .prologue
+    if-eqz p1, :cond_disable
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackPackages(Landroid/content/Context;)Ljava/util/ArrayList;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_refresh
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+    move-result v1
+
+    if-lez v1, :cond_refresh
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    invoke-static {p0, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->setSelectedIconPackPackage(Landroid/content/Context;Ljava/lang/String;)V
+
+    goto :cond_refresh
+
+    :cond_disable
+    const-string v2, "__disabled__"
+
+    invoke-static {p0, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->setSelectedIconPackPackage(Landroid/content/Context;Ljava/lang/String;)V
+
+    :cond_refresh
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheUnOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v3}, Ljava/util/HashMap;->clear()V
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v3}, Ljava/util/HashMap;->clear()V
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v3}, Ljava/util/ArrayList;->clear()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initApplicationList()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initImageLoaderAndStartLoad()V
+
+    iget-object v4, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v4, :cond_done
+
+    invoke-virtual {v4}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    :cond_done
+    return-void
+.end method
+
+.method public showIconPackPicker()V
+    .locals 10
+
+    .prologue
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackPackages(Landroid/content/Context;)Ljava/util/ArrayList;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_empty
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+    move-result v1
+
+    if-lez v1, :cond_empty
+
+    add-int/lit8 v2, v1, 0x1
+
+    new-array v3, v2, [Ljava/lang/CharSequence;
+
+    const/4 v4, 0x0
+
+    const-string v5, "\u4e0d\u4f7f\u7528\u56fe\u6807\u5305"
+
+    aput-object v5, v3, v4
+
+    const/4 v8, 0x0
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getSelectedIconPackPackage(Landroid/content/Context;)Ljava/lang/String;
+
+    move-result-object v9
+
+    const/4 v4, 0x0
+
+    :goto_0
+    if-ge v4, v1, :cond_show
+
+    invoke-virtual {v0, v4}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/String;
+
+    add-int/lit8 v6, v4, 0x1
+
+    invoke-virtual {v5, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v7
+
+    if-eqz v7, :cond_not_selected
+
+    move v8, v6
+
+    :cond_not_selected
+    new-instance v7, Ljava/lang/StringBuilder;
+
+    invoke-direct {v7}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-static {p0, v5}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackLabel(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v5
+
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v7
+
+    const-string v5, "\uff08"
+
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v7
+
+    invoke-virtual {v0, v4}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/String;
+
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v7
+
+    const-string v5, "\uff09"
+
+    invoke-virtual {v7, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v7
+
+    invoke-virtual {v7}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v5
+
+    aput-object v5, v3, v6
+
+    add-int/lit8 v4, v4, 0x1
+
+    goto :goto_0
+
+    :cond_show
+    new-instance v4, Landroid/app/AlertDialog$Builder;
+
+    const v5, 0x7f0a0180
+
+    invoke-direct {v4, p0, v5}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;I)V
+
+    const-string v5, "\u9009\u62e9\u56fe\u6807\u5305"
+
+    invoke-virtual {v4, v5}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v4
+
+    new-instance v5, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$4;
+
+    invoke-direct {v5, p0, v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$4;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Ljava/util/ArrayList;)V
+
+    invoke-virtual {v4, v3, v8, v5}, Landroid/app/AlertDialog$Builder;->setSingleChoiceItems([Ljava/lang/CharSequence;ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Landroid/app/AlertDialog$Builder;->show()Landroid/app/AlertDialog;
+
+    return-void
+
+    :cond_empty
+    const-string v7, "__disabled__"
+
+    invoke-virtual {p0, v7}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applySelectedIconPackPackage(Ljava/lang/String;)V
+
+    return-void
+.end method
+
+.method public applySelectedIconPackPackage(Ljava/lang/String;)V
+    .locals 4
+    .param p1, "packageName"    # Ljava/lang/String;
+
+    .prologue
+    if-nez p1, :cond_set
+
+    const-string p1, "__disabled__"
+
+    :cond_set
+    invoke-static {p0, p1}, Lcom/smartisanos/home/settings/icons/IconPackManager;->setSelectedIconPackPackage(Landroid/content/Context;Ljava/lang/String;)V
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->preloadSelectedIconPack(Landroid/content/Context;)V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_switch_done
+
+    const-string v1, "__disabled__"
+
+    invoke-virtual {v1, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_switch_on
+
+    const/4 v2, 0x0
+
+    goto :cond_set_switch
+
+    :cond_switch_on
+    const/4 v2, 0x1
+
+    :cond_set_switch
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    invoke-virtual {v0, v2}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    if-eqz v2, :cond_apply_icon_pack_subtitle_off
+
+    invoke-static {p0, p1}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackLabel(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setSwitchSubtitle(Ljava/lang/CharSequence;)V
+
+    goto :cond_apply_icon_pack_subtitle_done
+
+    :cond_apply_icon_pack_subtitle_off
+    const-string v1, "\u672a\u4f7f\u7528"
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setSwitchSubtitle(Ljava/lang/CharSequence;)V
+
+    :cond_apply_icon_pack_subtitle_done
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_switch_done
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheUnOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v3}, Ljava/util/HashMap;->clear()V
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v3}, Ljava/util/HashMap;->clear()V
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v3}, Ljava/util/ArrayList;->clear()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initApplicationList()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initImageLoaderAndStartLoad()V
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v3, :cond_done
+
+    invoke-virtual {v3}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    :cond_done
+    return-void
+.end method
+
 .method protected onResume()V
     .locals 2
 
@@ -1577,6 +2053,41 @@
 
     invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_resume_icon_pack_done
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->isIconPackAutoEnabled()Z
+
+    move-result v1
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    if-eqz v1, :cond_resume_icon_pack_subtitle_off
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getSelectedIconPackPackage(Landroid/content/Context;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {p0, v1}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackLabel(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setSwitchSubtitle(Ljava/lang/CharSequence;)V
+
+    goto :cond_resume_icon_pack_subtitle_done
+
+    :cond_resume_icon_pack_subtitle_off
+    const-string v1, "\u672a\u4f7f\u7528"
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setSwitchSubtitle(Ljava/lang/CharSequence;)V
+
+    :cond_resume_icon_pack_subtitle_done
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_resume_icon_pack_done
+
     .line 156
     return-void
 .end method
@@ -1594,6 +2105,14 @@
     const/4 v1, 0x0
 
     invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mItemUseIconPack:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_stop_icon_pack_done
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_stop_icon_pack_done
 
     .line 162
     return-void

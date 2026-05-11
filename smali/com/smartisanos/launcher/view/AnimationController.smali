@@ -6942,9 +6942,6 @@
 
     .prologue
     .line 221
-    invoke-virtual {p0}, Lcom/smartisanos/launcher/view/AnimationController;->playUnlockAnimation()V
-
-    .line 222
     sget-boolean v0, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 
     if-eqz v0, :cond_0
@@ -7424,6 +7421,21 @@
     goto :goto_0
 
     :cond_5a
+    invoke-virtual {p0}, Lcom/smartisanos/launcher/view/AnimationController;->isUnLockAnimationRunning()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_5b
+
+    sget-object v1, Lcom/smartisanos/launcher/view/AnimationController;->log:Lcom/smartisanos/launcher/LOG;
+
+    const-string v2, "### init unlock animation blocked: unlock animation is playing"
+
+    invoke-virtual {v1, v2}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
+
+    goto :goto_0
+
+    :cond_5b
 
     .line 859
     iget-boolean v1, p0, Lcom/smartisanos/launcher/view/AnimationController;->mUnlockAnimationHasInit:Z
@@ -7727,30 +7739,24 @@
     .line 199
     iget-object v0, p0, Lcom/smartisanos/launcher/view/AnimationController;->mLauncherAnimation9:Lcom/smartisanos/launcher/view/UnlockAnimationXML;
 
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/UnlockAnimationXML;->getTimeLine()Lcom/smartisanos/smengine/AnimationTimeLine;
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/UnlockAnimationXML;->isPlaying()Z
 
-    move-result-object v0
+    move-result v0
 
-    if-nez v0, :cond_0
+    if-eqz v0, :cond_0
 
-    iget-object v0, p0, Lcom/smartisanos/launcher/view/AnimationController;->mLauncherAnimation16:Lcom/smartisanos/launcher/view/UnlockAnimationXML;
-
-    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/UnlockAnimationXML;->getTimeLine()Lcom/smartisanos/smengine/AnimationTimeLine;
-
-    move-result-object v0
-
-    if-eqz v0, :cond_1
-
-    :cond_0
     const/4 v0, 0x1
 
-    :goto_0
     return v0
 
-    :cond_1
-    const/4 v0, 0x0
+    :cond_0
+    iget-object v0, p0, Lcom/smartisanos/launcher/view/AnimationController;->mLauncherAnimation16:Lcom/smartisanos/launcher/view/UnlockAnimationXML;
 
-    goto :goto_0
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/UnlockAnimationXML;->isPlaying()Z
+
+    move-result v0
+
+    return v0
 .end method
 
 .method public isUnlockAnimationInit()Z

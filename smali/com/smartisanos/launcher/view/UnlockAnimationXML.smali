@@ -1805,6 +1805,12 @@
 
     if-eqz v0, :cond_0
 
+    invoke-virtual {v0}, Lcom/smartisanos/smengine/AnimationTimeLine;->isFinished()Z
+
+    move-result v0
+
+    if-nez v0, :cond_0
+
     const/4 v0, 0x1
 
     :goto_0

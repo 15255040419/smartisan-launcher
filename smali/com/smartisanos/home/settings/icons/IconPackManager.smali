@@ -88,19 +88,55 @@
 .end method
 
 .method private static ensureLoaded(Landroid/content/Context;)V
-    .locals 2
+    .locals 3
     .param p0, "context"    # Landroid/content/Context;
 
     invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getSelectedIconPackPackage(Landroid/content/Context;)Ljava/lang/String;
 
     move-result-object v0
 
+    const-string v1, "__disabled__"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_not_disabled
+
+    invoke-static {}, Lcom/smartisanos/home/settings/icons/IconPackManager;->clearCache()V
+
+    return-void
+
+    :cond_not_disabled
     invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
     move-result v1
 
     if-eqz v1, :cond_0
 
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackPackages(Landroid/content/Context;)Ljava/util/ArrayList;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Ljava/util/ArrayList;->size()I
+
+    move-result v2
+
+    if-lez v2, :cond_no_pack
+
+    const/4 v2, 0x0
+
+    invoke-virtual {v1, v2}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-static {p0, v0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->setSelectedIconPackPackage(Landroid/content/Context;Ljava/lang/String;)V
+
+    goto :cond_0
+
+    :cond_no_pack
     invoke-static {}, Lcom/smartisanos/home/settings/icons/IconPackManager;->clearCache()V
 
     return-void
@@ -291,6 +327,78 @@
     return-object v0
 .end method
 
+.method public static getIconPackLabel(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
+    .locals 4
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "packageName"    # Ljava/lang/String;
+
+    invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_none
+
+    const-string v0, "__disabled__"
+
+    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_lookup
+
+    :cond_none
+    const-string v0, "\u672a\u4f7f\u7528"
+
+    return-object v0
+
+    :cond_lookup
+    :try_start_0
+    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+
+    move-result-object v1
+
+    const/4 v2, 0x0
+
+    invoke-virtual {v1, p1, v2}, Landroid/content/pm/PackageManager;->getApplicationInfo(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;
+
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Landroid/content/pm/PackageManager;->getApplicationLabel(Landroid/content/pm/ApplicationInfo;)Ljava/lang/CharSequence;
+
+    move-result-object v3
+
+    invoke-static {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_has_label
+
+    return-object p1
+
+    :cond_has_label
+    invoke-interface {v3}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
+
+    move-result-object v0
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    return-object v0
+
+    :catch_0
+    move-exception v0
+
+    return-object p1
+.end method
+
+.method public static preloadSelectedIconPack(Landroid/content/Context;)V
+    .locals 0
+    .param p0, "context"    # Landroid/content/Context;
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->ensureLoaded(Landroid/content/Context;)V
+
+    return-void
+.end method
+
 .method public static isLauncherRefreshPending(Landroid/content/Context;)Z
     .locals 3
     .param p0, "context"    # Landroid/content/Context;
@@ -338,6 +446,19 @@
 
     move-result-object v0
 
+    const-string v1, "__disabled__"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_selected_not_disabled
+
+    const/4 v0, 0x0
+
+    return v0
+
+    :cond_selected_not_disabled
     invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
     move-result v1
@@ -656,6 +777,8 @@
     invoke-static {p0, v0, p1}, Lcom/smartisanos/launcher/data/LauncherPreferences;->putString(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V
 
     invoke-static {}, Lcom/smartisanos/home/settings/icons/IconPackManager;->clearCache()V
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->markLauncherRefreshPending(Landroid/content/Context;)V
 
     return-void
 .end method

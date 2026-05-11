@@ -35,7 +35,7 @@
 
 # virtual methods
 .method public onReceive(Landroid/content/Context;Landroid/content/Intent;)V
-    .locals 8
+    .locals 10
     .param p1, "context"    # Landroid/content/Context;
     .param p2, "intent"    # Landroid/content/Intent;
 
@@ -319,6 +319,12 @@
 
     invoke-virtual {v4}, Lcom/smartisanos/home/Launcher;->removeEmergencyUnlockEvent()V
 
+    invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Lcom/smartisanos/home/Launcher;->clearLauncherPreparePowerOffFlag()V
+
     .line 546
     invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
 
@@ -432,6 +438,39 @@
 
     move-result-object v4
 
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/AnimationController;->isUnLockAnimationRunning()Z
+
+    move-result v5
+
+    if-eqz v5, :cond_e_check_init
+
+    invoke-static {}, Lcom/smartisanos/launcher/ApplicationProxy;->access$200()Lcom/smartisanos/launcher/LOG;
+
+    move-result-object v5
+
+    const-string v6, "### ACTION_KEYGUARD_TO_DISMISS skip duplicate because unlock animation is already running"
+
+    invoke-virtual {v5, v6}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
+
+    iget-object v4, p0, Lcom/smartisanos/launcher/ApplicationProxy$9;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
+
+    invoke-static {v4}, Lcom/smartisanos/launcher/ApplicationProxy;->access$900(Lcom/smartisanos/launcher/ApplicationProxy;)Landroid/os/Handler;
+
+    move-result-object v4
+
+    new-instance v5, Lcom/smartisanos/launcher/ApplicationProxy$15;
+
+    iget-object v6, p0, Lcom/smartisanos/launcher/ApplicationProxy$9;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
+
+    invoke-direct {v5, v6}, Lcom/smartisanos/launcher/ApplicationProxy$15;-><init>(Lcom/smartisanos/launcher/ApplicationProxy;)V
+
+    const-wide/16 v8, 0x9c4
+
+    invoke-virtual {v4, v5, v8, v9}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+
+    goto/16 :goto_0
+
+    :cond_e_check_init
     invoke-virtual {v4}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
 
     move-result v4

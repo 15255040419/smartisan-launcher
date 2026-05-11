@@ -36,7 +36,7 @@
 
 # virtual methods
 .method public run()V
-    .locals 3
+    .locals 6
 
     .prologue
     .line 347
@@ -85,6 +85,22 @@
     move-result-object v1
 
     invoke-virtual {v1}, Lcom/smartisanos/smengine/World;->updateGLView()V
+
+    iget-object v1, p0, Lcom/smartisanos/launcher/ApplicationProxy$3;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
+
+    invoke-static {v1}, Lcom/smartisanos/launcher/ApplicationProxy;->access$900(Lcom/smartisanos/launcher/ApplicationProxy;)Landroid/os/Handler;
+
+    move-result-object v1
+
+    new-instance v2, Lcom/smartisanos/launcher/ApplicationProxy$15;
+
+    iget-object v3, p0, Lcom/smartisanos/launcher/ApplicationProxy$3;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
+
+    invoke-direct {v2, v3}, Lcom/smartisanos/launcher/ApplicationProxy$15;-><init>(Lcom/smartisanos/launcher/ApplicationProxy;)V
+
+    const-wide/16 v4, 0x9c4
+
+    invoke-virtual {v1, v2, v4, v5}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
 
     .line 353
     :cond_1

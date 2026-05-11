@@ -1,6 +1,96 @@
 # Smartisan Launcher Maintained Compatibility Fixes
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
+
+## 2026-04-26 解锁动画、图标包自动识别与上游功能补齐
+
+### 现象
+
+- 开启解锁动画后，部分情况下同一次解锁会触发两条动画链路，表现为动画播放两次、动画只显示一半或桌面停在半解锁状态。
+- 当前已支持逐个应用更换图标，但安装第三方图标包后仍需要手动逐个替换，批量适配成本较高。
+- 上游 `08f8136` 修复了电话、短信、联系人在改进图标未匹配时缺少锤子内置图标兜底的问题，本地分支尚未合入该提交。
+- 当前 `HEAD` 没有合入上游截图中的“关闭电池优化”和“桌面隐藏虚拟键”入口，设置页实际不可见。
+- 桌面主题已经支持下载完成后自动拉起安装，详情页里的“下载后请在通知栏或下载中安装”提示已经过时。
+
+### 修复方案
+
+- `AndroidManifest.xml`
+  - 增加 Android 12+ 必需的 `android:exported` 标记，避免高版本安装失败。
+  - 增加 `SET_WALLPAPER`、`REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` 权限，支持壁纸同步和电池优化引导。
+- `smali/com/smartisanos/home/Launcher.smali`
+  - `postEmergencyUnlockEvent()` 增加解锁动画初始化状态检查：如果 `PageView` 已存在且 `AnimationController` 已初始化解锁动画，就不再发送 emergency unlock 事件，避免同一次解锁重复触发。
+  - `onResume` 中只在 `mLauncherIsPreparingPowerOff` 为真时补发 emergency unlock，并立即清掉该状态，避免普通恢复流程反复补发。
+  - 返回桌面时检查 `RedirectIconDB.needFetchIconForInit()`，如果改进图标库为空则自动触发 `EVENT_REQUEST_FETCH_ICON`，补齐上游空库自举抓取逻辑。
+  - 首次创建桌面后主动同步主题锁屏壁纸到系统壁纸，主题切换时也同步刷新。
+- `smali/com/smartisanos/home/settings/icons/IconPackManager.smali`
+  - 当用户未手动选择图标包时，自动扫描已安装的第三方图标包，选择第一个带 `appfilter.xml` 映射的包并加载。
+  - 该逻辑只填补“未选择图标包”的默认值，不覆盖单个应用已经设置的自定义图标。
+  - 增加 `__disabled__` 禁用标记：用户在应用图标页关闭“自动识别图标包”后，不会被后台自动选择逻辑重新打开。
+  - 选择图标包后标记桌面图标需要刷新，回到桌面时自动批量刷新图标外观，避免只刷新设置页预览而桌面不生效。
+  - 增加图标包应用名读取和选择后预加载：设置页右侧显示真实图标包名称，选中后先加载 `appfilter.xml` 映射再刷新预览，减少等待空白期。
+- `smali/com/smartisanos/home/settings/view/AppIconsSettingsActivity.smali`
+  - 修复“改进图标”开关只创建但未加入页面的问题，现在应用图标页顶部会显示“改进图标”。
+  - 将“自动识别图标包”从滑动开关改为点击行弹窗选择：可在“不使用图标包”和已安装图标包之间切换，选择后刷新列表预览并触发桌面刷新。
+  - 将图标包入口文案收敛为“图标包”，右侧显示“未使用 / 当前图标包名称”；弹窗改用单选列表，条目显示“应用名（包名）”，更接近设置选择页语义。
+  - 将“改进图标”和“图标包”合并为上下两行圆角设置分组，去掉中间多余间距，避免第一行看起来像独立卡片。
+  - 打开“改进图标”开关时立即触发 `EVENT_REQUEST_FETCH_ICON`，不用等下一次启动或刷新。
+- `smali/com/smartisanos/home/settings/SettingItemSwitch.smali`
+  - 修复右侧状态文案只设置文本但未显示的问题，图标包入口选择后可正常显示“已选择 / 未使用”。
+- `res/layout/setting_main.xml`、`smali/com/smartisanos/home/settings/view/SettingMainActivity.smali`
+  - 补齐“桌面隐藏虚拟键”开关，写入 `launcher_hide_navigation_bar`，并在切换后立即刷新系统 UI 标志。
+  - 补齐“关闭电池优化”入口，未授权时优先打开 `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`；已在白名单时直接打开电池优化管理页，避免第二次点击无反馈。
+  - 高斯壁纸选择、桌面布局切换、图标包选择等本地新增弹窗改用 `SmartisanDialogStyle`，与检查更新弹窗风格更一致。
+- `res/layout/activity_theme_item.xml`
+  - 删除桌面主题详情页的手动安装提示行，避免自动安装流程下出现误导文案。
+- `smali/com/smartisanos/launcher/data/Utils.smali`
+  - 切换主题下载代理域名到 `gh.llkk.cc`。
+  - 将“隐藏虚拟键”限制为只对 `Launcher` 主界面生效，设置、主题、搜索等其它界面保留虚拟键。
+  - 补齐 `updateWindowColorAndSystemUi(Window)` 封装，设置页切换隐藏虚拟键后可刷新状态栏 / 导航栏样式，且不误触发桌面专用隐藏逻辑。
+  - 增加系统壁纸同步入口，主题壁纸变更后可同步到系统壁纸。
+- `smali/com/smartisanos/launcher/view/DragLayer.smali`
+  - 移植桌面下拉通知逻辑，普通桌面空白区域向下滑动时尝试展开系统通知栏。
+- `smali/com/smartisanos/launcher/view/AnimationController.smali`、`smali/com/smartisanos/launcher/ApplicationProxy$9.smali`
+  - 同步上游 `4cda2b0` 解锁修复：强制结束解锁动画时不再重新播放，重复解锁广播到达时若动画正在运行则跳过，降低半截动画卡住和重复执行概率。
+  - 修正 `isUnLockAnimationRunning()` 的判断条件：只在动画真正 `isPlaying()` 时才视为运行中，避免“锁屏时已初始化 timeline”被误判为正在播放，导致真正解锁广播被跳过并停在半解锁状态。
+  - 充电 / Doze / BatteryEdge 场景下系统可能在解锁动画开始后再次发来锁屏初始化事件；现在动画播放中会拒绝二次 `initUnlockAnimation()`，避免播放到一半又被重新初始化。
+- `smali/com/smartisanos/launcher/ApplicationProxy$3.smali`、`smali/com/smartisanos/launcher/ApplicationProxy$15.smali`
+  - 解锁动画开始播放后增加 2.5 秒 watchdog：若系统动画时间线没有正常结束，自动调用已有的强制结束事件并刷新 GL，避免停在半解锁画面。
+  - `ACTION_KEYGUARD_TO_DISMISS` 因“动画正在运行”跳过播放时，也会安装同样的 watchdog；在 `isPlaying()` 语义修正后，仅当动画 2.5 秒后仍真正处于播放中才执行幂等复位。
+- `smali/com/smartisanos/launcher/view/UnlockAnimationXML.smali`
+  - 修正 `isPlaying()` 语义：旧逻辑只要 `mTimeLine != null` 就认为正在播放，但 `init()` 阶段已经会创建 `mTimeLine` 并把桌面摆到解锁动画第一帧，导致 Android 12 上后续 `ACTION_KEYGUARD_TO_DISMISS` 被误判为重复事件并跳过真正的 `start()`。
+  - 新逻辑改为检查底层 `AnimationTimeLine.isFinished()`：只有 timeline 已经启动且未结束才算正在播放，初始化完成但尚未播放时允许正常进入播放流程。
+- `smali/com/smartisanos/launcher/theme/ChangeThemeHandler.smali`、`smali/com/smartisanos/launcher/data/Utils.smali`
+  - 同步上游 `75552f2` 主题修复：高斯主题切换跳过系统壁纸重同步；壁纸同步成功后短时间内跳过桌面重启，避免壁纸同步触发重启导致卡顿。
+- `smali/com/smartisanos/launcher/data/Constants.smali`、`smali/com/smartisanos/launcher/view/MainView.smali`
+  - 提升页数上限：9 宫格提升到 `0x78`，16 宫格提升到 `0x40`。
+- `smali/com/smartisanos/quicksearchbox/container/editbox/EditBoxFragment.smali`
+  - 搜索页恢复时强制显示 T9 键盘，避免输入面板状态错乱。
+- `smali/smartisanos/widget/SwitchEx.smali`
+  - 为开关控件启用软件渲染层，规避三星 S24 Ultra 等设备开关显示异常。
+- `smali/com/smartisanos/launcher/ApplicationProxy.smali`、`smali/com/smartisanos/launcher/LauncherModel.smali`
+  - 增加多厂商角标广播兼容，支持 Samsung / HTC / Sony 等常见未读数 Intent 格式。
+- `smali/com/smartisanos/home/net/NetworkHandler.smali`
+  - 当网络改进图标和包名图标均匹配失败时，按组件名 / 包名中的角色关键词识别电话、短信、联系人，并回退到锤子内置图标。
+  - 同步上游 `fac27ac` 扩展系统应用兜底：增加日历、时钟角色识别，并限制该兜底只对系统应用生效，避免第三方应用误套系统图标。
+  - 兜底图标会写入现有 `RedirectIconInfo` 流程，继续复用原来的图标缓存、MD5 和多 Activity 同包保存逻辑。
+- `smali/com/smartisan/updater/ApkUpdater.smali`、`smali/com/smartisanos/home/settings/view/SettingMainActivity.smali`
+  - 检查更新发现新版时同时保存 `new_version_code`，设置页优先用当前安装 `versionCode` 清除红点，版本名仅作为旧数据兜底，避免 `v1.5.1-r6` / `1.5.1-r6` 这类格式差异导致红点不消失。
+
+### 图标来源兼容策略
+
+推荐保持以下优先级，既能兼容上游图标包能力，也不牺牲当前逐个应用自定义能力：
+
+1. **用户单个应用自定义图标**：最高优先级，用户明确改过的图标永远不被自动识别、网络改进图标或内置兜底覆盖。
+2. **已选 / 自动识别的第三方图标包**：用于批量替换；只有未做单独自定义的应用才走图标包映射，可在应用图标页独立关闭。
+3. **锤子改进图标库 / 网络图标抓取**：用于图标包未覆盖的应用。
+4. **电话、短信、联系人内置兜底**：仅在改进图标未匹配成功时生效，避免这些系统角色应用露出不匹配的原始图标。
+5. **应用原始图标**：所有增强路径都不可用时才回退。
+
+### 上游同步结论
+
+- 不建议直接合并 `upstream/main`：本地分支已经有自定义图标、解锁动画和多处兼容性改动，直接 merge 会带来大量资源、脚本、签名与文档层面的冲突。
+- 当前 `HEAD` 没有直接包含截图中的上游提交；本次先手工移植了 `08f8136` 的图标兜底能力，并补齐 `50d4dae` / `eff7e06` 中用户可见的“桌面隐藏虚拟键”和“关闭电池优化”入口。
+- 后续继续采用“按提交挑选、按功能移植”的方式更稳：先保留本地逐个自定义图标能力，再把上游图标包、壁纸、状态栏、搜索、安装兼容等补丁逐项对齐。
  
 ## 2026-04-20 更新下载安装流程适配 (v1.5.4.5)
 
