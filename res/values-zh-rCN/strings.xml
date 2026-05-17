@@ -70,7 +70,7 @@
     <string name="dlg_msg_download_theme_local_only">当前只有1个主题，是否下载其他主题？</string>
     <string name="dlg_ok">确定</string>
     <string name="dlg_switch_launcher_msg">更改此项设置需要重新载入桌面</string>
-    <string name="dlg_switch_launcher_msg_9_grids">单个十六宫格（包括隐藏板块）内的图标如果超过九个，切换到九宫格后，会被自动按顺序放入两个九宫格内，而之后再切换回十六宫格时，这两个板块内的应用不会自动回到一个板块内。更改此项设置需要重新载入页面</string>
+    <string name="dlg_switch_launcher_msg_9_grids">单个二十宫格（包括隐藏板块）内的图标如果超过十二个，切换到十二宫格后，会被自动按顺序放入两个十二宫格内，而之后再切换回二十宫格时，这两个板块内的应用不会自动回到一个板块内。更改此项设置需要重新载入页面</string>
     <string name="dlg_switch_launcher_title">设置桌面</string>
     <string name="download_embedded_app_downlading">%s 正在下载中</string>
     <string name="download_embedded_app_failed">%s 下载失败</string>
@@ -143,8 +143,8 @@
     <string name="lockscreen_wallpaper_setting_sub_text">设置锁屏界面的壁纸</string>
     <string name="lockscreen_wallpaper_setting_text">锁屏壁纸</string>
     <string name="mode_android_original_launcher">安卓原生</string>
-    <string name="mode_smartisan_launcher_16_grids">十六宫格</string>
-    <string name="mode_smartisan_launcher_9_grids">九宫格</string>
+    <string name="mode_smartisan_launcher_16_grids">二十宫格</string>
+    <string name="mode_smartisan_launcher_9_grids">十二宫格</string>
     <string name="more">更多</string>
     <string name="more_check_upgradation">检查更新</string>
     <string name="more_info">更多</string>
@@ -207,7 +207,7 @@
     <string name="setting_user_experience_switch_txt">参与用户体验改进计划</string>
     <string name="setting_user_experience_title_txt">Smartisan 服务条款</string>
     <string name="setting_user_experience_txt">用户体验改进计划</string>
-    <string name="share_msg">我正在使用锤子科技（Smartisan）出品的锤子桌面 APP。它的桌面再现了经典的九宫/十六宫格设计。编辑模式下，图标的批量移动、板块的隐藏和加密都可轻松实现，支持设置以锁屏壁纸为背景的“玻璃主题”。此外，还可选择下载 Smartisan OS 中的电话、短信等应用。下载链接：http://www.smartisan.com/#/apps/launcher/</string>
+    <string name="share_msg">我正在使用锤子科技（Smartisan）出品的锤子桌面 APP。它的桌面再现了经典的十二宫/二十宫格设计。编辑模式下，图标的批量移动、板块的隐藏和加密都可轻松实现，支持设置以锁屏壁纸为背景的“玻璃主题”。此外，还可选择下载 Smartisan OS 中的电话、短信等应用。下载链接：http://www.smartisan.com/#/apps/launcher/</string>
     <string name="singletext_item_clearrecord">清除搜索记录</string>
     <string name="singletext_item_displaymore">点击显示更多...</string>
     <string name="singletext_item_searchonline">在网页中搜索</string>

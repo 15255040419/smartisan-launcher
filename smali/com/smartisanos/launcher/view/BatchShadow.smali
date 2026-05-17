@@ -67,9 +67,9 @@
     .prologue
     const/4 v2, 0x0
 
-    const/16 v4, 0x10
+    const/16 v4, 0x14
 
-    const/16 v3, 0x9
+    const/16 v3, 0xc
 
     .line 60
     invoke-direct {p0, p1}, Lcom/smartisanos/smengine/SceneNode;-><init>(Ljava/lang/String;)V
@@ -3617,7 +3617,7 @@
 
     const/4 v5, 0x4
 
-    if-ne v4, v5, :cond_0
+    if-lt v4, v5, :cond_0
 
     .line 79
     const-string v1, "TextureBatch16Material"
@@ -3725,7 +3725,9 @@
     :sswitch_data_0
     .sparse-switch
         0x9 -> :sswitch_0
+        0xc -> :sswitch_0
         0x10 -> :sswitch_1
+        0x14 -> :sswitch_1
     .end sparse-switch
 .end method
 
@@ -3794,7 +3796,9 @@
     :sswitch_data_0
     .sparse-switch
         0x9 -> :sswitch_0
+        0xc -> :sswitch_0
         0x10 -> :sswitch_1
+        0x14 -> :sswitch_1
     .end sparse-switch
 .end method
 

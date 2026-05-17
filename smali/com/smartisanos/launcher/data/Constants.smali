@@ -1640,7 +1640,7 @@
 
     .line 290
     :pswitch_0
-    const/16 v0, 0x9
+    const/16 v0, 0xc
 
     .line 291
     goto :goto_0
@@ -1661,7 +1661,7 @@
 
     .line 302
     :pswitch_3
-    const/16 v0, 0x10
+    const/16 v0, 0x14
 
     .line 303
     goto :goto_0
@@ -2332,11 +2332,11 @@
     add-float v27, v36, v37
 
     .line 475
-    const/high16 v36, 0x40400000    # 3.0f
+    const/high16 v36, 0x40800000    # 4.0f
 
     mul-float v36, v36, v6
 
-    const/high16 v37, 0x40000000    # 2.0f
+    const/high16 v37, 0x40400000    # 3.0f
 
     mul-float v37, v37, v10
 
@@ -2577,11 +2577,11 @@
     add-float v27, v36, v37
 
     .line 480
-    const/high16 v36, 0x40800000    # 4.0f
+    const/high16 v36, 0x40a00000    # 5.0f
 
     mul-float v36, v36, v6
 
-    const/high16 v37, 0x40400000    # 3.0f
+    const/high16 v37, 0x40800000    # 4.0f
 
     mul-float v37, v37, v10
 
@@ -3350,7 +3350,7 @@
     .param p0, "mode"    # I
 
     .prologue
-    const/16 v0, 0x9
+    const/16 v0, 0xc
 
     .line 1086
     const/4 v1, 0x1
@@ -3368,7 +3368,7 @@
     if-ne p0, v1, :cond_1
 
     .line 1089
-    const/16 v0, 0x10
+    const/16 v0, 0x14
 
     goto :goto_0
 
@@ -3415,7 +3415,7 @@
 
     invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v4, "getCellNumByMode return 9, but mode ["
+    const-string v4, "getCellNumByMode return 12, but mode ["
 
     invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -4942,7 +4942,7 @@
 
     iget v8, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->cell_spacing_v:F
 
-    mul-float/2addr v8, v10
+    mul-float/2addr v8, v12
 
     sub-float v1, v7, v8
 
@@ -4953,7 +4953,7 @@
     iput v7, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->cell_width:F
 
     .line 559
-    div-float v7, v1, v12
+    div-float v7, v1, v13
 
     iput v7, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->cell_height:F
 
@@ -5026,7 +5026,7 @@
 
     iget v8, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->cell_spacing_v:F
 
-    mul-float/2addr v8, v12
+    mul-float/2addr v8, v13
 
     sub-float v1, v7, v8
 
@@ -5037,7 +5037,9 @@
     iput v7, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->cell_width:F
 
     .line 573
-    div-float v7, v1, v13
+    const/high16 v8, 0x40a00000    # 5.0f
+
+    div-float v7, v1, v8
 
     iput v7, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->cell_height:F
 
@@ -7504,7 +7506,7 @@
     .line 874
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->pageCellAllCenterPoints:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x9
+    const/16 v2, 0xc
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7522,7 +7524,7 @@
     .line 877
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->pageCellAllCenterPoints:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x10
+    const/16 v2, 0x14
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7542,7 +7544,7 @@
 
     const/4 v2, 0x6
 
-    const/16 v3, 0x9
+    const/16 v3, 0xc
 
     new-array v3, v3, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7553,7 +7555,7 @@
 
     const/4 v2, 0x7
 
-    const/16 v3, 0x10
+    const/16 v3, 0x14
 
     new-array v3, v3, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7797,7 +7799,7 @@
     .line 927
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->cellWorldCenterPointsInWindow:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x9
+    const/16 v2, 0xc
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7807,7 +7809,7 @@
     const/4 v0, 0x0
 
     :goto_5
-    const/16 v1, 0x9
+    const/16 v1, 0xc
 
     if-ge v0, v1, :cond_8
 
@@ -7831,7 +7833,7 @@
     :cond_8
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->cellWorldCenterPointsInWindow:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x10
+    const/16 v2, 0x14
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7841,7 +7843,7 @@
     const/4 v0, 0x0
 
     :goto_6
-    const/16 v1, 0x10
+    const/16 v1, 0x14
 
     if-ge v0, v1, :cond_9
 
@@ -9456,7 +9458,7 @@
     .local v29, "v":F
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     move/from16 v32, v0
 
@@ -9474,7 +9476,7 @@
 
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     move/from16 v33, v0
 
@@ -9508,7 +9510,7 @@
 
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
 
     move/from16 v33, v0
 
@@ -9538,13 +9540,13 @@
     .local v10, "cellScaleY":F
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     move/from16 v32, v0
 
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
 
     move/from16 v33, v0
 
@@ -9626,7 +9628,7 @@
     .line 843
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     move/from16 v32, v0
 

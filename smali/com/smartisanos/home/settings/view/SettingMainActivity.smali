@@ -479,7 +479,7 @@
     .end local v3    # "pageInfo":[Ljava/lang/String;
     .restart local v2    # "open":Ljava/lang/String;
     :pswitch_1
-    const-string v4, "grid_type:9;"
+    const-string v4, "grid_type:12;"
 
     invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -487,7 +487,7 @@
 
     .line 676
     :pswitch_2
-    const-string v4, "grid_type:16;"
+    const-string v4, "grid_type:20;"
 
     invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 

@@ -61,9 +61,9 @@
 
     const/4 v2, 0x0
 
-    const/16 v4, 0x10
+    const/16 v4, 0x14
 
-    const/16 v3, 0x9
+    const/16 v3, 0xc
 
     .line 61
     invoke-direct {p0, p1}, Lcom/smartisanos/smengine/SceneNode;-><init>(Ljava/lang/String;)V
@@ -1369,7 +1369,7 @@
 
     const/4 v5, 0x4
 
-    if-ne v4, v5, :cond_0
+    if-lt v4, v5, :cond_0
 
     .line 82
     const-string v1, "TextureBatch16PreColorMaterial"
@@ -1379,14 +1379,14 @@
 
     array-length v4, v4
 
-    mul-int/lit8 v4, v4, 0x10
+    mul-int/lit8 v4, v4, 0x14
 
     new-array v4, v4, [F
 
     iput-object v4, p0, Lcom/smartisanos/launcher/view/BatchBackground;->mMeshTexTureCoordArray:[F
 
     .line 84
-    const/16 v4, 0x10
+    const/16 v4, 0x14
 
     new-array v4, v4, [Z
 
@@ -1495,7 +1495,9 @@
     :sswitch_data_0
     .sparse-switch
         0x9 -> :sswitch_0
+        0xc -> :sswitch_0
         0x10 -> :sswitch_1
+        0x14 -> :sswitch_1
     .end sparse-switch
 .end method
 
@@ -1564,7 +1566,9 @@
     :sswitch_data_0
     .sparse-switch
         0x9 -> :sswitch_0
+        0xc -> :sswitch_0
         0x10 -> :sswitch_1
+        0x14 -> :sswitch_1
     .end sparse-switch
 .end method
 

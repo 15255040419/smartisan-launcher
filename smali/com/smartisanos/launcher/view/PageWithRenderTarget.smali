@@ -94,9 +94,9 @@
 
     .prologue
     .local p2, "ccList":Ljava/util/ArrayList;, "Ljava/util/ArrayList<Lcom/smartisanos/launcher/data/ItemInfo;>;"
-    const/16 v2, 0x10
+    const/16 v2, 0x14
 
-    const/16 v1, 0x9
+    const/16 v1, 0xc
 
     .line 77
     invoke-direct {p0, p1, p2, p3}, Lcom/smartisanos/launcher/view/Page;-><init>(Ljava/lang/String;Ljava/util/ArrayList;Ljava/lang/String;)V
@@ -1377,7 +1377,7 @@
 
     .local v0, "i":I
     :goto_0
-    const/16 v3, 0x9
+    const/16 v3, 0xc
 
     if-ge v0, v3, :cond_0
 
@@ -1409,7 +1409,7 @@
     const/4 v0, 0x0
 
     :goto_1
-    const/16 v3, 0x10
+    const/16 v3, 0x14
 
     if-ge v0, v3, :cond_1
 
@@ -2537,7 +2537,7 @@
 
     const/4 v6, 0x4
 
-    if-ne v5, v6, :cond_1
+    if-lt v5, v6, :cond_1
 
     .line 93
     const-string v1, "TextureBatch16Material"
@@ -2552,7 +2552,7 @@
 
     .line 97
     :cond_3
-    const/16 v5, 0x10
+    const/16 v5, 0x14
 
     new-array v5, v5, [Z
 
@@ -2563,7 +2563,7 @@
 
     array-length v5, v5
 
-    mul-int/lit8 v5, v5, 0x10
+    mul-int/lit8 v5, v5, 0x14
 
     new-array v5, v5, [F
 
@@ -2680,7 +2680,7 @@
 
     const/4 v4, 0x4
 
-    if-ne v3, v4, :cond_2
+    if-lt v3, v4, :cond_2
 
     .line 833
     const-string v1, "TextureBatch16Material"
@@ -3086,7 +3086,9 @@
     :sswitch_data_0
     .sparse-switch
         0x9 -> :sswitch_0
+        0xc -> :sswitch_0
         0x10 -> :sswitch_1
+        0x14 -> :sswitch_1
     .end sparse-switch
 .end method
 
@@ -3155,7 +3157,9 @@
     :sswitch_data_0
     .sparse-switch
         0x9 -> :sswitch_0
+        0xc -> :sswitch_0
         0x10 -> :sswitch_1
+        0x14 -> :sswitch_1
     .end sparse-switch
 .end method
 
