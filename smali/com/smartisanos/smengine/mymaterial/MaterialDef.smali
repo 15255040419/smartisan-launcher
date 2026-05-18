@@ -146,25 +146,25 @@
 
 .field private static final modelSpaceDiffuseColorVaryingDefine:Ljava/lang/String; = "varying vec3 vModelSpaceDiffuseColor;\n"
 
-.field private static final modelSpaceLightDirArray16Define:Ljava/lang/String; = "uniform vec3 uModelSpaceLightDir[16];\n"
+.field private static final modelSpaceLightDirArray16Define:Ljava/lang/String; = "uniform vec3 uModelSpaceLightDir[20];\n"
 
-.field private static final modelSpaceLightDirArray9Define:Ljava/lang/String; = "uniform vec3 uModelSpaceLightDir[9];\n"
+.field private static final modelSpaceLightDirArray9Define:Ljava/lang/String; = "uniform vec3 uModelSpaceLightDir[12];\n"
 
 .field private static final modualColorUniformDefine:Ljava/lang/String; = "uniform vec4 uModularColor;\n"
 
-.field private static final modularColorArray16Define:Ljava/lang/String; = "uniform vec4 uModularColorArray16[16];\n"
+.field private static final modularColorArray16Define:Ljava/lang/String; = "uniform vec4 uModularColorArray16[20];\n"
 
 .field private static final modularColorArray6Define:Ljava/lang/String; = "uniform vec4 uModularColorArray6[6];\n"
 
-.field private static final modularColorArray9Define:Ljava/lang/String; = "uniform vec4 uModularColorArray9[9];\n"
+.field private static final modularColorArray9Define:Ljava/lang/String; = "uniform vec4 uModularColorArray9[12];\n"
 
 .field private static final modularColorVaryingDefine:Ljava/lang/String; = "varying vec4 vModularColor;\n"
 
-.field private static final mvpArray16Define:Ljava/lang/String; = "uniform mat4 uMVPMatArray16[16];\n"
+.field private static final mvpArray16Define:Ljava/lang/String; = "uniform mat4 uMVPMatArray16[20];\n"
 
 .field private static final mvpArray6Define:Ljava/lang/String; = "uniform mat4 uMVPMatArray6[6];\n"
 
-.field private static final mvpArray9Define:Ljava/lang/String; = "uniform mat4 uMVPMatArray9[9];\n"
+.field private static final mvpArray9Define:Ljava/lang/String; = "uniform mat4 uMVPMatArray9[12];\n"
 
 .field private static final mvpIndexAttributeDefine:Ljava/lang/String; = "attribute float aMvpArrayIndex;\n"
 
@@ -364,7 +364,7 @@
 
     .prologue
     .line 590
-    const-string v1, "uniform mat4 uMVPMatArray16[16];\nuniform vec4 uModularColorArray16[16];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray16[20];\nuniform vec4 uModularColorArray16[20];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 599
     .local v1, "text":Ljava/lang/String;
@@ -436,7 +436,7 @@
 
     .prologue
     .line 553
-    const-string v1, "uniform mat4 uMVPMatArray9[9];\nuniform vec4 uModularColorArray9[9];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray9[12];\nuniform vec4 uModularColorArray9[12];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 562
     .local v1, "text":Ljava/lang/String;
@@ -4702,7 +4702,7 @@
 
     .prologue
     .line 1479
-    const-string v1, "uniform mat4 uMVPMatArray16[16];\nuniform vec4 uModularColorArray16[16];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray16[20];\nuniform vec4 uModularColorArray16[20];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 1487
     .local v1, "text":Ljava/lang/String;
@@ -4735,7 +4735,7 @@
 
     .prologue
     .line 717
-    const-string v1, "uniform mat4 uMVPMatArray16[16];\nuniform vec4 uModularColorArray16[16];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray16[20];\nuniform vec4 uModularColorArray16[20];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 725
     .local v1, "text":Ljava/lang/String;
@@ -4847,7 +4847,7 @@
 
     .line 1318
     .local v2, "screenDepth":F
-    const-string v4, "uniform mat4 uMVPMatArray16[16];\nuniform vec4 uModularColorArray16[16];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nuniform vec3 uModelSpaceLightDir[16];\nvarying vec3 vModelSpaceDiffuseColor;\nvoid main() {\n"
+    const-string v4, "uniform mat4 uMVPMatArray16[20];\nuniform vec4 uModularColorArray16[20];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nuniform vec3 uModelSpaceLightDir[20];\nvarying vec3 vModelSpaceDiffuseColor;\nvoid main() {\n"
 
     .line 1328
     .local v4, "text":Ljava/lang/String;
@@ -5130,7 +5130,7 @@
 
     .prologue
     .line 1434
-    const-string v1, "uniform mat4 uMVPMatArray9[9];\nuniform vec4 uModularColorArray9[9];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray9[12];\nuniform vec4 uModularColorArray9[12];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 1442
     .local v1, "text":Ljava/lang/String;
@@ -5163,7 +5163,7 @@
 
     .prologue
     .line 685
-    const-string v1, "uniform mat4 uMVPMatArray9[9];\nuniform vec4 uModularColorArray9[9];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray9[12];\nuniform vec4 uModularColorArray9[12];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 693
     .local v1, "text":Ljava/lang/String;
@@ -5275,7 +5275,7 @@
 
     .line 1271
     .local v2, "screenDepth":F
-    const-string v4, "uniform mat4 uMVPMatArray9[9];\nuniform vec4 uModularColorArray9[9];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nuniform vec3 uModelSpaceLightDir[9];\nvarying vec3 vModelSpaceDiffuseColor;\nvoid main() {\n"
+    const-string v4, "uniform mat4 uMVPMatArray9[12];\nuniform vec4 uModularColorArray9[12];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec4 vModularColor;\nuniform vec3 uModelSpaceLightDir[12];\nvarying vec3 vModelSpaceDiffuseColor;\nvoid main() {\n"
 
     .line 1281
     .local v4, "text":Ljava/lang/String;
@@ -6406,7 +6406,7 @@
 
     .prologue
     .line 789
-    const-string v1, "uniform mat4 uMVPMatArray16[16];\nuniform vec4 uModularColorArray16[16];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute vec2 aShadowTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray16[20];\nuniform vec4 uModularColorArray16[20];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute vec2 aShadowTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 799
     .local v1, "text":Ljava/lang/String;
@@ -6478,7 +6478,7 @@
 
     .prologue
     .line 749
-    const-string v1, "uniform mat4 uMVPMatArray9[9];\nuniform vec4 uModularColorArray9[9];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute vec2 aShadowTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
+    const-string v1, "uniform mat4 uMVPMatArray9[12];\nuniform vec4 uModularColorArray9[12];\nattribute vec3 aPosition;\nattribute vec2 aTexCoord;\nattribute vec2 aShadowTexCoord;\nattribute float aMvpArrayIndex;\nvarying vec2 vTexCoord;\nvarying vec2 vShadowTexCoord;\nvarying vec4 vModularColor;\nvoid main() {\n"
 
     .line 759
     .local v1, "text":Ljava/lang/String;

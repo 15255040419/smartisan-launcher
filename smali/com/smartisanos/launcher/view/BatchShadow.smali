@@ -3546,7 +3546,7 @@
 
     .line 76
     .local v1, "mode":Ljava/lang/String;
-    iget v4, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v4, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     if-ne v4, v7, :cond_1
 
@@ -5077,7 +5077,7 @@
 
     array-length v4, v0
 
-    const/16 v5, 0x9
+    const/16 v5, 0xc
 
     if-ne v4, v5, :cond_12
 

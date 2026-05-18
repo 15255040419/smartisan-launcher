@@ -52,6 +52,31 @@
     if-ne v1, v2, :cond_1
 
     .line 74
+    new-instance v1, Landroid/content/Intent;
+
+    invoke-direct {v1}, Landroid/content/Intent;-><init>()V
+
+    const-string v2, "com.smartisanos.home"
+
+    const-string v3, "com.smartisanos.home.settings.view.SettingMainActivity"
+
+    invoke-virtual {v1, v2, v3}, Landroid/content/Intent;->setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+
+    const/high16 v2, 0x10000000
+
+    invoke-virtual {v1, v2}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_0
+
+    invoke-virtual {v2, v1}, Lcom/smartisanos/launcher/LauncherApplication;->startActivity(Landroid/content/Intent;)V
+
+    goto :goto_0
+
+    .line 75
     sget-boolean v1, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 
     if-eqz v1, :cond_0
@@ -62,7 +87,7 @@
 
     const-string v2, "DEBUG"
 
-    const-string v3, "SettingButton onClick return by current mode is SINGLE_PAGE_MODE"
+    const-string v3, "SettingButton onClick return by current mode is SINGLE_PAGE_MODE and app context is null"
 
     invoke-virtual {v1, v2, v3}, Lcom/smartisanos/launcher/LOG;->info(Ljava/lang/String;Ljava/lang/String;)V
 

@@ -1647,7 +1647,7 @@
 
     .line 294
     :pswitch_1
-    const/16 v0, 0x24
+    const/16 v0, 0x30
 
     .line 295
     goto :goto_0
@@ -1668,7 +1668,7 @@
 
     .line 306
     :pswitch_4
-    const/16 v0, 0x40
+    const/16 v0, 0x50
 
     goto :goto_0
 
@@ -2332,11 +2332,11 @@
     add-float v27, v36, v37
 
     .line 475
-    const/high16 v36, 0x40800000    # 4.0f
+    const/high16 v36, 0x40a00000    # 5.0f
 
     mul-float v36, v36, v6
 
-    const/high16 v37, 0x40400000    # 3.0f
+    const/high16 v37, 0x40800000    # 4.0f
 
     mul-float v37, v37, v10
 
@@ -2577,11 +2577,11 @@
     add-float v27, v36, v37
 
     .line 480
-    const/high16 v36, 0x40a00000    # 5.0f
+    const/high16 v36, 0x40800000    # 4.0f
 
     mul-float v36, v36, v6
 
-    const/high16 v37, 0x40800000    # 4.0f
+    const/high16 v37, 0x40400000    # 3.0f
 
     mul-float v37, v37, v10
 
@@ -3379,7 +3379,7 @@
     if-ne p0, v1, :cond_2
 
     .line 1091
-    const/16 v0, 0x24
+    const/16 v0, 0x30
 
     goto :goto_0
 
@@ -3390,7 +3390,7 @@
     if-ne p0, v1, :cond_3
 
     .line 1093
-    const/16 v0, 0x40
+    const/16 v0, 0x50
 
     goto :goto_0
 
@@ -7515,7 +7515,7 @@
     .line 875
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->pageCellAllCenterPoints:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x9
+    const/16 v2, 0xc
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7533,7 +7533,7 @@
     .line 878
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->pageCellAllCenterPoints:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x10
+    const/16 v2, 0x14
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7867,7 +7867,7 @@
     :cond_9
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->cellWorldCenterPointsInWindow:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x24
+    const/16 v2, 0x30
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7877,7 +7877,7 @@
     const/4 v0, 0x0
 
     :goto_7
-    const/16 v1, 0x24
+    const/16 v1, 0x30
 
     if-ge v0, v1, :cond_a
 
@@ -7901,7 +7901,7 @@
     :cond_a
     sget-object v1, Lcom/smartisanos/launcher/data/Constants;->cellWorldCenterPointsInWindow:[[Lcom/smartisanos/smengine/math/Vector3f;
 
-    const/16 v2, 0x40
+    const/16 v2, 0x50
 
     new-array v2, v2, [Lcom/smartisanos/smengine/math/Vector3f;
 
@@ -7911,7 +7911,7 @@
     const/4 v0, 0x0
 
     :goto_8
-    const/16 v1, 0x40
+    const/16 v1, 0x50
 
     if-ge v0, v1, :cond_b
 
@@ -9458,7 +9458,7 @@
     .local v29, "v":F
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
 
     move/from16 v32, v0
 
@@ -9476,7 +9476,7 @@
 
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
 
     move/from16 v33, v0
 
@@ -9510,7 +9510,7 @@
 
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     move/from16 v33, v0
 
@@ -9540,13 +9540,13 @@
     .local v10, "cellScaleY":F
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
 
     move/from16 v32, v0
 
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     move/from16 v33, v0
 
@@ -9628,7 +9628,7 @@
     .line 843
     move-object/from16 v0, v26
 
-    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
+    iget v0, v0, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
 
     move/from16 v32, v0
 

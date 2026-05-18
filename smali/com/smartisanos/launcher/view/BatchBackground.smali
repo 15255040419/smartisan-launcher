@@ -1282,7 +1282,7 @@
 
     .line 77
     .local v1, "mode":Ljava/lang/String;
-    iget v4, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v4, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     const/4 v5, 0x3
 
@@ -1296,14 +1296,14 @@
 
     array-length v4, v4
 
-    mul-int/lit8 v4, v4, 0x9
+    mul-int/lit8 v4, v4, 0xc
 
     new-array v4, v4, [F
 
     iput-object v4, p0, Lcom/smartisanos/launcher/view/BatchBackground;->mMeshTexTureCoordArray:[F
 
     .line 80
-    const/16 v4, 0x9
+    const/16 v4, 0xc
 
     new-array v4, v4, [Z
 
@@ -3110,7 +3110,7 @@
 
     array-length v4, v0
 
-    const/16 v5, 0x9
+    const/16 v5, 0xc
 
     if-ne v4, v5, :cond_18
 

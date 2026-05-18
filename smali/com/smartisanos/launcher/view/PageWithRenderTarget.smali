@@ -2405,7 +2405,7 @@
 
     .line 85
     .local v1, "mode":Ljava/lang/String;
-    iget v5, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v5, v3, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     const/4 v6, 0x3
 
@@ -2424,7 +2424,7 @@
 
     .line 90
     :cond_0
-    const/16 v5, 0x9
+    const/16 v5, 0xc
 
     new-array v5, v5, [Z
 
@@ -2435,7 +2435,7 @@
 
     array-length v5, v5
 
-    mul-int/lit8 v5, v5, 0x9
+    mul-int/lit8 v5, v5, 0xc
 
     new-array v5, v5, [F
 
@@ -2637,7 +2637,7 @@
 
     .line 830
     .local v1, "mode":Ljava/lang/String;
-    iget v3, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v3, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     const/4 v4, 0x3
 
@@ -2676,7 +2676,7 @@
     .line 832
     .end local v0    # "material":Lcom/smartisanos/smengine/mymaterial/Material;
     :cond_3
-    iget v3, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v3, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     const/4 v4, 0x4
 
@@ -2859,7 +2859,7 @@
 
     .line 798
     .local v1, "mode":Ljava/lang/String;
-    iget v3, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_row_num:I
+    iget v3, v2, Lcom/smartisanos/launcher/data/LayoutProperty;->page_cell_col_num:I
 
     const/4 v4, 0x3
 
@@ -2931,7 +2931,7 @@
 
     const/4 v4, 0x4
 
-    if-ne v3, v4, :cond_2
+    if-lt v3, v4, :cond_2
 
     .line 801
     const-string v1, "TextureBatch16WithDirLightMaterial"
@@ -4030,7 +4030,7 @@
 
     array-length v3, v0
 
-    const/16 v4, 0x9
+    const/16 v4, 0xc
 
     if-ne v3, v4, :cond_e
 

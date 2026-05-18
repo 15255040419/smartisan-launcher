@@ -18,6 +18,10 @@
 
 
 # instance fields
+.field private mDownX:F
+
+.field private mSlideDone:Z
+
 .field final synthetic this$0:Lcom/smartisanos/launcher/view/DockView;
 
 
@@ -43,6 +47,16 @@
 
     .prologue
     .line 1124
+    invoke-virtual {p1}, Lcom/smartisanos/smengine/TouchEvent;->getWorldCoordinateX()F
+
+    move-result v1
+
+    iput v1, p0, Lcom/smartisanos/launcher/view/DockView$MyTouchListener;->mDownX:F
+
+    const/4 v1, 0x0
+
+    iput-boolean v1, p0, Lcom/smartisanos/launcher/view/DockView$MyTouchListener;->mSlideDone:Z
+
     sget-boolean v1, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 
     if-eqz v1, :cond_0
@@ -92,13 +106,56 @@
 .end method
 
 .method public onMove(Lcom/smartisanos/smengine/TouchEvent;)V
-    .locals 5
+    .locals 7
     .param p1, "event"    # Lcom/smartisanos/smengine/TouchEvent;
 
     .prologue
     const/4 v4, 0x0
 
     .line 1151
+    iget-boolean v1, p0, Lcom/smartisanos/launcher/view/DockView$MyTouchListener;->mSlideDone:Z
+
+    if-nez v1, :cond_slide_0
+
+    invoke-virtual {p1}, Lcom/smartisanos/smengine/TouchEvent;->getWorldCoordinateX()F
+
+    move-result v1
+
+    iget v2, p0, Lcom/smartisanos/launcher/view/DockView$MyTouchListener;->mDownX:F
+
+    sub-float/2addr v1, v2
+
+    const/high16 v2, -0x3d380000    # -100.0f
+
+    cmpg-float v1, v1, v2
+
+    if-gez v1, :cond_slide_0
+
+    sget v1, Lcom/smartisanos/launcher/data/Constants;->sPageMode:I
+
+    sget v2, Lcom/smartisanos/launcher/data/Constants;->SINGLE_PAGE_MODE:I
+
+    if-ne v1, v2, :cond_slide_0
+
+    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
+
+    move-result-object v1
+
+    const/4 v2, 0x0
+
+    invoke-virtual {v1, v2}, Lcom/smartisanos/launcher/view/PageView;->switchPageMode(Lcom/smartisanos/launcher/view/Page;)Z
+
+    const/4 v1, 0x1
+
+    iput-boolean v1, p0, Lcom/smartisanos/launcher/view/DockView$MyTouchListener;->mSlideDone:Z
+
+    goto :goto_0
+
+    :cond_slide_0
     iget-object v1, p0, Lcom/smartisanos/launcher/view/DockView$MyTouchListener;->this$0:Lcom/smartisanos/launcher/view/DockView;
 
     invoke-virtual {p1}, Lcom/smartisanos/smengine/TouchEvent;->getWorldCoordinateX()F
